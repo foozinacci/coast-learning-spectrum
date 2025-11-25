@@ -1,0 +1,282 @@
+# LaBuBu's Balance Lab - .gitignore
+
+# ===========================
+# Dependencies & Packages
+# ===========================
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# ===========================
+# Environment & Secrets
+# ===========================
+
+# Never commit sensitive data!
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# Student PII and private data
+*.pii
+student-data/
+private-keys/
+credentials.json
+secrets/
+
+# ===========================
+# Build Outputs
+# ===========================
+
+# Next.js
+.next/
+out/
+
+# React
+build/
+dist/
+
+# Vercel
+.vercel
+
+# Webpack
+.cache/
+
+# Turbopack
+.turbo/
+
+# ===========================
+# Databases
+# ===========================
+
+# SQLite (development)
+*.db
+*.sqlite
+*.sqlite3
+
+# PostgreSQL dumps
+*.sql
+*.dump
+
+# Prisma
+prisma/*.db
+prisma/*.db-journal
+
+# ===========================
+# Logs & Reports
+# ===========================
+
+# Application logs
+logs/
+*.log
+
+# Test coverage
+coverage/
+.nyc_output/
+*.lcov
+
+# Accessibility test reports
+a11y-reports/
+
+# Performance reports
+lighthouse-reports/
+
+# ===========================
+# OS & Editor Files
+# ===========================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# ===========================
+# IDEs & Editors
+# ===========================
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains (WebStorm, PyCharm, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+
+# ===========================
+# Testing & CI/CD
+# ===========================
+
+# Jest
+jest-results.json
+
+# Playwright
+playwright-report/
+test-results/
+
+# Cypress
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+
+# E2E artifacts
+e2e-artifacts/
+
+# ===========================
+# Assets & Media (Large Files)
+# ===========================
+
+# Character animations (if large source files)
+# Keep optimized versions in repo, ignore source
+*.psd
+*.ai
+*.sketch
+*.fig (Figma files should be linked, not committed)
+
+# Video/audio source files
+# (Optimized versions should be in /public/assets)
+*.mov
+*.mp4 (large source files)
+*.wav (uncompressed audio)
+*.aiff
+
+# Keep:
+# - Optimized WebP, PNG, JPEG in /public/assets
+# - Compressed MP3/OGG for web
+
+# ===========================
+# Temporary Files
+# ===========================
+
+# Temporary working files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# ===========================
+# Documentation Builds
+# ===========================
+
+# Docusaurus / Markdown site generators
+docs/.docusaurus/
+docs/build/
+
+# Storybook
+storybook-static/
+
+# ===========================
+# Mobile (Future)
+# ===========================
+
+# React Native
+.expo/
+.expo-shared/
+
+# iOS
+ios/Pods/
+ios/*.xcworkspace
+ios/*.xcuserstate
+
+# Android
+android/app/build/
+android/.gradle/
+
+# ===========================
+# Miscellaneous
+# ===========================
+
+# Lock files (choose one: npm or yarn or pnpm)
+# Uncomment based on package manager choice:
+# package-lock.json (if using yarn or pnpm)
+# yarn.lock (if using npm or pnpm)
+# pnpm-lock.yaml (if using npm or yarn)
+
+# Service worker cache
+sw.js
+workbox-*.js
+
+# Generated TypeScript types
+*.tsbuildinfo
+
+# Sentry
+.sentryclirc
+
+# ===========================
+# IMPORTANT NOTES
+# ===========================
+
+# NEVER commit:
+# - Student personally identifiable information (PII)
+# - API keys, tokens, or secrets
+# - Production database credentials
+# - Large unoptimized media files
+# - Third-party dependencies (use package.json)
+
+# ALWAYS commit:
+# - Source code
+# - Configuration templates (.env.example)
+# - Documentation (README, CLAUDE.md, etc.)
+# - Optimized assets for web (WebP, SVG, compressed audio)
+# - Test files and fixtures (with anonymized data)
