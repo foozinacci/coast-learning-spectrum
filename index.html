@@ -1,1 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Spectrum - Every color of how they learn</title>
+    <style>
+        /* ========================================
+           CALM ROOM UI COLORS (Brand Guidelines)
+           ======================================== */
+        :root {
+            /* Core UI Colors */
+            --deep-navy: #111827;
+            --slate-gray: #4B5563;
+            --light-gray: #E5E7EB;
+            --white: #FFFFFF;
+            --accent-teal: #14B8A6;
 
+            /* Spectrum/Mood Colors */
+            --mood-brave: #EF4444;      /* Red - Brave */
+            --mood-retry: #F97316;      /* Orange - Retry */
+            --mood-curious: #FACC15;    /* Yellow - Curious */
+            --mood-focused: #10B981;    /* Green - Focused */
+            --mood-success: #3B82F6;    /* Blue - Success */
+            --mood-creative: #8B5CF6;   /* Violet - Creative */
+            --mood-break: #F9FAFB;      /* White - Break */
+            --mood-overwhelmed: #1F2937; /* Charcoal - Overwhelmed */
+            --mood-encouragement: #EC4899; /* Pink - Encouragement */
+            --mood-mastery: #EAB308;    /* Gold - Mastery */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light-gray);
+            color: var(--deep-navy);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: var(--deep-navy);
+            color: var(--white);
+            padding: 20px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2em;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        header .tagline {
+            font-size: 1em;
+            color: var(--light-gray);
+            font-style: italic;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            color: var(--deep-navy);
+            margin-bottom: 16px;
+            font-size: 1.5em;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: var(--accent-teal);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: #0D9488;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--slate-gray);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background: #374151;
+        }
+
+        /* Three-Grade System */
+        .three-grade {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .grade-box {
+            background: var(--light-gray);
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid var(--slate-gray);
+        }
+
+        .grade-box.current {
+            border-color: var(--accent-teal);
+            background: #F0FDFA;
+        }
+
+        .grade-label {
+            font-weight: 600;
+            color: var(--slate-gray);
+            font-size: 0.85em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .grade-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--deep-navy);
+        }
+
+        /* Characters */
+        .characters {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .labubu {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            transition: all 0.5s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .gator {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .speech-bubble {
+            background: var(--white);
+            border: 3px solid var(--accent-teal);
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .speech-bubble::before {
+            content: '🐊';
+            font-size: 2em;
+            position: absolute;
+            left: -30px;
+            top: 10px;
+        }
+
+        .gator-message {
+            color: var(--deep-navy);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            background: var(--light-gray);
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-teal);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        /* Question Area */
+        .question {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: var(--deep-navy);
+            margin: 20px 0;
+            padding: 20px;
+            background: var(--light-gray);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .answers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .answer-btn {
+            padding: 20px;
+            font-size: 1.2em;
+            font-weight: 600;
+            background: var(--white);
+            border: 3px solid var(--slate-gray);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .answer-btn:hover {
+            border-color: var(--accent-teal);
+            transform: scale(1.05);
+        }
+
+        .answer-btn.correct {
+            border-color: var(--mood-focused);
+            background: #D1FAE5;
+        }
+
+        .answer-btn.incorrect {
+            border-color: var(--mood-brave);
+            background: #FEE2E2;
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Form */
+        .form-group {
+            margin: 15px 0;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--deep-navy);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-teal);
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .stat {
+            background: var(--light-gray);
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--accent-teal);
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: var(--slate-gray);
+            margin-top: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .three-grade {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.5em;
+            }
+
+            .labubu {
+                width: 80px;
+                height: 80px;
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🌈 Learning Spectrum</h1>
+            <p class="tagline">Every color of how they learn</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Setup Screen -->
+        <div id="setupScreen" class="card">
+            <h2>Welcome to Learning Spectrum!</h2>
+            <p style="margin-bottom: 20px;">Let's set up your learning profile.</p>
+
+            <div class="form-group">
+                <label for="studentName">Student Name:</label>
+                <input type="text" id="studentName" placeholder="e.g., Wednesday">
+            </div>
+
+            <div class="form-group">
+                <label for="gradeEnrolled">Grade Enrolled:</label>
+                <select id="gradeEnrolled">
+                    <option value="">Select grade</option>
+                    <option value="K">Kindergarten</option>
+                    <option value="1">Grade 1</option>
+                    <option value="2">Grade 2</option>
+                    <option value="3">Grade 3</option>
+                    <option value="4">Grade 4</option>
+                    <option value="5">Grade 5</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="subject">Choose Starting Subject:</label>
+                <select id="subject">
+                    <option value="math">Math Spectrum</option>
+                    <option value="reading">Reading Spectrum</option>
+                </select>
+            </div>
+
+            <button class="btn btn-primary" onclick="startLearning()">Start Learning Journey 🚀</button>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboardScreen" class="hidden">
+            <!-- Three-Grade System -->
+            <div class="card">
+                <h2>Your Learning Spectrum</h2>
+                <div class="three-grade">
+                    <div class="grade-box">
+                        <div class="grade-label">Enrolled</div>
+                        <div class="grade-value" id="enrolledGrade">2</div>
+                    </div>
+                    <div class="grade-box current">
+                        <div class="grade-label">Current Level</div>
+                        <div class="grade-value" id="currentGrade">1.2</div>
+                    </div>
+                    <div class="grade-box">
+                        <div class="grade-label">Target</div>
+                        <div class="grade-value" id="targetGrade">2.5</div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;">0%</div>
+                </div>
+            </div>
+
+            <!-- Characters -->
+            <div class="card">
+                <div class="characters">
+                    <div class="labubu" id="labubu" style="background: var(--mood-curious);">
+                        👶
+                    </div>
+                    <div class="gator">
+                        <div class="speech-bubble">
+                            <p class="gator-message" id="gatorMessage">
+                                Hey LaBuBu, ready to check your Learning Spectrum today?
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="card">
+                <h2>Today's Progress</h2>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value" id="questionsAnswered">0</div>
+                        <div class="stat-label">Questions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="correctAnswers">0</div>
+                        <div class="stat-label">Correct</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="currentStreak">0</div>
+                        <div class="stat-label">Streak</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="card">
+                <h2>What would you like to do?</h2>
+                <button class="btn btn-primary" onclick="startSession()">Start New Session</button>
+                <button class="btn btn-primary" onclick="resumeSession()">Resume</button>
+                <button class="btn btn-secondary" onclick="exportProfile()">Export Profile</button>
+                <button class="btn btn-secondary" onclick="importProfile()">Import Profile</button>
+                <button class="btn btn-secondary" onclick="resetApp()">Reset</button>
+            </div>
+        </div>
+
+        <!-- Practice Screen -->
+        <div id="practiceScreen" class="hidden">
+            <div class="card">
+                <div class="characters">
+                    <div class="labubu" id="labubuPractice" style="background: var(--mood-focused);">
+                        👶
+                    </div>
+                    <div class="gator">
+                        <div class="speech-bubble">
+                            <p class="gator-message" id="gatorPracticeMessage">
+                                Let's solve this together!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" id="questionText">
+                    What is 2 + 3?
+                </div>
+
+                <div class="answers" id="answersContainer">
+                    <!-- Answers will be inserted here -->
+                </div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-secondary" onclick="takeBreak()">Take a Break ⏸️</button>
+                    <button class="btn btn-secondary" onclick="endSession()">End Session</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // STATE MANAGEMENT
+        // ========================================
+
+        let gameState = {
+            student: {
+                name: '',
+                gradeEnrolled: 2,
+                gradeCurrent: 1.0,
+                gradeTarget: 2.5,
+                subject: 'math'
+            },
+            session: {
+                questionsAnswered: 0,
+                correctAnswers: 0,
+                currentStreak: 0,
+                maxStreak: 0,
+                currentQuestion: null,
+                mood: 'curious'
+            },
+            history: []
+        };
+
+        // Load saved state from localStorage
+        function loadState() {
+            const saved = localStorage.getItem('learningSpectrumState');
+            if (saved) {
+                gameState = JSON.parse(saved);
+                return true;
+            }
+            return false;
+        }
+
+        // Save state to localStorage
+        function saveState() {
+            localStorage.setItem('learningSpectrumState', JSON.stringify(gameState));
+        }
+
+        // ========================================
+        // QUESTIONS DATABASE
+        // ========================================
+
+        const questions = {
+            math: [
+                { q: 'What is 2 + 3?', answers: [5, 4, 6, 7], correct: 0, level: 1.0 },
+                { q: 'What is 5 - 2?', answers: [3, 2, 4, 5], correct: 0, level: 1.0 },
+                { q: 'What is 4 + 4?', answers: [8, 7, 9, 6], correct: 0, level: 1.2 },
+                { q: 'What is 10 - 3?', answers: [7, 6, 8, 9], correct: 0, level: 1.2 },
+                { q: 'What is 6 × 2?', answers: [12, 10, 14, 8], correct: 0, level: 2.0 },
+                { q: 'What is 15 ÷ 3?', answers: [5, 4, 6, 3], correct: 0, level: 2.0 },
+                { q: 'What is 7 + 8?', answers: [15, 14, 16, 13], correct: 0, level: 1.5 },
+                { q: 'What is 20 - 7?', answers: [13, 12, 14, 15], correct: 0, level: 1.5 },
+            ],
+            reading: [
+                { q: 'What sound does "cat" start with?', answers: ['k', 't', 's', 'a'], correct: 0, level: 1.0 },
+                { q: 'How many syllables in "butterfly"?', answers: [3, 2, 4, 5], correct: 0, level: 1.5 },
+                { q: 'Which word rhymes with "dog"?', answers: ['fog', 'cat', 'run', 'tree'], correct: 0, level: 1.2 },
+                { q: 'What is the vowel in "sun"?', answers: ['u', 'o', 'a', 'i'], correct: 0, level: 1.0 },
+                { q: 'Which is a compound word?', answers: ['rainbow', 'happy', 'jump', 'red'], correct: 0, level: 2.0 },
+                { q: 'What\'s the plural of "box"?', answers: ['boxes', 'boxs', 'boxies', 'boxen'], correct: 0, level: 1.8 },
+            ]
+        };
+
+        // ========================================
+        // MOOD SYSTEM
+        // ========================================
+
+        const moods = {
+            brave: { color: '#EF4444', emoji: '💪', message: 'You were so brave to try that hard question!' },
+            retry: { color: '#F97316', emoji: '🔄', message: 'Good try! Let\'s look at that one again together.' },
+            curious: { color: '#FACC15', emoji: '🤔', message: 'Let\'s explore this together!' },
+            focused: { color: '#10B981', emoji: '✨', message: 'You\'re in the groove — great focus!' },
+            success: { color: '#3B82F6', emoji: '🎉', message: 'Nice work! That took real focus.' },
+            creative: { color: '#8B5CF6', emoji: '🎨', message: 'Love your creative thinking!' },
+            mastery: { color: '#EAB308', emoji: '⭐', message: 'Wow! You\'ve mastered this skill!' }
+        };
+
+        function updateLaBuBuMood(mood) {
+            gameState.session.mood = mood;
+            const moodData = moods[mood];
+
+            const labubus = document.querySelectorAll('.labubu');
+            labubus.forEach(labubu => {
+                labubu.style.background = moodData.color;
+                labubu.textContent = moodData.emoji;
+            });
+        }
+
+        function calculateMood() {
+            const { currentStreak, questionsAnswered, correctAnswers } = gameState.session;
+
+            if (currentStreak >= 5) return 'mastery';
+            if (currentStreak >= 3) return 'focused';
+            if (correctAnswers / questionsAnswered >= 0.7) return 'success';
+            if (currentStreak === 0 && questionsAnswered > 2) return 'retry';
+            return 'curious';
+        }
+
+        // ========================================
+        // GATOR MESSAGES
+        // ========================================
+
+        function updateGatorMessage(message, elementId = 'gatorMessage') {
+            const gatorEl = document.getElementById(elementId);
+            if (gatorEl) {
+                gatorEl.textContent = message;
+            }
+        }
+
+        function getEncouragementMessage(isCorrect) {
+            if (isCorrect) {
+                const messages = [
+                    'Excellent work!',
+                    'You nailed it! Great focus!',
+                    'That\'s exactly right!',
+                    'Nice thinking!',
+                    'You worked so hard on that!'
+                ];
+                return messages[Math.floor(Math.random() * messages.length)];
+            } else {
+                const messages = [
+                    'Almost there! Let\'s try another one.',
+                    'Good try! Want to keep going?',
+                    'I can see you\'re thinking hard. Let me help!',
+                    'That\'s okay! Let\'s try a different one.',
+                    'You\'re learning! Let\'s keep going.'
+                ];
+                return messages[Math.floor(Math.random() * messages.length)];
+            }
+        }
+
+        // ========================================
+        // SCREEN MANAGEMENT
+        // ========================================
+
+        function showScreen(screenId) {
+            document.querySelectorAll('[id$="Screen"]').forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        // ========================================
+        // INITIALIZATION
+        // ========================================
+
+        function initApp() {
+            if (loadState() && gameState.student.name) {
+                showDashboard();
+            } else {
+                showScreen('setupScreen');
+            }
+        }
+
+        function startLearning() {
+            const name = document.getElementById('studentName').value;
+            const grade = document.getElementById('gradeEnrolled').value;
+            const subject = document.getElementById('subject').value;
+
+            if (!name || !grade) {
+                alert('Please fill in all fields!');
+                return;
+            }
+
+            gameState.student.name = name;
+            gameState.student.gradeEnrolled = grade === 'K' ? 0 : parseInt(grade);
+            gameState.student.gradeCurrent = gameState.student.gradeEnrolled - 0.8;
+            gameState.student.gradeTarget = gameState.student.gradeEnrolled + 0.5;
+            gameState.student.subject = subject;
+
+            saveState();
+            showDashboard();
+        }
+
+        function showDashboard() {
+            showScreen('dashboardScreen');
+            updateDashboard();
+        }
+
+        function updateDashboard() {
+            const { student, session } = gameState;
+
+            // Update three-grade system
+            document.getElementById('enrolledGrade').textContent = student.gradeEnrolled;
+            document.getElementById('currentGrade').textContent = student.gradeCurrent.toFixed(1);
+            document.getElementById('targetGrade').textContent = student.gradeTarget.toFixed(1);
+
+            // Calculate progress percentage
+            const progress = ((student.gradeCurrent - student.gradeEnrolled) /
+                             (student.gradeTarget - student.gradeEnrolled)) * 100;
+            const progressPercent = Math.max(0, Math.min(100, progress)).toFixed(0);
+
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = progressPercent + '%';
+            progressFill.textContent = progressPercent + '%';
+
+            // Update stats
+            document.getElementById('questionsAnswered').textContent = session.questionsAnswered;
+            document.getElementById('correctAnswers').textContent = session.correctAnswers;
+            document.getElementById('currentStreak').textContent = session.currentStreak;
+
+            // Update Gator message
+            if (session.questionsAnswered === 0) {
+                updateGatorMessage(`Hey ${student.name}, ready to check your Learning Spectrum today?`);
+            } else {
+                const accuracy = (session.correctAnswers / session.questionsAnswered * 100).toFixed(0);
+                updateGatorMessage(
+                    `Great work today! You're ${progressPercent}% to your target. ` +
+                    `You got ${accuracy}% correct. Keep it up!`
+                );
+            }
+
+            // Update LaBuBu mood
+            updateLaBuBuMood(calculateMood());
+        }
+
+        // ========================================
+        // SESSION MANAGEMENT
+        // ========================================
+
+        function startSession() {
+            showScreen('practiceScreen');
+            loadNextQuestion();
+        }
+
+        function resumeSession() {
+            startSession();
+        }
+
+        function endSession() {
+            // Update current grade based on performance
+            const accuracy = gameState.session.correctAnswers / gameState.session.questionsAnswered;
+            if (accuracy >= 0.8) {
+                gameState.student.gradeCurrent += 0.1;
+            } else if (accuracy >= 0.6) {
+                gameState.student.gradeCurrent += 0.05;
+            }
+
+            // Cap at target
+            if (gameState.student.gradeCurrent > gameState.student.gradeTarget) {
+                gameState.student.gradeCurrent = gameState.student.gradeTarget;
+                updateGatorMessage('🎉 Amazing! You\'ve reached your target! Let\'s set a new goal!', 'gatorPracticeMessage');
+            }
+
+            saveState();
+            setTimeout(() => {
+                showDashboard();
+            }, 2000);
+        }
+
+        function takeBreak() {
+            updateLaBuBuMood('curious');
+            updateGatorMessage('Taking a break is smart! Come back when you\'re ready.', 'gatorPracticeMessage');
+            setTimeout(() => {
+                showDashboard();
+            }, 2000);
+        }
+
+        // ========================================
+        // QUESTION MANAGEMENT
+        // ========================================
+
+        function loadNextQuestion() {
+            const subject = gameState.student.subject;
+            const availableQuestions = questions[subject].filter(
+                q => q.level <= gameState.student.gradeCurrent + 0.5
+            );
+
+            if (availableQuestions.length === 0) {
+                updateGatorMessage('You\'ve completed all available questions! Great job!', 'gatorPracticeMessage');
+                setTimeout(endSession, 3000);
+                return;
+            }
+
+            const question = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
+            gameState.session.currentQuestion = question;
+
+            // Display question
+            document.getElementById('questionText').textContent = question.q;
+
+            // Display answers
+            const answersContainer = document.getElementById('answersContainer');
+            answersContainer.innerHTML = '';
+
+            question.answers.forEach((answer, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = answer;
+                btn.onclick = () => checkAnswer(index);
+                answersContainer.appendChild(btn);
+            });
+
+            updateGatorMessage('Let\'s solve this together!', 'gatorPracticeMessage');
+        }
+
+        function checkAnswer(selectedIndex) {
+            const question = gameState.session.currentQuestion;
+            const isCorrect = selectedIndex === question.correct;
+
+            // Update stats
+            gameState.session.questionsAnswered++;
+            if (isCorrect) {
+                gameState.session.correctAnswers++;
+                gameState.session.currentStreak++;
+                gameState.session.maxStreak = Math.max(
+                    gameState.session.maxStreak,
+                    gameState.session.currentStreak
+                );
+            } else {
+                gameState.session.currentStreak = 0;
+            }
+
+            // Visual feedback
+            const buttons = document.querySelectorAll('.answer-btn');
+            buttons[selectedIndex].classList.add(isCorrect ? 'correct' : 'incorrect');
+            buttons[question.correct].classList.add('correct');
+
+            // Update mood and message
+            const mood = calculateMood();
+            updateLaBuBuMood(mood);
+            updateGatorMessage(getEncouragementMessage(isCorrect), 'gatorPracticeMessage');
+
+            // Disable all buttons
+            buttons.forEach(btn => btn.disabled = true);
+
+            // Save and load next question
+            saveState();
+            setTimeout(loadNextQuestion, 2000);
+        }
+
+        // ========================================
+        // DATA MANAGEMENT
+        // ========================================
+
+        function exportProfile() {
+            const dataStr = JSON.stringify(gameState, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `learning-spectrum-${gameState.student.name}.json`;
+            link.click();
+
+            updateGatorMessage('Profile exported! You can import this file anytime to restore your progress.');
+        }
+
+        function importProfile() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+
+                reader.onload = (event) => {
+                    try {
+                        const imported = JSON.parse(event.target.result);
+                        gameState = imported;
+                        saveState();
+                        showDashboard();
+                        updateGatorMessage('Profile imported successfully! Welcome back!');
+                    } catch (error) {
+                        alert('Error importing file. Please check the file format.');
+                    }
+                };
+
+                reader.readAsText(file);
+            };
+
+            input.click();
+        }
+
+        function resetApp() {
+            if (confirm('Are you sure? This will clear all progress but you can import a backup later.')) {
+                localStorage.removeItem('learningSpectrumState');
+                location.reload();
+            }
+        }
+
+        // ========================================
+        // START APP
+        // ========================================
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>
