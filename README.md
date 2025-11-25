@@ -1,76 +1,159 @@
-# 🐊 LaBuBu's Balance Lab
+# 🌈 Learning Spectrum
 
-**An ADHD-friendly, character-driven learning platform for elementary students**
+**Every color of how they learn.**
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Status](https://img.shields.io/badge/status-in--development-yellow.svg)
 
 ---
 
-## 🌟 Overview
+## 🎯 Mission
 
-LaBuBu's Balance Lab is a web-based educational platform designed for elementary students (K-3), with particular focus on ADHD-friendly design and 504 plan accommodations. The platform features two engaging characters:
+Learning Spectrum exists to give families and schools a **shared, honest view** of a child's learning journey — academic, emotional, and behavioral — and to turn that understanding into small, doable steps forward, every day.
 
-- **🎨 LaBuBu**: A learner avatar whose color changes (green 🟢, red 🔴, blue 🔵) to reflect the student's focus and success
-- **🐊 Hugh Gregg Gator**: A warm, encouraging mentor who guides students through every lesson
+## 🌟 Vision
 
-## ✨ Key Features
+A world where every student — especially neurodivergent kids on 504 plans — is seen as more than "behind" or "ahead," and where their **spectrum of strengths, struggles, bravery, and progress** is visible and valued.
 
-### For Students
-- 🎮 **Interactive Learning**: Hands-on tasks with immediate visual feedback
-- 🎯 **Self-Paced**: No timers or pressure—learn at your own speed
-- 🏆 **Gamified Progress**: Earn badges, unlock achievements, see your growth
-- 🎨 **Visual Feedback**: LaBuBu's colors show how you're doing
-- 🐊 **Gator's Guidance**: A friendly mentor celebrates every step
+---
 
-### For Teachers
-- 📊 **Progress Tracking**: Hexagon charts visualize student skill development
-- 📋 **504 Accommodations**: Built-in support for individualized learning plans
-- 📈 **Data-Driven Insights**: Track accuracy, time-on-task, and growth over time
-- 📄 **Easy Reporting**: Export progress reports for SST meetings and parents
+## What is Learning Spectrum?
 
-### For Parents
-- 🏠 **Cross-Home Learning**: Students access the same content at school and home
-- 📱 **Progress Dashboard**: See what your child is learning and achieving
-- 🐊 **Gator Narration**: Understand your child's progress in plain language
-- 📧 **Stay Informed**: Receive milestone updates and assignment reminders
+Learning Spectrum is a K–5 learning companion that tracks reading, math, focus, and effort across home and school. Instead of reducing a child to a single number or grade, it shows their progress as a **spectrum**, with three clear reference points:
 
-## 🎯 Design Principles
+```
+┌──────────────┬──────────────┬──────────────┐
+│   ENROLLED   │   CURRENT    │    TARGET    │
+├──────────────┼──────────────┼──────────────┤
+│ Grade they're│ Grade level  │ Grade level  │
+│   attending  │   they're at │   we're      │
+│              │   right now  │   aiming for │
+└──────────────┴──────────────┴──────────────┘
+```
 
-### ADHD-Friendly UX
-- ✅ Minimal clutter and distraction
-- ✅ Clear, predictable navigation
-- ✅ Auto-save (never lose progress)
-- ✅ Optional break reminders
-- ✅ One task at a time
+This three-grade system becomes a **shared language** between parents, teachers, and SST teams.
 
-### Accessibility First
-- ♿ WCAG 2.1 AA compliant
-- 🔊 Text-to-speech for passages
-- 🎨 Adjustable fonts and colors
-- ⌨️ Full keyboard navigation
-- 📱 Responsive design (mobile + desktop)
+---
 
-### Positive Learning
-- 🌱 Growth mindset messaging
-- 🎉 Celebrate effort over perfection
-- 💪 Encouragement during struggles
-- 🔄 "Let's try again!" (never punitive)
+## 🎭 Meet the Characters
 
-## 🏗️ Project Status
+### LaBuBu (Students)
+Every student is represented as a **LaBuBu** — a friendly avatar whose **color changes** to reflect their learning state:
+- 🔴 **Red**: Brave (trying something hard)
+- 🟠 **Orange**: Retry (learning from mistakes)
+- 🟡 **Yellow**: Curious (exploring)
+- 🟢 **Green**: Focused (in the groove)
+- 🔵 **Blue**: Calm success (steady mastery)
+- 🟣 **Violet**: Creative (integrated tasks)
+- ⚪ **White**: Break (taking a pause)
+- ⚫ **Charcoal**: Overwhelmed (needs support)
 
-**Current Phase**: Greenfield Development (Repository Initialization)
+### Hugh Gregg Gator (Teacher)
+The **Gator** is a calm, encouraging teacher who guides every experience:
+- Explains charts in plain language
+- Celebrates effort, not just correctness
+- Appears in dashboards, reports, and SST meetings
+- Never scolds or compares students
 
-This repository is in active development. See [CLAUDE.md](./CLAUDE.md) for comprehensive development guidelines and architecture vision.
+*"Let's look at this together — you're doing great!"* 🐊
+
+---
+
+## ✨ Core Features
+
+### 📊 Three-Grade Dashboard
+Every dashboard shows **Enrolled → Current → Target** for each skill:
+- **Hexagon/Radar Charts**: Multi-axis progress across reading, math, focus, bravery
+- **Gator Narration**: Plain-language summaries ("You're 60% to your target in reading!")
+- **Real-Time Updates**: Charts reflect work done at home and school
+
+### 📸 Screenshot Import
+**NEW**: Upload a screenshot of your child's school report, and Learning Spectrum will:
+1. Extract text (OCR)
+2. Parse data (AI-powered)
+3. Show a preview for you to confirm
+4. Merge into your child's spectrum
+
+*"As easy as screenshotting a school report to import stats from school."*
+
+### 💾 Stability First (Sacred Features)
+These features are **non-negotiable**:
+- **Export Profile**: JSON (re-import) + PDF (SST meetings) with Gator commentary
+- **Import Profile**: Upload previous exports, merge or replace
+- **Resume**: Pick up exactly where you left off (even on different devices)
+- **Reset Session**: Start fresh today, keep historical progress
+
+### 🏠 Home & School Bridge
+- **Cross-Device Sync**: Work done at home appears at school, and vice versa
+- **Consistent Experience**: Same charts, same Gator, same data everywhere
+- **Offline Mode**: Keep working offline; data syncs when you're back online
+
+### 🧩 504-Aware by Design
+- **No Timers**: Self-paced learning, no countdown clocks
+- **Break Button**: Always visible, always available
+- **Auto-Save**: Progress saved every 30 seconds
+- **Clear Navigation**: One task at a time, minimal clutter
+- **Adjustable**: Text size, color themes, audio hints
+
+### 📄 SST Reports
+Generate progress reports designed for **Student Support Team meetings**:
+- Gator-narrated charts (plain language, no jargon)
+- Three-grade system clearly visible
+- Export as PDF or CSV
+- Honest, growth-oriented language
+
+---
+
+## 🎨 Design Philosophy
+
+### The "Calm Room"
+Learning Spectrum's UI feels like a **quiet, organized classroom**:
+- **Core Colors**: Deep Navy, Slate Gray, Light Gray, White, Accent Teal
+- **Ample Whitespace**: No clutter, no overwhelming visuals
+- **Spectrum Colors**: Used for data, not full backgrounds
+
+### Spectrum-Based, Not Game-Based
+- **No leaderboards** or comparisons
+- **No streaks** or pressure mechanics
+- **Focus on individual growth**, not ranking
+- **Gator is supportive**, not a "fun mascot"
+
+### ADHD-Friendly
+- No blinking ads or pop-ups
+- No forced timers or deadlines
+- Break anytime, resume anytime
+- Simple, predictable layout
+
+---
+
+## 💡 Brand Pillars
+
+1. **Spectrum, Not a Single Score**: Multiple axes, not one number
+2. **Stability First**: Data never lies or vanishes. Export/Import/Resume/Reset are sacred.
+3. **Gator-Guided, Student-Centered**: Gator narrates; students experience
+4. **504-Aware by Design**: ADHD isn't a side-case; it's the core user
+5. **Shared Language**: Same charts at home, school, and SST meetings
+
+---
 
 ## 🚀 Getting Started
 
-_(Documentation will be updated as the tech stack is finalized)_
+### For Parents
+1. **Create an account** (or use your school login)
+2. **Set up your child's profile** (grade enrolled, accommodations)
+3. **Upload a screenshot** of their latest school report (optional)
+4. **Start a session** and watch LaBuBu's colors reflect their work
+5. **Export progress** to share with teachers or SST teams
 
-### Prerequisites
-- TBD (awaiting tech stack decision)
+### For Teachers
+1. **Access your school portal**
+2. **View all students' spectrums** in one dashboard
+3. **See home/school activity** side-by-side
+4. **Generate SST reports** with Gator narration
+5. **Tag 504 accommodations** for automatic support
 
-### Installation
+### For Developers
+_(Coming soon)_
 ```bash
 # Clone the repository
 git clone https://github.com/foozinacci/coast-learning-spectrum.git
@@ -83,115 +166,105 @@ cd coast-learning-spectrum
 # npm run dev
 ```
 
-### Environment Setup
-```bash
-# Copy environment template
-cp .env.example .env
+See [CLAUDE.md](./CLAUDE.md) for comprehensive development guidelines.
 
-# Configure your environment variables
-# (Database, authentication, etc.)
-```
+---
 
 ## 📚 Documentation
 
 - **[CLAUDE.md](./CLAUDE.md)**: Comprehensive guide for AI assistants and developers
-- **[Architecture Docs](./docs/architecture)**: _(Coming soon)_ Design decisions and system architecture
-- **[Curriculum Guide](./docs/curriculum)**: _(Coming soon)_ Lesson plans and skill taxonomy
-- **[Accessibility Guide](./docs/accessibility)**: _(Coming soon)_ A11y testing and compliance
+- **[BRAND.md](./BRAND.md)**: Complete brand guidelines (voice, tone, colors)
+- **[docs/three-grade-system.md](./docs/three-grade-system.md)**: _(Coming soon)_ Deep dive on Enrolled→Current→Target
+- **[docs/screenshot-import.md](./docs/screenshot-import.md)**: _(Coming soon)_ OCR/LLM implementation guide
+- **[docs/sst-reports.md](./docs/sst-reports.md)**: _(Coming soon)_ SST meeting export formats
 
-## 🧪 Testing
+---
 
-_(Testing strategy TBD)_
+## 🧪 Roadmap
 
-```bash
-# Run unit tests
-# npm test
+### Phase 1: Foundation (Q1 2025)
+- [ ] Finalize tech stack (Next.js, TypeScript, PostgreSQL)
+- [ ] Implement three-grade dashboard
+- [ ] Build LaBuBu + Gator character system
+- [ ] Create export/import/resume/reset functionality
 
-# Run E2E tests
-# npm run test:e2e
+### Phase 2: Core Features (Q2 2025)
+- [ ] Screenshot import (OCR + LLM parsing)
+- [ ] Home/school sync engine
+- [ ] Offline mode with service workers
+- [ ] Diagnostics & stability panel
 
-# Run accessibility tests
-# npm run test:a11y
-```
+### Phase 3: Curriculum Content (Q3 2025)
+- [ ] Reading Spectrum (phonics, decoding, comprehension)
+- [ ] Math Spectrum (counting, operations, word problems)
+- [ ] Combined Spectrum (integrated tasks)
+- [ ] Focus & Bravery tracking
+
+### Phase 4: SST & Communication (Q4 2025)
+- [ ] SST report generator (PDF + CSV)
+- [ ] Parent/teacher messaging
+- [ ] School system integration (Clever, ClassLink)
+- [ ] Pilot at Hugh Gregg Elementary, NY
+
+---
+
+## 🔬 Research Foundation
+
+Learning Spectrum is built on evidence-based practices:
+
+- **ADHD-Friendly Design**: Self-paced, no timers, clear navigation ([Monster Math](https://monstermath.app), [FocusBear](https://focusbear.io))
+- **Spectrum-Based Assessment**: Multiple intelligences, not single scores
+- **Character-Based Learning**: Gator provides supportive mentorship ([RAW Studio](https://raw.studio))
+- **Color Psychology**: Thoughtful use of color for feedback ([Psychology Today](https://www.psychologytoday.com))
+- **Universal Design for Learning**: Multiple means of representation and engagement ([CAST UDL](http://udlguidelines.cast.org/))
+
+---
 
 ## 🤝 Contributing
 
-We welcome contributions that align with our mission of inclusive, engaging education!
+We welcome contributions that align with our mission of **stability-first, 504-aware, spectrum-based learning**.
 
 ### Before Contributing
 1. Read [CLAUDE.md](./CLAUDE.md) for development guidelines
-2. Check existing issues and PRs to avoid duplicates
-3. Ensure your contribution follows our accessibility standards
+2. Understand the **three-grade system** (Enrolled → Current → Target)
+3. Internalize the **Brand Pillars** (especially Stability First)
 
 ### Development Workflow
 1. Create a feature branch: `git checkout -b feature/your-feature`
-2. Make your changes (following ADHD-friendly and accessibility principles)
-3. Test thoroughly (especially keyboard navigation and screen readers)
-4. Commit using conventional commits: `feat: add new lesson type`
+2. Make your changes (follow calm room UI + spectrum colors)
+3. Test thoroughly (especially export/import/resume)
+4. Commit using conventional commits: `feat: add screenshot import`
 5. Push and create a pull request
 
 ### Pull Request Checklist
-- [ ] Code follows project conventions
-- [ ] Gator appears in new lesson screens (if applicable)
-- [ ] LaBuBu color states work correctly (if applicable)
-- [ ] Accessibility: ARIA labels, keyboard navigation, color contrast
-- [ ] No timers or time pressure added
-- [ ] Tests passing
-- [ ] Documentation updated
+- [ ] **Stability**: Export/Import/Resume/Reset work correctly
+- [ ] **Three-Grade System**: Charts show Enrolled → Current → Target
+- [ ] **Gator Voice**: Supportive, never punitive
+- [ ] **Calm Room UI**: Spectrum colors only for data
+- [ ] **ADHD-Friendly**: No timers, breaks available
+- [ ] **504-Aware**: Accommodations respected
+- [ ] **Accessibility**: Keyboard nav, ARIA labels, WCAG AA contrast
+- [ ] **Tests**: Unit + integration + e2e passing
+- [ ] **Documentation**: Updated if needed
 
-## 📋 Roadmap
-
-### Phase 1: Foundation (Q1 2025)
-- [ ] Finalize tech stack
-- [ ] Set up development environment
-- [ ] Implement core UI components
-- [ ] Create LaBuBu and Gator character systems
-- [ ] Build basic lesson loop structure
-
-### Phase 2: Core Learning (Q2 2025)
-- [ ] Develop math curriculum (K-2)
-- [ ] Develop reading curriculum (K-2)
-- [ ] Implement progress tracking engine
-- [ ] Build student dashboard with charts
-- [ ] Create teacher portal
-
-### Phase 3: Accessibility & Features (Q3 2025)
-- [ ] 504 accommodation features
-- [ ] Offline mode and caching
-- [ ] Parent portal and notifications
-- [ ] Export reports (PDF/CSV)
-- [ ] User testing with students
-
-### Phase 4: Launch & Iterate (Q4 2025)
-- [ ] Pilot at Hugh Gregg Elementary
-- [ ] Gather feedback and iterate
-- [ ] Performance optimization
-- [ ] Additional curriculum content
-- [ ] Mobile app (iOS/Android)
-
-## 🔬 Research & Evidence
-
-This platform is built on evidence-based practices:
-
-- **ADHD-Friendly Design**: Self-paced learning, minimal distractions ([Monster Math](https://monstermath.app), [FocusBear](https://focusbear.io))
-- **Character-Based Learning**: Mascots increase engagement and trust ([RAW Studio](https://raw.studio))
-- **Color Psychology**: Thoughtful use of color for feedback ([Psychology Today](https://www.psychologytoday.com))
-- **CRA Method**: Concrete-Representational-Abstract for math ([Monster Math](https://monstermath.app))
-- **Universal Design for Learning**: Multiple means of representation, engagement, and expression
+---
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
-_(Note: License file to be added)_
+**Important**: This software handles student data. When deploying, you MUST comply with FERPA, COPPA, and relevant data privacy laws. See [LICENSE](./LICENSE) for full educational use notice.
+
+---
 
 ## 🙏 Acknowledgments
 
 - **Hugh Gregg Elementary School, NY**: Educational partner and pilot school
-- **ADHD Education Community**: Research and best practices
-- **Accessibility Advocates**: WCAG guidelines and inclusive design principles
-- **Character Artists**: LaBuBu and Gator design
+- **Families with children on 504 plans**: The inspiration and testing ground for this work
+- **ADHD & Neurodivergent Community**: For teaching us about real needs, not assumptions
 - **Open Source Community**: Tools and frameworks that make this possible
+
+---
 
 ## 📞 Contact
 
@@ -201,25 +274,38 @@ _(Note: License file to be added)_
 
 ---
 
-**Built with ❤️ for inclusive education**
+## 💬 One-Line Summary (For Teachers)
 
-*"Every child deserves a learning experience that celebrates their unique way of thinking."*
+*"Learning Spectrum gives us a shared picture of where a student is right now and how they're moving toward the grade-level expectations we've set together."*
 
 ---
 
-## 🐊 Meet the Characters
+**Built with ❤️ for real families, real needs.**
 
-### LaBuBu 🎨
-LaBuBu is *you*—the learner! As you work through lessons, LaBuBu's color changes to show how you're doing:
-- 🟢 **Green**: You're focused and doing great!
-- 🔴 **Red**: You might need a little help (and that's okay!)
-- 🔵 **Blue**: You're working steadily—nice and calm!
+*Stability, clarity, and honesty are not optional.* 🐊🌈
 
-### Hugh Gregg Gator 🐊
-Gator is your teacher and friend. He's always there to:
-- Explain new concepts
-- Celebrate your wins
-- Help when things are tricky
-- Remind you that mistakes are how we learn!
+---
 
-Gator's motto: *"Let's learn together—one step at a time!"* 🐊✨
+## 🎓 Real-World Use Case
+
+> *"I should be able to screenshot a school report like [this one](./docs/examples/progress-report.png) and import my daughter's stats directly into Learning Spectrum. Then, when we meet with the SST team, we all point to the same charts — her enrolled grade (2nd), her current level (early 1st in reading), and our target (mid-2nd by June). Gator explains what the numbers mean in plain English, and everyone — teachers, specialists, us — speaks the same language."*
+>
+> — Parent, Hugh Gregg Elementary
+
+---
+
+## 🔍 What Makes Learning Spectrum Different?
+
+| Traditional Ed-Tech | Learning Spectrum |
+|---------------------|-------------------|
+| Single score ("below grade level") | **Three grades**: Enrolled → Current → Target |
+| Gamification (streaks, leaderboards) | **Supportive**: Gator narrates, no pressure |
+| One-size-fits-all | **504-aware by design**: ADHD is the core user |
+| Data trapped in platform | **Export anytime**: JSON, PDF, CSV — you own it |
+| Generic reports | **SST-ready**: Plain language, Gator commentary |
+| Home OR school | **Bridge**: Same data, same charts everywhere |
+| "Fun" mascot | **Calm teacher**: Gator is a mentor, not a toy |
+
+---
+
+**Learning Spectrum: See the whole child. Grow the whole child.** 🌈
