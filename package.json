@@ -1,0 +1,21 @@
+{
+  "name": "learning-spectrum",
+  "version": "1.0.0",
+  "description": "Learning Spectrum - Every color of how they learn. A K-5 learning companion for students with 504 plans and ADHD.",
+  "scripts": {
+    "start": "python3 -m http.server 3000",
+    "dev": "python3 -m http.server 3000"
+  },
+  "keywords": [
+    "education",
+    "learning",
+    "504-plan",
+    "ADHD",
+    "elementary",
+    "K-5",
+    "reading",
+    "math"
+  ],
+  "author": "Learning Spectrum Team",
+  "license": "MIT"
+}
