@@ -1,0 +1,194 @@
+{
+  "generatedAt": "2025-11-26T21:49:01.907Z",
+  "totalQuestions": 8444,
+  "grades": [
+    {
+      "grade": "1",
+      "categories": [
+        {
+          "category": "reading",
+          "count": 52
+        },
+        {
+          "category": "understanding",
+          "count": 270
+        },
+        {
+          "category": "fluency",
+          "count": 330
+        },
+        {
+          "category": "math",
+          "count": 270
+        },
+        {
+          "category": "focus",
+          "count": 200
+        },
+        {
+          "category": "effort",
+          "count": 320
+        }
+      ],
+      "total": 1442
+    },
+    {
+      "grade": "2",
+      "categories": [
+        {
+          "category": "reading",
+          "count": 0
+        },
+        {
+          "category": "understanding",
+          "count": 270
+        },
+        {
+          "category": "fluency",
+          "count": 330
+        },
+        {
+          "category": "math",
+          "count": 270
+        },
+        {
+          "category": "focus",
+          "count": 200
+        },
+        {
+          "category": "effort",
+          "count": 320
+        }
+      ],
+      "total": 1390
+    },
+    {
+      "grade": "3",
+      "categories": [
+        {
+          "category": "reading",
+          "count": 0
+        },
+        {
+          "category": "understanding",
+          "count": 270
+        },
+        {
+          "category": "fluency",
+          "count": 330
+        },
+        {
+          "category": "math",
+          "count": 270
+        },
+        {
+          "category": "focus",
+          "count": 200
+        },
+        {
+          "category": "effort",
+          "count": 320
+        }
+      ],
+      "total": 1390
+    },
+    {
+      "grade": "4",
+      "categories": [
+        {
+          "category": "reading",
+          "count": 0
+        },
+        {
+          "category": "understanding",
+          "count": 270
+        },
+        {
+          "category": "fluency",
+          "count": 330
+        },
+        {
+          "category": "math",
+          "count": 270
+        },
+        {
+          "category": "focus",
+          "count": 200
+        },
+        {
+          "category": "effort",
+          "count": 320
+        }
+      ],
+      "total": 1390
+    },
+    {
+      "grade": "5",
+      "categories": [
+        {
+          "category": "reading",
+          "count": 0
+        },
+        {
+          "category": "understanding",
+          "count": 270
+        },
+        {
+          "category": "fluency",
+          "count": 330
+        },
+        {
+          "category": "math",
+          "count": 270
+        },
+        {
+          "category": "focus",
+          "count": 200
+        },
+        {
+          "category": "effort",
+          "count": 320
+        }
+      ],
+      "total": 1390
+    },
+    {
+      "grade": "K",
+      "categories": [
+        {
+          "category": "reading",
+          "count": 52
+        },
+        {
+          "category": "understanding",
+          "count": 270
+        },
+        {
+          "category": "fluency",
+          "count": 330
+        },
+        {
+          "category": "math",
+          "count": 270
+        },
+        {
+          "category": "focus",
+          "count": 200
+        },
+        {
+          "category": "effort",
+          "count": 320
+        }
+      ],
+      "total": 1442
+    }
+  ],
+  "files": [
+    "/home/user/coast-learning-spectrum/questions/grade-1-comprehensive.js",
+    "/home/user/coast-learning-spectrum/questions/grade-2-comprehensive.js",
+    "/home/user/coast-learning-spectrum/questions/grade-3-comprehensive.js",
+    "/home/user/coast-learning-spectrum/questions/grade-4-comprehensive.js",
+    "/home/user/coast-learning-spectrum/questions/grade-5-comprehensive.js",
+    "/home/user/coast-learning-spectrum/questions/grade-K-comprehensive.js"
+  ]
+}
