@@ -809,9 +809,16 @@
 
         .answers {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 15px;
             margin: 25px 0;
+        }
+
+        /* Fix for answer containers with speaker buttons */
+        .answers > div {
+            display: flex;
+            gap: 8px;
+            align-items: stretch;
         }
 
         .answer-btn {
@@ -1587,6 +1594,11 @@
                 padding: 12px;
             }
 
+            .answer-speaker-btn {
+                min-width: 40px !important;
+                font-size: 1em !important;
+            }
+
             #headerRadar {
                 width: 100px !important;
                 height: 100px !important;
@@ -2056,31 +2068,7 @@
 
             <!-- Dashboard Grid Layout -->
             <div class="dashboard-grid">
-                <!-- Three-Grade System -->
-                <div class="card">
-                    <h2>📡 Spectrum Status</h2>
-                    <div class="three-grade">
-                        <div class="grade-box">
-                            <div class="grade-label">Enrolled</div>
-                            <div class="grade-value" id="enrolledGrade">2</div>
-                        </div>
-                        <div class="grade-box current">
-                            <div class="grade-label">Current</div>
-                            <div class="grade-value" id="currentGrade">1.2</div>
-                        </div>
-                        <div class="grade-box">
-                            <div class="grade-label">Target</div>
-                            <div class="grade-value" id="targetGrade">2.5</div>
-                        </div>
-                    </div>
-
-                    <!-- Progress Bar -->
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill" style="width: 0%;">0%</div>
-                    </div>
-                </div>
-
-                <!-- Note: Stats and Spectrum Map now consolidated in header -->
+                <!-- Note: Spectrum Status now shown in header only -->
             </div>
 
             <!-- Actions -->
@@ -3372,7 +3360,22 @@
                 // Cancel any ongoing speech
                 window.speechSynthesis.cancel();
 
-                const utterance = new SpeechSynthesisUtterance(text);
+                // Preprocess text for better TTS pronunciation
+                let processedText = text;
+
+                // Replace mathematical symbols with spoken equivalents
+                processedText = processedText.replace(/\s*-\s*/g, ' minus ');  // minus sign
+                processedText = processedText.replace(/\s*\+\s*/g, ' plus ');   // plus sign
+                processedText = processedText.replace(/\s*×\s*/g, ' times ');   // multiplication
+                processedText = processedText.replace(/\s*÷\s*/g, ' divided by '); // division
+                processedText = processedText.replace(/\s*=\s*/g, ' equals ');  // equals
+                processedText = processedText.replace(/\s*<\s*/g, ' is less than '); // less than
+                processedText = processedText.replace(/\s*>\s*/g, ' is greater than '); // greater than
+
+                // Clean up multiple spaces
+                processedText = processedText.replace(/\s+/g, ' ').trim();
+
+                const utterance = new SpeechSynthesisUtterance(processedText);
 
                 // Set language
                 const langMap = {
@@ -3779,17 +3782,12 @@
         function updateDashboard() {
             const { student, session } = gameState;
 
-            document.getElementById('enrolledGrade').textContent = student.gradeEnrolled === 0 ? 'K' : student.gradeEnrolled;
-            document.getElementById('currentGrade').textContent = student.gradeCurrent.toFixed(1);
-            document.getElementById('targetGrade').textContent = student.gradeTarget.toFixed(1);
+            // Note: Spectrum Status (enrolled/current/target) now only displayed in header
+            // Removed duplicate dashboard display per user request
 
             const progress = ((student.gradeCurrent - student.gradeEnrolled) /
                              (student.gradeTarget - student.gradeEnrolled)) * 100;
             const progressPercent = Math.max(0, Math.min(100, progress || 0)).toFixed(0);
-
-            const progressFill = document.getElementById('progressFill');
-            progressFill.style.width = progressPercent + '%';
-            progressFill.textContent = progressPercent + '%';
 
             document.getElementById('questionsAnswered').textContent = session.questionsAnswered;
             document.getElementById('correctAnswers').textContent = session.correctAnswers;
@@ -4026,7 +4024,22 @@
                 // Cancel any ongoing speech
                 window.speechSynthesis.cancel();
 
-                const utterance = new SpeechSynthesisUtterance(text);
+                // Preprocess text for better TTS pronunciation (same as speak function)
+                let processedText = text;
+
+                // Replace mathematical symbols with spoken equivalents
+                processedText = processedText.replace(/\s*-\s*/g, ' minus ');  // minus sign
+                processedText = processedText.replace(/\s*\+\s*/g, ' plus ');   // plus sign
+                processedText = processedText.replace(/\s*×\s*/g, ' times ');   // multiplication
+                processedText = processedText.replace(/\s*÷\s*/g, ' divided by '); // division
+                processedText = processedText.replace(/\s*=\s*/g, ' equals ');  // equals
+                processedText = processedText.replace(/\s*<\s*/g, ' is less than '); // less than
+                processedText = processedText.replace(/\s*>\s*/g, ' is greater than '); // greater than
+
+                // Clean up multiple spaces
+                processedText = processedText.replace(/\s+/g, ' ').trim();
+
+                const utterance = new SpeechSynthesisUtterance(processedText);
                 utterance.rate = 0.9; // Slightly slower for clarity
                 utterance.pitch = 1.0;
                 utterance.volume = 1.0;
@@ -4234,11 +4247,39 @@
 
                 // Render as multiple-choice buttons (works for MC, matching, rhyming, sequence, emotion_check_in)
                 shuffled.forEach((answer, index) => {
+                    // Create container for answer button + speaker button
+                    const answerContainer = document.createElement('div');
+                    answerContainer.style.cssText = 'display: flex; gap: 8px; align-items: stretch; width: 100%;';
+
+                    // Main answer button
                     const btn = document.createElement('button');
                     btn.className = 'answer-btn';
                     btn.textContent = answer;
                     btn.onclick = () => checkAnswer(index);
-                    container.appendChild(btn);
+                    btn.style.cssText = 'flex: 1;'; // Take up most of the space
+
+                    // Speaker button for this answer
+                    const speakerBtn = document.createElement('button');
+                    speakerBtn.className = 'answer-speaker-btn';
+                    speakerBtn.innerHTML = '🔊';
+                    speakerBtn.title = 'Read this answer aloud';
+                    speakerBtn.style.cssText = 'min-width: 45px; padding: 0 10px; font-size: 1.2em; background: rgba(20, 184, 166, 0.2); border: 2px solid var(--neon-teal); border-radius: 12px; cursor: pointer; transition: all 0.2s;';
+                    speakerBtn.onclick = (e) => {
+                        e.stopPropagation(); // Prevent triggering answer selection
+                        readQuestionAloud(answer); // Reuse the TTS function
+                    };
+                    speakerBtn.onmouseover = () => {
+                        speakerBtn.style.background = 'rgba(20, 184, 166, 0.4)';
+                        speakerBtn.style.transform = 'scale(1.05)';
+                    };
+                    speakerBtn.onmouseout = () => {
+                        speakerBtn.style.background = 'rgba(20, 184, 166, 0.2)';
+                        speakerBtn.style.transform = 'scale(1)';
+                    };
+
+                    answerContainer.appendChild(btn);
+                    answerContainer.appendChild(speakerBtn);
+                    container.appendChild(answerContainer);
                 });
             }
         }
