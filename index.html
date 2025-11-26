@@ -1618,7 +1618,32 @@
                     </div>
                 </div>
 
-                <!-- 4. Interactive Spectrum (Radar + Clickable Badges) -->
+                <!-- 4. Tracking Info (Name, Date/Time, Active/Idle, Effectiveness) -->
+                <div id="headerTracking" class="hidden header-tracking" style="display:flex; flex-direction:column; gap:5px; font-size:0.85em; min-width:200px;">
+                    <div id="headerStudentName" style="font-weight:600; color:var(--neon-blue);"></div>
+                    <div id="headerDateTime" style="color:var(--text-muted);"></div>
+                    <div style="display:flex; gap:10px;">
+                        <div>
+                            <span style="color:var(--neon-green);">Active:</span>
+                            <span id="headerActiveTime">0m</span>
+                        </div>
+                        <div>
+                            <span style="color:var(--neon-orange);">Idle:</span>
+                            <span id="headerIdleTime">0m</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:5px;">
+                        <div style="font-size:0.8em; margin-bottom:3px;">
+                            <span>Effectiveness: </span>
+                            <span id="headerEffectiveness" style="font-weight:700; color:var(--neon-green);">--</span>
+                        </div>
+                        <div style="width:100%; height:8px; background:rgba(0,0,0,0.3); border-radius:4px; overflow:hidden;">
+                            <div id="headerEffectivenessBar" style="height:100%; width:0%; background:linear-gradient(90deg, var(--neon-pink), var(--neon-yellow), var(--neon-green)); transition:width 0.3s;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Interactive Spectrum (Radar + Clickable Badges) -->
                 <div id="headerSpectrum" class="hidden header-spectrum">
                     <canvas id="headerRadar" width="100" height="100"></canvas>
                     <div id="headerStats" class="header-stats-badges">
@@ -2832,6 +2857,21 @@
             updateDashboard();
             drawSpectrumRadar();
             drawHeaderRadar();
+
+            // Show header sections
+            document.getElementById('headerGrades').classList.remove('hidden');
+            document.getElementById('headerSession').classList.remove('hidden');
+            document.getElementById('headerSpectrum').classList.remove('hidden');
+            document.getElementById('headerTracking').classList.remove('hidden');
+
+            // Initialize session tracking if not already done
+            if (!gameState.tracking.sessionStart) {
+                gameState.tracking.sessionStart = Date.now();
+                gameState.tracking.lastActive = Date.now();
+            }
+
+            updateHeaderValues();
+            updateTrackingInfo();
         }
 
         function updateDashboard() {
@@ -3675,7 +3715,142 @@
             if (streakEl) {
                 streakEl.textContent = gameState.session.currentStreak;
             }
+
+            // Update tracking info
+            updateTrackingInfo();
         }
+
+        function updateTrackingInfo() {
+            // Update student name
+            const nameEl = document.getElementById('headerStudentName');
+            if (nameEl && gameState.student.name) {
+                nameEl.textContent = gameState.student.name;
+            }
+
+            // Update date/time
+            const dateTimeEl = document.getElementById('headerDateTime');
+            if (dateTimeEl) {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                dateTimeEl.textContent = `${dateStr} • ${timeStr}`;
+            }
+
+            // Calculate and update active/idle time
+            if (gameState.tracking) {
+                const activeMinutes = Math.floor(gameState.tracking.activeTime / 60000);
+                const idleMinutes = Math.floor(gameState.tracking.idleTime / 60000);
+
+                const activeEl = document.getElementById('headerActiveTime');
+                const idleEl = document.getElementById('headerIdleTime');
+
+                if (activeEl) activeEl.textContent = `${activeMinutes}m`;
+                if (idleEl) idleEl.textContent = `${idleMinutes}m`;
+            }
+
+            // Calculate and update effectiveness meter
+            calculateEffectiveness();
+        }
+
+        function calculateEffectiveness() {
+            const tracking = gameState.tracking;
+            const session = gameState.session;
+
+            if (!tracking || !session) return;
+
+            const totalTime = tracking.activeTime + tracking.idleTime;
+            if (totalTime === 0) {
+                updateEffectivenessDisplay(0);
+                return;
+            }
+
+            // Effectiveness formula:
+            // (0.5 × activeRatio) + (0.3 × accuracy) + (0.2 × pace)
+            const activeRatio = tracking.activeTime / totalTime;
+            const accuracy = session.questionsAnswered > 0
+                ? session.correctAnswers / session.questionsAnswered
+                : 0;
+            const questionsPerMinute = tracking.activeTime > 0
+                ? (session.questionsAnswered / (tracking.activeTime / 60000))
+                : 0;
+            const pace = Math.min(questionsPerMinute / 10, 1); // Cap at 10 questions/min = 100%
+
+            const effectiveness = (0.5 * activeRatio + 0.3 * accuracy + 0.2 * pace) * 100;
+            updateEffectivenessDisplay(Math.round(effectiveness));
+        }
+
+        function updateEffectivenessDisplay(percent) {
+            const effectivenessEl = document.getElementById('headerEffectiveness');
+            const barEl = document.getElementById('headerEffectivenessBar');
+
+            if (effectivenessEl) {
+                effectivenessEl.textContent = `${percent}%`;
+
+                // Color based on effectiveness
+                if (percent >= 70) {
+                    effectivenessEl.style.color = 'var(--neon-green)';
+                } else if (percent >= 40) {
+                    effectivenessEl.style.color = 'var(--neon-yellow)';
+                } else {
+                    effectivenessEl.style.color = 'var(--neon-pink)';
+                }
+            }
+
+            if (barEl) {
+                barEl.style.width = `${percent}%`;
+            }
+        }
+
+        // Track user activity
+        function trackActivity() {
+            if (!gameState.tracking) return;
+
+            const now = Date.now();
+            const lastActive = gameState.tracking.lastActive;
+            const timeSinceActive = now - lastActive;
+
+            // If more than 30 seconds since last activity, count as idle
+            if (timeSinceActive > 30000) {
+                gameState.tracking.idleTime += timeSinceActive;
+            } else {
+                gameState.tracking.activeTime += timeSinceActive;
+            }
+
+            gameState.tracking.lastActive = now;
+            updateTrackingInfo();
+        }
+
+        // Track user interactions
+        document.addEventListener('click', () => {
+            if (gameState.tracking) {
+                gameState.tracking.lastActive = Date.now();
+            }
+        });
+
+        document.addEventListener('keypress', () => {
+            if (gameState.tracking) {
+                gameState.tracking.lastActive = Date.now();
+            }
+        });
+
+        // Update tracking every 5 seconds
+        setInterval(() => {
+            if (gameState.tracking && gameState.tracking.sessionStart) {
+                trackActivity();
+                saveState();
+            }
+        }, 5000);
+
+        // Update date/time every minute
+        setInterval(() => {
+            const dateTimeEl = document.getElementById('headerDateTime');
+            if (dateTimeEl && !dateTimeEl.classList.contains('hidden')) {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                dateTimeEl.textContent = `${dateStr} • ${timeStr}`;
+            }
+        }, 60000);
 
         function updateHeaderStats() {
             const container = document.getElementById('headerStats');
