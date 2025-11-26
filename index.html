@@ -2004,6 +2004,57 @@
             }
         }
 
+        function ensureSettings() {
+            if (!gameState.settings) {
+                gameState.settings = {
+                    ttsEnabled: false,
+                    ttsVoice: 'female',
+                    musicEnabled: true,
+                    sfxEnabled: true,
+                    volume: 0.5,
+                    modules: {
+                        reading: true,
+                        math: true,
+                        executive: true,
+                        emotions: true
+                    }
+                };
+            }
+            if (!gameState.settings.modules) {
+                gameState.settings.modules = {
+                    reading: true,
+                    math: true,
+                    executive: true,
+                    emotions: true
+                };
+            }
+        }
+
+        function ensureTracking() {
+            if (!gameState.tracking) {
+                gameState.tracking = {
+                    sessionStart: null,
+                    lastActive: Date.now(),
+                    activeTime: 0,
+                    idleTime: 0
+                };
+            }
+        }
+
+        function ensurePreferences() {
+            if (!gameState.student.preferences) {
+                gameState.student.preferences = {
+                    preferredBreak: null,
+                    preferredFeedback: null,
+                    preferredHelp: null,
+                    copingStrategies: []
+                };
+            }
+            if (!gameState.student.language) {
+                gameState.student.language = 'en';
+            }
+        }
+
         // Load saved state from localStorage
         function loadState() {
             const saved = localStorage.getItem('learningSpectrumState');
@@ -2011,6 +2062,9 @@
                 try {
                     gameState = JSON.parse(saved);
                     ensureDomains();
+                    ensureSettings();
+                    ensureTracking();
+                    ensurePreferences();
                     return true;
                 } catch (e) {
                     console.error(e);
@@ -2772,10 +2826,16 @@
         // ========================================
 
         function initApp() {
-            ensureDomains();
-
             // Check if there's saved state
-            if (loadState() && gameState.student.name) {
+            const hasSavedState = loadState();
+
+            // Always ensure all required objects exist
+            ensureDomains();
+            ensureSettings();
+            ensureTracking();
+            ensurePreferences();
+
+            if (hasSavedState && gameState.student.name) {
                 // Show Resume/New Session modal
                 document.getElementById('resumeStudentName').textContent = gameState.student.name;
                 document.getElementById('resumeModal').classList.remove('hidden');
@@ -2864,7 +2924,8 @@
             document.getElementById('headerSpectrum').classList.remove('hidden');
             document.getElementById('headerTracking').classList.remove('hidden');
 
-            // Initialize session tracking if not already done
+            // Ensure tracking exists and initialize session tracking if not already done
+            ensureTracking();
             if (!gameState.tracking.sessionStart) {
                 gameState.tracking.sessionStart = Date.now();
                 gameState.tracking.lastActive = Date.now();
@@ -3410,7 +3471,7 @@
 
                 saveState();
                 updateHeaderValues();
-                setTimeout(loadNextQuestion, 2500);
+                setTimeout(loadNextQuestionWrapper, 2500);
                 return; // Exit early - don't run skill-based logic
             }
 
@@ -3490,7 +3551,16 @@
             updateHeaderValues();
             updateHeaderStats();
 
-            setTimeout(loadNextQuestion, 2500);
+            setTimeout(loadNextQuestionWrapper, 2500);
+        }
+
+        // Wrapper to choose between regular and tailored question loading
+        function loadNextQuestionWrapper() {
+            if (gameState.session.tailoredMode && gameState.session.tailoredMode.active) {
+                loadNextTailoredQuestion();
+            } else {
+                loadNextQuestion();
+            }
         }
 
         // ========================================
@@ -3931,14 +4001,95 @@
             const domainData = domainTipsData[currentFocusDomain];
             closeDomainTips();
 
-            // Show message and start session
+            // Show message and start tailored session
             showGatorMessage(`Let's focus on ${domainData.title}! Ready to practice?`);
 
-            // Filter questions by domain (in real implementation)
-            // For now, just start a normal session
+            // Start tailored session filtered by domain
             setTimeout(() => {
-                startSession();
+                startTailoredSession(currentFocusDomain);
             }, 1000);
+        }
+
+        function startTailoredSession(domain) {
+            // Set tailored mode flag
+            if (!gameState.session.tailoredMode) {
+                gameState.session.tailoredMode = {
+                    active: true,
+                    domain: domain,
+                    questionPool: []
+                };
+            } else {
+                gameState.session.tailoredMode.active = true;
+                gameState.session.tailoredMode.domain = domain;
+            }
+
+            // Build question pool filtered by domain
+            const currentGrade = gameState.student.gradeCurrent;
+            const subject = gameState.student.subject;
+            const currentKey = getGradeKey(currentGrade);
+            const lowerKey = getGradeKey(Math.max(0, currentGrade - 1));
+            const higherKey = getGradeKey(Math.min(5, currentGrade + 1));
+
+            let pool = [];
+
+            // Get questions from current, lower, and higher grades
+            [currentKey, lowerKey, higherKey].forEach(gradeKey => {
+                if (questions[subject] && questions[subject][gradeKey]) {
+                    questions[subject][gradeKey].forEach(q => {
+                        // Filter by domain
+                        if (q.domains && q.domains.includes(domain)) {
+                            pool.push(q);
+                        }
+                    });
+                }
+            });
+
+            // Also check reading questions if relevant
+            if (['decoding', 'comprehension', 'fluency'].includes(domain)) {
+                [currentKey, lowerKey, higherKey].forEach(gradeKey => {
+                    if (questions.reading && questions.reading[gradeKey]) {
+                        questions.reading[gradeKey].forEach(q => {
+                            if (q.domains && q.domains.includes(domain)) {
+                                pool.push(q);
+                            }
+                        });
+                    }
+                });
+            }
+
+            if (pool.length === 0) {
+                updateGatorMessage(`I don't have exercises ready for ${domain} yet. Let's pick a nearby level or try a different area.`);
+                gameState.session.tailoredMode.active = false;
+                return;
+            }
+
+            // Store the filtered pool
+            gameState.session.tailoredMode.questionPool = pool;
+
+            // Start practice session
+            showScreen('practiceScreen');
+            loadNextTailoredQuestion();
+        }
+
+        function loadNextTailoredQuestion() {
+            if (!gameState.session.tailoredMode || !gameState.session.tailoredMode.active) {
+                // Fall back to regular question loading
+                loadNextQuestion();
+                return;
+            }
+
+            const pool = gameState.session.tailoredMode.questionPool;
+            if (pool.length === 0) {
+                updateGatorMessage('Great work on these exercises! Let\'s return to the dashboard.', 'gatorPracticeMessage');
+                setTimeout(endSession, 2000);
+                return;
+            }
+
+            const question = selectWeightedQuestion(pool);
+            gameState.session.currentQuestion = question;
+
+            renderQuestion(question);
+            updateGatorMessage(`Let's work on ${gameState.session.tailoredMode.domain}!`, 'gatorPracticeMessage');
         }
 
         // ========================================
