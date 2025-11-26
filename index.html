@@ -2830,6 +2830,19 @@
             });
             document.getElementById(screenId).classList.remove('hidden');
 
+            // Switch ambience based on screen
+            switch(screenId) {
+                case 'setupScreen':
+                    playAmbience('setup');
+                    break;
+                case 'dashboardScreen':
+                    playAmbience('dashboard');
+                    break;
+                case 'practiceScreen':
+                    playAmbience('practice');
+                    break;
+            }
+
             // Toggle header elements visibility
             const headerSpectrum = document.getElementById('headerSpectrum');
             const headerGrades = document.getElementById('headerGrades');
@@ -3235,6 +3248,137 @@
                 window.speechSynthesis.speak(utterance);
             } else {
                 console.warn('Text-to-Speech not supported in this browser');
+            }
+        }
+
+        // ========================================
+        // AUDIO LAYER SYSTEM
+        // ========================================
+
+        const audioContext = {
+            currentAmbience: null,
+            ambienceAudio: null,
+            sfxVolume: 0.3
+        };
+
+        // Ambient music themes
+        const ambienceThemes = {
+            setup: null, // Calm focus ambience (placeholder)
+            dashboard: null, // Gator "Teacher Room" ambience (placeholder)
+            practice: null, // Curiosity / LaBuBu "Student World" ambience (placeholder)
+            break: null, // Break Time / Regulation ambience (placeholder)
+            timed: null // Focus + Timer ambience (placeholder)
+        };
+
+        function playAmbience(theme) {
+            if (!gameState.settings || !gameState.settings.musicEnabled) {
+                return; // Music is disabled
+            }
+
+            // Stop current ambience if playing
+            if (audioContext.ambienceAudio) {
+                audioContext.ambienceAudio.pause();
+                audioContext.ambienceAudio.currentTime = 0;
+            }
+
+            // Placeholder for actual audio files
+            // When audio files are added, they would be loaded here
+            audioContext.currentAmbience = theme;
+
+            // Example implementation (when audio files exist):
+            // const audioFile = ambienceThemes[theme];
+            // if (audioFile) {
+            //     audioContext.ambienceAudio = new Audio(audioFile);
+            //     audioContext.ambienceAudio.loop = true;
+            //     audioContext.ambienceAudio.volume = gameState.settings.volume || 0.5;
+            //     audioContext.ambienceAudio.play();
+            // }
+        }
+
+        function stopAmbience() {
+            if (audioContext.ambienceAudio) {
+                audioContext.ambienceAudio.pause();
+                audioContext.ambienceAudio.currentTime = 0;
+            }
+            audioContext.currentAmbience = null;
+        }
+
+        function updateAudioVolume(volume) {
+            if (audioContext.ambienceAudio) {
+                audioContext.ambienceAudio.volume = volume;
+            }
+        }
+
+        // Sound effects
+        function playSFX(type) {
+            if (!gameState.settings || !gameState.settings.sfxEnabled) {
+                return; // SFX disabled
+            }
+
+            // Using Web Audio API for procedural sound generation
+            // This avoids need for audio files
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            const volume = (gameState.settings.volume || 0.5) * audioContext.sfxVolume;
+            gainNode.gain.value = volume;
+
+            switch(type) {
+                case 'correct':
+                    // Gentle ascending chime
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    oscillator.frequency.exponentialRampToValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                    oscillator.frequency.exponentialRampToValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    oscillator.start(audioCtx.currentTime);
+                    oscillator.stop(audioCtx.currentTime + 0.3);
+                    break;
+
+                case 'incorrect':
+                    // Soft, gentle "try again" tone (not harsh)
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(392.00, audioCtx.currentTime); // G4
+                    oscillator.frequency.exponentialRampToValueAtTime(349.23, audioCtx.currentTime + 0.15); // F4
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                    oscillator.start(audioCtx.currentTime);
+                    oscillator.stop(audioCtx.currentTime + 0.2);
+                    break;
+
+                case 'click':
+                    // Soft UI click
+                    oscillator.type = 'sine';
+                    oscillator.frequency.value = 800;
+                    gainNode.gain.value = volume * 0.3;
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                    oscillator.start(audioCtx.currentTime);
+                    oscillator.stop(audioCtx.currentTime + 0.05);
+                    break;
+
+                case 'levelup':
+                    // Celebration jingle
+                    oscillator.type = 'triangle';
+                    oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                    oscillator.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
+                    oscillator.frequency.setValueAtTime(1046.50, audioCtx.currentTime + 0.3); // C6
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                    oscillator.start(audioCtx.currentTime);
+                    oscillator.stop(audioCtx.currentTime + 0.5);
+                    break;
+
+                case 'retry':
+                    // Gentle retry chime
+                    oscillator.type = 'sine';
+                    oscillator.frequency.value = 440.00; // A4
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                    oscillator.start(audioCtx.currentTime);
+                    oscillator.stop(audioCtx.currentTime + 0.15);
+                    break;
             }
         }
 
@@ -3942,6 +4086,9 @@
                 buttons[selectedIndexOrValue].classList.add(isCorrect ? 'correct' : 'incorrect');
                 buttons[correctIndex].classList.add('correct');
                 buttons.forEach(btn => btn.disabled = true);
+
+                // Play audio feedback
+                playSFX(isCorrect ? 'correct' : 'incorrect');
             }
 
             // Update session stats
