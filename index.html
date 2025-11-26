@@ -1911,7 +1911,14 @@
                 gradeCurrent: 1.0,
                 gradeTarget: 2.5,
                 subject: 'math',
-                context: 'home' // home | school
+                context: 'home', // home | school
+                language: 'en', // en | es | etc
+                preferences: {
+                    preferredBreak: null,
+                    preferredFeedback: null,
+                    preferredHelp: null,
+                    copingStrategies: []
+                }
             },
             domains: {
                 decoding:      { score: 0.4, history: [] },
@@ -1920,6 +1927,25 @@
                 math:          { score: 0.4, history: [] },
                 executive:     { score: 0.4, history: [] },
                 emotions:      { score: 0.4, history: [] }
+            },
+            settings: {
+                ttsEnabled: false,
+                ttsVoice: 'female',
+                musicEnabled: true,
+                sfxEnabled: true,
+                volume: 0.5,
+                modules: {
+                    reading: true,
+                    math: true,
+                    executive: true,
+                    emotions: true
+                }
+            },
+            tracking: {
+                sessionStart: null,
+                lastActive: Date.now(),
+                activeTime: 0,
+                idleTime: 0
             },
             // Mastery tracking for 48 microSkills
             microSkillMastery: {},
@@ -2248,6 +2274,56 @@
                 ]
             }
         };
+
+        // ========================================
+        // SELF-ADVOCACY / PREFERENCE QUESTIONS
+        // ========================================
+        // These have NO wrong answers - all choices are valid preferences
+
+        const preferenceQuestions = [
+            {
+                type: 'preference',
+                q: 'What helps you most when things feel hard?',
+                answers: ['Take a short break', 'Ask for help', 'Try a different way', 'Keep going slowly'],
+                preferenceKey: 'preferredHelp',
+                domains: ['emotions', 'executive']
+            },
+            {
+                type: 'preference',
+                q: 'What kind of break works best for you?',
+                answers: ['Walk around', 'Quiet time', 'Fidget/doodle', 'Stretch'],
+                preferenceKey: 'preferredBreak',
+                domains: ['emotions', 'executive']
+            },
+            {
+                type: 'preference',
+                q: 'When you get an answer right, what feels best?',
+                answers: ['🎉 Celebrate!', '😊 Quiet smile', '➡️ Keep going', '🤝 Share with someone'],
+                preferenceKey: 'preferredFeedback',
+                domains: ['emotions']
+            },
+            {
+                type: 'preference',
+                q: 'When you feel frustrated, what helps you calm down?',
+                answers: ['Deep breaths', 'Count to 10', 'Talk to someone', 'Take a break'],
+                preferenceKey: 'copingStrategies',
+                domains: ['emotions', 'executive']
+            },
+            {
+                type: 'preference',
+                q: 'How do you like to learn new things?',
+                answers: ['See examples first', 'Try it myself', 'Have someone explain', 'Read about it'],
+                preferenceKey: 'learningStyle',
+                domains: ['executive']
+            },
+            {
+                type: 'preference',
+                q: 'When you're stuck on a problem, what do you want to do?',
+                answers: ['Ask for a hint', 'Try again on my own', 'Skip and come back', 'Work with someone'],
+                preferenceKey: 'problemSolving',
+                domains: ['executive', 'emotions']
+            }
+        ];
 
         // ========================================
         // MOOD SYSTEM
@@ -2672,16 +2748,54 @@
 
         function initApp() {
             ensureDomains();
+
+            // Check if there's saved state
             if (loadState() && gameState.student.name) {
-                showDashboard();
+                // Show Resume/New Session modal
+                document.getElementById('resumeStudentName').textContent = gameState.student.name;
+                document.getElementById('resumeModal').classList.remove('hidden');
             } else {
+                // No saved state, go to setup
                 showScreen('setupScreen');
             }
+
             initMoodButtons();
             initRadar();
             initHeaderRadar();
             initGradeDials();
             updateDiagnostics();
+        }
+
+        function resumeExistingSession() {
+            // Close modal and show dashboard
+            document.getElementById('resumeModal').classList.add('hidden');
+            showDashboard();
+        }
+
+        function startFreshSession() {
+            // Keep profile but reset session stats
+            gameState.session = {
+                questionsAnswered: 0,
+                correctAnswers: 0,
+                currentStreak: 0,
+                maxStreak: 0,
+                currentQuestion: null,
+                mood: 'curious',
+                hintsUsed: 0
+            };
+
+            // Reset tracking
+            if (gameState.tracking) {
+                gameState.tracking.sessionStart = Date.now();
+                gameState.tracking.lastActive = Date.now();
+                gameState.tracking.activeTime = 0;
+                gameState.tracking.idleTime = 0;
+            }
+
+            saveState();
+            document.getElementById('resumeModal').classList.add('hidden');
+            showDashboard();
+            updateGatorMessage(`Welcome back, ${gameState.student.name}! Ready for a fresh start today? Let's see what you can do!`);
         }
 
         function startLearning() {
@@ -3165,6 +3279,75 @@
             const qType = question.type || 'multiple_choice';
             let isCorrect = false;
 
+            // ========================================
+            // PREFERENCE QUESTIONS (NO WRONG ANSWERS)
+            // ========================================
+            if (qType === 'preference') {
+                // All answers are valid for preference questions
+                const buttons = document.querySelectorAll('.answer-btn');
+                const selectedAnswer = question.answers[selectedIndexOrValue];
+
+                // Highlight selection with validating color (not "correct" or "incorrect")
+                buttons[selectedIndexOrValue].style.borderColor = 'var(--neon-blue)';
+                buttons[selectedIndexOrValue].style.background = 'linear-gradient(135deg, rgba(0, 240, 255, 0.3), rgba(139, 92, 246, 0.2))';
+                buttons[selectedIndexOrValue].style.boxShadow = '0 0 40px rgba(0, 240, 255, 0.6)';
+                buttons.forEach(btn => btn.disabled = true);
+
+                // Save preference to student profile
+                if (question.preferenceKey) {
+                    if (!gameState.student.preferences) {
+                        gameState.student.preferences = {};
+                    }
+
+                    // For copingStrategies, store as array; for others, single value
+                    if (question.preferenceKey === 'copingStrategies') {
+                        if (!Array.isArray(gameState.student.preferences.copingStrategies)) {
+                            gameState.student.preferences.copingStrategies = [];
+                        }
+                        if (!gameState.student.preferences.copingStrategies.includes(selectedAnswer)) {
+                            gameState.student.preferences.copingStrategies.push(selectedAnswer);
+                        }
+                    } else {
+                        gameState.student.preferences[question.preferenceKey] = selectedAnswer;
+                    }
+                }
+
+                // Validating feedback from Gator
+                const validationMessages = [
+                    "Good choice. We'll try that to help you.",
+                    "I hear you. That's what works for you.",
+                    "Thanks for sharing. I'll remember that.",
+                    "That makes sense. Everyone learns differently.",
+                    "Great! Now I know how to support you better."
+                ];
+                const message = validationMessages[Math.floor(Math.random() * validationMessages.length)];
+                updateGatorMessage(message, 'gatorPracticeMessage');
+
+                // Track as answered but not as correct/incorrect
+                gameState.session.questionsAnswered++;
+
+                // Log as preference, not skill check
+                gameState.history.push({
+                    t: Date.now(),
+                    subject: 'preferences',
+                    type: 'preference',
+                    text: question.q,
+                    selected: selectedIndexOrValue,
+                    selectedAnswer: selectedAnswer,
+                    preferenceKey: question.preferenceKey,
+                    domains: question.domains || []
+                });
+
+                saveState();
+                updateHeaderValues();
+                setTimeout(loadNextQuestion, 2500);
+                return; // Exit early - don't run skill-based logic
+            }
+
+            // ========================================
+            // SKILL QUESTIONS (HAVE RIGHT/WRONG ANSWERS)
+            // ========================================
+
             if (qType === 'fill_in_blank_simple') {
                 // Compare text (case-insensitive)
                 const correctAnswer = (question.correct || '').toString().toLowerCase().trim();
@@ -3559,6 +3742,36 @@
 
         window.onload = initApp;
     </script>
+
+    <!-- Resume/New Session Modal -->
+    <div id="resumeModal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>👋 Welcome Back, <span id="resumeStudentName"></span>!</h2>
+            </div>
+
+            <div class="modal-body" style="text-align: center; padding: 30px 20px;">
+                <p style="font-size: 1.1em; margin-bottom: 30px; color: var(--text-light);">
+                    Do you want to:
+                </p>
+
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <button class="btn btn-primary" onclick="resumeExistingSession()" style="padding: 20px;">
+                        <span style="font-size: 1.2em;">▶️ Resume Session</span>
+                        <br>
+                        <small style="opacity: 0.8;">Continue where you left off</small>
+                    </button>
+
+                    <button class="btn btn-secondary" onclick="startFreshSession()" style="padding: 20px;">
+                        <span style="font-size: 1.2em;">🆕 Start New Session</span>
+                        <br>
+                        <small style="opacity: 0.8;">Keep profile, reset today's stats</small>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Domain Tips Modal -->
     <div id="domainTipsModal" class="modal hidden">
