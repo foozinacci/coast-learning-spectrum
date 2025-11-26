@@ -3457,25 +3457,54 @@
         }
 
         function startLearning() {
-            const name = document.getElementById('studentName').value;
+            console.log('🚀 startLearning() called - Launch Journey button clicked');
+
+            // Get student name, default to "Student" if empty
+            const nameInput = document.getElementById('studentName');
+            const name = nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Student';
+
             const enrolledDial = document.getElementById('enrolledDial');
             const currentDial = document.getElementById('currentDial');
             const targetDial = document.getElementById('targetDial');
-            const subject = document.getElementById('subject').value;
-            const context = document.getElementById('contextMode').value;
-            const language = document.getElementById('languageSelect').value;
-            const ttsVoice = document.getElementById('ttsVoiceSelect').value;
-            const ttsEnabled = document.getElementById('ttsToggle').checked;
+            const subject = document.getElementById('subject');
+            const context = document.getElementById('contextMode');
+            const language = document.getElementById('languageSelect');
+            const ttsVoice = document.getElementById('ttsVoiceSelect');
+            const ttsEnabled = document.getElementById('ttsToggle');
+
+            console.log('📋 Element check:', {
+                nameInput: !!nameInput,
+                name: name,
+                enrolledDial: !!enrolledDial,
+                currentDial: !!currentDial,
+                targetDial: !!targetDial,
+                subject: !!subject,
+                context: !!context,
+                language: !!language,
+                ttsVoice: !!ttsVoice,
+                ttsEnabled: !!ttsEnabled
+            });
 
             // CRITICAL FIX: Validate all required elements exist before proceeding
-            if (!name || !enrolledDial || !currentDial || !targetDial) {
-                console.error('Missing required setup fields:', {
-                    name: !!name,
+            if (!enrolledDial || !currentDial || !targetDial) {
+                console.error('❌ Missing grade dial elements:', {
                     enrolledDial: !!enrolledDial,
                     currentDial: !!currentDial,
                     targetDial: !!targetDial
                 });
-                alert('Please fill in all fields! Make sure all grade levels are set.');
+                alert('Error: Grade level controls not found. Please refresh the page and try again.');
+                return;
+            }
+
+            if (!subject || !context || !language || !ttsVoice || !ttsEnabled) {
+                console.error('❌ Missing form elements:', {
+                    subject: !!subject,
+                    context: !!context,
+                    language: !!language,
+                    ttsVoice: !!ttsVoice,
+                    ttsEnabled: !!ttsEnabled
+                });
+                alert('Error: Form controls not found. Please refresh the page and try again.');
                 return;
             }
 
@@ -3484,30 +3513,37 @@
             const gradeCurrent = parseFloat(currentDial.value);
             const gradeTarget = parseFloat(targetDial.value);
 
+            console.log('📊 Grade values:', { gradeEnrolled, gradeCurrent, gradeTarget });
+
             if (isNaN(gradeEnrolled) || isNaN(gradeCurrent) || isNaN(gradeTarget)) {
-                console.error('Invalid grade values:', { gradeEnrolled, gradeCurrent, gradeTarget });
+                console.error('❌ Invalid grade values:', { gradeEnrolled, gradeCurrent, gradeTarget });
                 alert('Invalid grade levels detected. Please refresh the page and try again.');
                 return;
             }
+
+            // All validations passed - set up the game state
+            console.log('✅ All validations passed - starting learning journey');
 
             gameState.student.name = name;
             gameState.student.gradeEnrolled = gradeEnrolled;
             gameState.student.gradeCurrent = gradeCurrent;
             gameState.student.gradeTarget = gradeTarget;
-            gameState.student.subject = subject;
-            gameState.student.context = context;
-            gameState.student.language = language;
+            gameState.student.subject = subject.value;
+            gameState.student.context = context.value;
+            gameState.student.language = language.value;
 
-            gameState.settings.ttsEnabled = ttsEnabled;
-            gameState.settings.ttsVoice = ttsVoice;
+            gameState.settings.ttsEnabled = ttsEnabled.checked;
+            gameState.settings.ttsVoice = ttsVoice.value;
 
             gameState.session.questionsAnswered = 0;
             gameState.session.correctAnswers = 0;
             gameState.session.currentStreak = 0;
             gameState.session.maxStreak = 0;
 
+            console.log('💾 Saving state and showing dashboard...');
             saveState();
             showDashboard();
+            console.log('✅ Launch complete!');
         }
 
         function showDashboard() {
