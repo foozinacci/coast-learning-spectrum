@@ -462,6 +462,26 @@
             75% { transform: translateY(-10px) rotate(5deg); }
         }
 
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
         .labubu:hover {
             transform: scale(1.1) rotate(360deg);
             box-shadow:
@@ -1242,13 +1262,17 @@
                 executive:     { score: 0.4, history: [] },
                 emotions:      { score: 0.4, history: [] }
             },
+            // Mastery tracking for 48 microSkills
+            microSkillMastery: {},
+            badges: [],
             session: {
                 questionsAnswered: 0,
                 correctAnswers: 0,
                 currentStreak: 0,
                 maxStreak: 0,
                 currentQuestion: null,
-                mood: 'curious'
+                mood: 'curious',
+                hintsUsed: 0
             },
             history: []
         };
@@ -1292,46 +1316,166 @@
         }
 
         // ========================================
+        // NYS-ALIGNED MICROSKILLS (48 GRANULAR SKILLS)
+        // ========================================
+
+        const microSkills = {
+            // KINDERGARTEN
+            'K.math.counting.1to10': { id: 'K.math.counting.1to10', name: 'Count 1-10', grade: 'K', subject: 'math', nysStandard: 'K.CC.A.1', domains: ['math'] },
+            'K.math.counting.11to20': { id: 'K.math.counting.11to20', name: 'Count 11-20', grade: 'K', subject: 'math', nysStandard: 'K.CC.A.1', domains: ['math'] },
+            'K.math.comparison.more_less': { id: 'K.math.comparison.more_less', name: 'Compare quantities (more/less)', grade: 'K', subject: 'math', nysStandard: 'K.CC.C.6', domains: ['math'] },
+            'K.math.shapes.basic': { id: 'K.math.shapes.basic', name: 'Identify basic shapes', grade: 'K', subject: 'math', nysStandard: 'K.G.A.2', domains: ['math'] },
+            'K.math.addition.to5': { id: 'K.math.addition.to5', name: 'Add within 5', grade: 'K', subject: 'math', nysStandard: 'K.OA.A.1', domains: ['math'] },
+            'K.reading.letters.uppercase': { id: 'K.reading.letters.uppercase', name: 'Recognize uppercase letters', grade: 'K', subject: 'reading', nysStandard: 'K.RF.1.d', domains: ['decoding'] },
+            'K.reading.letters.lowercase': { id: 'K.reading.letters.lowercase', name: 'Recognize lowercase letters', grade: 'K', subject: 'reading', nysStandard: 'K.RF.1.d', domains: ['decoding'] },
+            'K.reading.phonics.letter_sounds': { id: 'K.reading.phonics.letter_sounds', name: 'Letter-sound correspondence', grade: 'K', subject: 'reading', nysStandard: 'K.RF.3.a', domains: ['decoding'] },
+
+            // GRADE 1
+            '1.math.addition.within10': { id: '1.math.addition.within10', name: 'Addition within 10', grade: '1', subject: 'math', nysStandard: '1.OA.C.6', domains: ['math'] },
+            '1.math.subtraction.within10': { id: '1.math.subtraction.within10', name: 'Subtraction within 10', grade: '1', subject: 'math', nysStandard: '1.OA.C.6', domains: ['math'] },
+            '1.math.place_value.tens_ones': { id: '1.math.place_value.tens_ones', name: 'Understand tens and ones', grade: '1', subject: 'math', nysStandard: '1.NBT.B.2', domains: ['math'] },
+            '1.math.addition.within20': { id: '1.math.addition.within20', name: 'Addition within 20', grade: '1', subject: 'math', nysStandard: '1.OA.C.6', domains: ['math'] },
+            '1.reading.phonics.short_vowels': { id: '1.reading.phonics.short_vowels', name: 'Decode short vowel words', grade: '1', subject: 'reading', nysStandard: '1.RF.3.b', domains: ['decoding'] },
+            '1.reading.phonics.digraphs': { id: '1.reading.phonics.digraphs', name: 'Decode digraphs (sh, ch, th)', grade: '1', subject: 'reading', nysStandard: '1.RF.3.a', domains: ['decoding'] },
+            '1.reading.fluency.grade1_text': { id: '1.reading.fluency.grade1_text', name: 'Read grade 1 text with fluency', grade: '1', subject: 'reading', nysStandard: '1.RF.4.b', domains: ['fluency'] },
+            '1.reading.comprehension.main_topic': { id: '1.reading.comprehension.main_topic', name: 'Identify main topic', grade: '1', subject: 'reading', nysStandard: '1.RI.2', domains: ['comprehension'] },
+
+            // GRADE 2
+            '2.math.addition.within100': { id: '2.math.addition.within100', name: 'Addition within 100', grade: '2', subject: 'math', nysStandard: '2.NBT.B.5', domains: ['math'] },
+            '2.math.subtraction.within100': { id: '2.math.subtraction.within100', name: 'Subtraction within 100', grade: '2', subject: 'math', nysStandard: '2.NBT.B.5', domains: ['math'] },
+            '2.math.multiplication.intro': { id: '2.math.multiplication.intro', name: 'Introduction to multiplication', grade: '2', subject: 'math', nysStandard: '2.OA.C.4', domains: ['math', 'executive'] },
+            '2.math.place_value.hundreds': { id: '2.math.place_value.hundreds', name: 'Understand hundreds place', grade: '2', subject: 'math', nysStandard: '2.NBT.A.1', domains: ['math'] },
+            '2.math.measurement.length': { id: '2.math.measurement.length', name: 'Measure length', grade: '2', subject: 'math', nysStandard: '2.MD.A.1', domains: ['math'] },
+            '2.reading.phonics.long_vowels': { id: '2.reading.phonics.long_vowels', name: 'Decode long vowel patterns', grade: '2', subject: 'reading', nysStandard: '2.RF.3.c', domains: ['decoding'] },
+            '2.reading.comprehension.main_idea': { id: '2.reading.comprehension.main_idea', name: 'Determine main idea', grade: '2', subject: 'reading', nysStandard: '2.RI.2', domains: ['comprehension'] },
+            '2.reading.vocabulary.context_clues': { id: '2.reading.vocabulary.context_clues', name: 'Use context clues', grade: '2', subject: 'reading', nysStandard: '2.L.4.a', domains: ['comprehension'] },
+
+            // GRADE 3
+            '3.math.multiplication.within100': { id: '3.math.multiplication.within100', name: 'Multiply within 100', grade: '3', subject: 'math', nysStandard: '3.OA.C.7', domains: ['math'] },
+            '3.math.division.within100': { id: '3.math.division.within100', name: 'Divide within 100', grade: '3', subject: 'math', nysStandard: '3.OA.C.7', domains: ['math'] },
+            '3.math.fractions.unit_fractions': { id: '3.math.fractions.unit_fractions', name: 'Understand unit fractions', grade: '3', subject: 'math', nysStandard: '3.NF.A.1', domains: ['math'] },
+            '3.math.area.rectangles': { id: '3.math.area.rectangles', name: 'Find area of rectangles', grade: '3', subject: 'math', nysStandard: '3.MD.C.7', domains: ['math'] },
+            '3.math.word_problems.multistep': { id: '3.math.word_problems.multistep', name: 'Solve multi-step word problems', grade: '3', subject: 'math', nysStandard: '3.OA.D.8', domains: ['math', 'executive'] },
+            '3.reading.comprehension.theme': { id: '3.reading.comprehension.theme', name: 'Determine central message/theme', grade: '3', subject: 'reading', nysStandard: '3.RL.2', domains: ['comprehension'] },
+            '3.reading.vocabulary.affixes': { id: '3.reading.vocabulary.affixes', name: 'Use prefixes and suffixes', grade: '3', subject: 'reading', nysStandard: '3.L.4.b', domains: ['decoding', 'comprehension'] },
+            '3.reading.comprehension.text_structure': { id: '3.reading.comprehension.text_structure', name: 'Describe text structure', grade: '3', subject: 'reading', nysStandard: '3.RI.5', domains: ['comprehension'] },
+
+            // GRADE 4
+            '4.math.multiplication.multidigit': { id: '4.math.multiplication.multidigit', name: 'Multiply multi-digit numbers', grade: '4', subject: 'math', nysStandard: '4.NBT.B.5', domains: ['math'] },
+            '4.math.fractions.equivalent': { id: '4.math.fractions.equivalent', name: 'Recognize equivalent fractions', grade: '4', subject: 'math', nysStandard: '4.NF.A.1', domains: ['math'] },
+            '4.math.decimals.intro': { id: '4.math.decimals.intro', name: 'Understand decimal notation', grade: '4', subject: 'math', nysStandard: '4.NF.C.6', domains: ['math'] },
+            '4.math.angles.measurement': { id: '4.math.angles.measurement', name: 'Measure angles', grade: '4', subject: 'math', nysStandard: '4.MD.C.6', domains: ['math'] },
+            '4.reading.comprehension.inference': { id: '4.reading.comprehension.inference', name: 'Make inferences from text', grade: '4', subject: 'reading', nysStandard: '4.RL.1', domains: ['comprehension', 'executive'] },
+            '4.reading.comprehension.point_of_view': { id: '4.reading.comprehension.point_of_view', name: 'Identify point of view', grade: '4', subject: 'reading', nysStandard: '4.RL.6', domains: ['comprehension'] },
+            '4.reading.vocabulary.figurative_language': { id: '4.reading.vocabulary.figurative_language', name: 'Interpret figurative language', grade: '4', subject: 'reading', nysStandard: '4.L.5.a', domains: ['comprehension'] },
+            '4.reading.comprehension.compare_texts': { id: '4.reading.comprehension.compare_texts', name: 'Compare/contrast texts', grade: '4', subject: 'reading', nysStandard: '4.RL.9', domains: ['comprehension', 'executive'] },
+
+            // GRADE 5
+            '5.math.fractions.operations': { id: '5.math.fractions.operations', name: 'Add/subtract fractions', grade: '5', subject: 'math', nysStandard: '5.NF.A.1', domains: ['math'] },
+            '5.math.decimals.operations': { id: '5.math.decimals.operations', name: 'Operations with decimals', grade: '5', subject: 'math', nysStandard: '5.NBT.B.7', domains: ['math'] },
+            '5.math.volume.rectangular_prisms': { id: '5.math.volume.rectangular_prisms', name: 'Calculate volume', grade: '5', subject: 'math', nysStandard: '5.MD.C.5', domains: ['math'] },
+            '5.math.algebra.expressions': { id: '5.math.algebra.expressions', name: 'Evaluate algebraic expressions', grade: '5', subject: 'math', nysStandard: '5.OA.A.2', domains: ['math', 'executive'] },
+            '5.reading.comprehension.theme_analysis': { id: '5.reading.comprehension.theme_analysis', name: 'Analyze theme development', grade: '5', subject: 'reading', nysStandard: '5.RL.2', domains: ['comprehension', 'executive'] },
+            '5.reading.comprehension.text_evidence': { id: '5.reading.comprehension.text_evidence', name: 'Quote text evidence', grade: '5', subject: 'reading', nysStandard: '5.RL.1', domains: ['comprehension'] },
+            '5.reading.vocabulary.academic_words': { id: '5.reading.vocabulary.academic_words', name: 'Acquire academic vocabulary', grade: '5', subject: 'reading', nysStandard: '5.L.6', domains: ['comprehension'] },
+            '5.reading.comprehension.authors_purpose': { id: '5.reading.comprehension.authors_purpose', name: 'Analyze author\'s purpose', grade: '5', subject: 'reading', nysStandard: '5.RI.6', domains: ['comprehension', 'executive'] }
+        };
+
+        // ========================================
         // GRADE-AWARE QUESTIONS DATABASE
         // ========================================
 
         const questions = {
             math: {
                 K: [
-                    { type: 'multiple_choice', q: 'How many fingers am I holding up? ✋', answers: [5, 3, 4, 2], correct: 0, level: 0.5, domains: ['math'] },
-                    { type: 'multiple_choice', q: 'Which number comes after 2?', answers: [3, 4, 1, 5], correct: 0, level: 0.5, domains: ['math'] },
-                    { type: 'fill_in_blank_simple', q: 'Count with me! 1, 2, 3, __', correct: '4', level: 0.6, domains: ['math'] },
-                    { type: 'multiple_choice', q: 'Which group has MORE? 🍎🍎 or 🍎🍎🍎', answers: ['🍎🍎🍎', '🍎🍎', 'Same', "Don't know"], correct: 0, level: 0.7, domains: ['math'] },
-                    { type: 'matching', q: 'Which shape is a circle?', answers: ['⭕', '⬛', '🔺', '⬜'], correct: 0, level: 0.5, domains: ['math'] },
-                    { type: 'sequence', q: 'Which shows the numbers in order?', answers: ['1, 2, 3', '3, 1, 2', '2, 3, 1', '3, 2, 1'], correct: 0, level: 0.6, domains: ['math', 'executive'] },
-                    { type: 'multiple_choice', q: 'What is 1 + 1?', answers: [2, 1, 3, 4], correct: 0, level: 0.8, domains: ['math'] },
-                    { type: 'multiple_choice', q: 'Which number is bigger: 5 or 3?', answers: [5, 3], correct: 0, level: 0.7, domains: ['math'] },
-                    { type: 'fill_in_blank_simple', q: '2 + 1 = __', correct: '3', level: 0.9, domains: ['math'] },
-                    { type: 'emotion_check_in', q: 'How does this bunny feel when sharing carrots? 🐰🥕', answers: ['😊 Happy', '😢 Sad', '😠 Mad'], correct: 0, level: 0.5, domains: ['emotions'] }
+                    { type: 'multiple_choice', q: 'How many fingers am I holding up? ✋', answers: [5, 3, 4, 2], correct: 0, level: 0.5, domains: ['math'], microSkills: ['K.math.counting.1to10'] },
+                    { type: 'multiple_choice', q: 'Which number comes after 2?', answers: [3, 4, 1, 5], correct: 0, level: 0.5, domains: ['math'], microSkills: ['K.math.counting.1to10'] },
+                    { type: 'fill_in_blank_simple', q: 'Count with me! 1, 2, 3, __', correct: '4', level: 0.6, domains: ['math'], microSkills: ['K.math.counting.1to10'] },
+                    { type: 'multiple_choice', q: 'Which group has MORE? 🍎🍎 or 🍎🍎🍎', answers: ['🍎🍎🍎', '🍎🍎', 'Same', "Don't know"], correct: 0, level: 0.7, domains: ['math'], microSkills: ['K.math.comparison.more_less'] },
+                    { type: 'matching', q: 'Which shape is a circle?', answers: ['⭕', '⬛', '🔺', '⬜'], correct: 0, level: 0.5, domains: ['math'], microSkills: ['K.math.shapes.basic'] },
+                    { type: 'sequence', q: 'Which shows the numbers in order?', answers: ['1, 2, 3', '3, 1, 2', '2, 3, 1', '3, 2, 1'], correct: 0, level: 0.6, domains: ['math', 'executive'], microSkills: ['K.math.counting.1to10'] },
+                    { type: 'multiple_choice', q: 'What is 1 + 1?', answers: [2, 1, 3, 4], correct: 0, level: 0.8, domains: ['math'], microSkills: ['K.math.addition.to5'] },
+                    { type: 'multiple_choice', q: 'Which number is bigger: 5 or 3?', answers: [5, 3], correct: 0, level: 0.7, domains: ['math'], microSkills: ['K.math.comparison.more_less'] },
+                    { type: 'fill_in_blank_simple', q: '2 + 1 = __', correct: '3', level: 0.9, domains: ['math'], microSkills: ['K.math.addition.to5'] },
+                    { type: 'emotion_check_in', q: 'How does this bunny feel when sharing carrots? 🐰🥕', answers: ['😊 Happy', '😢 Sad', '😠 Mad'], correct: 0, level: 0.5, domains: ['emotions'], microSkills: [] },
+                    // Additional K Math Questions
+                    { type: 'multiple_choice', q: 'Count the stars! ⭐⭐⭐ How many?', answers: [3, 2, 4, 5], correct: 0, level: 0.5, domains: ['math'], microSkills: ['K.math.counting.1to10'] },
+                    { type: 'multiple_choice', q: 'What number comes before 5?', answers: [4, 6, 3, 5], correct: 0, level: 0.6, domains: ['math'], microSkills: ['K.math.counting.1to10'] },
+                    { type: 'fill_in_blank_simple', q: 'Count backwards: 5, 4, 3, __', correct: '2', level: 0.7, domains: ['math'], microSkills: ['K.math.counting.1to10'] },
+                    { type: 'multiple_choice', q: 'Which shape is a square?', answers: ['⬛', '⭕', '🔺', '⬜ (but not square)'], correct: 0, level: 0.5, domains: ['math'], microSkills: ['K.math.shapes.basic'] },
+                    { type: 'multiple_choice', q: 'Which shape is a triangle?', answers: ['🔺', '⭕', '⬛', '⬜'], correct: 0, level: 0.5, domains: ['math'], microSkills: ['K.math.shapes.basic'] },
+                    { type: 'matching', q: 'How many legs does a dog have? 🐕', answers: [4, 2, 3, 5], correct: 0, level: 0.6, domains: ['math'], microSkills: ['K.math.counting.1to10'] },
+                    { type: 'multiple_choice', q: 'What is 2 + 2?', answers: [4, 3, 5, 6], correct: 0, level: 0.9, domains: ['math'], microSkills: ['K.math.addition.to5'] },
+                    { type: 'fill_in_blank_simple', q: '1 + 2 = __', correct: '3', level: 0.8, domains: ['math'], microSkills: ['K.math.addition.to5'] },
+                    { type: 'multiple_choice', q: 'Which has FEWER? 🌟🌟 or 🌟', answers: ['🌟', '🌟🌟', 'Same'], correct: 0, level: 0.7, domains: ['math'], microSkills: ['K.math.comparison.more_less'] },
+                    { type: 'sequence', q: 'Put in order: 3, 1, 2', answers: ['1, 2, 3', '3, 2, 1', '2, 1, 3'], correct: 0, level: 0.7, domains: ['math', 'executive'], microSkills: ['K.math.counting.1to10'] },
+                    { type: 'multiple_choice', q: 'Count the balloons! 🎈🎈🎈🎈🎈', answers: [5, 4, 6, 3], correct: 0, level: 0.6, domains: ['math'], microSkills: ['K.math.counting.1to10'] },
+                    { type: 'fill_in_blank_simple', q: 'If you have 3 cookies and eat 1, you have __ left', correct: '2', level: 0.9, domains: ['math'], microSkills: ['K.math.addition.to5'] },
+                    { type: 'multiple_choice', q: 'What is 4 + 1?', answers: [5, 4, 6, 3], correct: 0, level: 0.9, domains: ['math'], microSkills: ['K.math.addition.to5'] },
+                    { type: 'matching', q: 'Count by 2s: 2, 4, __', answers: [6, 5, 7, 8], correct: 0, level: 0.9, domains: ['math'], microSkills: ['K.math.counting.1to10'] },
+                    { type: 'multiple_choice', q: 'How many wheels on a car? 🚗', answers: [4, 2, 3, 5], correct: 0, level: 0.6, domains: ['math'], microSkills: ['K.math.counting.1to10'] },
+                    { type: 'emotion_check_in', q: 'When you count to 10 all by yourself, how do you feel?', answers: ['😊 Proud', '💪 Strong', '🎉 Excited'], correct: 0, level: 0.5, domains: ['emotions'], microSkills: [] }
                 ],
                 1: [
-                    { type: 'multiple_choice', q: 'What is 2 + 3?', answers: [5, 4, 6, 7], correct: 0, level: 1.0, domains: ['math'] },
-                    { type: 'multiple_choice', q: 'What is 5 - 2?', answers: [3, 2, 4, 5], correct: 0, level: 1.0, domains: ['math'] },
-                    { type: 'fill_in_blank_simple', q: '4 + 3 = __', correct: '7', level: 1.1, domains: ['math'] },
-                    { type: 'multiple_choice', q: 'What is 10 - 5?', answers: [5, 6, 4, 3], correct: 0, level: 1.2, domains: ['math'] },
-                    { type: 'sequence', q: 'Put these in order from smallest to biggest: 7, 3, 5', answers: ['3, 5, 7', '7, 5, 3', '5, 3, 7', '3, 7, 5'], correct: 0, level: 1.3, domains: ['math', 'executive'] },
-                    { type: 'multiple_choice', q: 'How many tens are in 20?', answers: [2, 1, 3, 4], correct: 0, level: 1.4, domains: ['math'] },
-                    { type: 'matching', q: 'Which matches? 5 + 5', answers: [10, 9, 11, 8], correct: 0, level: 1.2, domains: ['math'] },
-                    { type: 'multiple_choice', q: 'What is 6 + 4?', answers: [10, 9, 11, 8], correct: 0, level: 1.3, domains: ['math'] },
-                    { type: 'fill_in_blank_simple', q: '8 - 3 = __', correct: '5', level: 1.4, domains: ['math'] },
-                    { type: 'emotion_check_in', q: 'When you solve a hard problem, how do you feel?', answers: ['💪 Brave', '🎉 Proud', '😊 Happy', '😌 Calm'], correct: 1, level: 1.0, domains: ['emotions'] }
+                    { type: 'multiple_choice', q: 'What is 2 + 3?', answers: [5, 4, 6, 7], correct: 0, level: 1.0, domains: ['math'], microSkills: ['1.math.addition.within10'] },
+                    { type: 'multiple_choice', q: 'What is 5 - 2?', answers: [3, 2, 4, 5], correct: 0, level: 1.0, domains: ['math'], microSkills: ['1.math.subtraction.within10'] },
+                    { type: 'fill_in_blank_simple', q: '4 + 3 = __', correct: '7', level: 1.1, domains: ['math'], microSkills: ['1.math.addition.within10'] },
+                    { type: 'multiple_choice', q: 'What is 10 - 5?', answers: [5, 6, 4, 3], correct: 0, level: 1.2, domains: ['math'], microSkills: ['1.math.subtraction.within10'] },
+                    { type: 'sequence', q: 'Put these in order from smallest to biggest: 7, 3, 5', answers: ['3, 5, 7', '7, 5, 3', '5, 3, 7', '3, 7, 5'], correct: 0, level: 1.3, domains: ['math', 'executive'], microSkills: ['1.math.addition.within10'] },
+                    { type: 'multiple_choice', q: 'How many tens are in 20?', answers: [2, 1, 3, 4], correct: 0, level: 1.4, domains: ['math'], microSkills: ['1.math.place_value.tens_ones'] },
+                    { type: 'matching', q: 'Which matches? 5 + 5', answers: [10, 9, 11, 8], correct: 0, level: 1.2, domains: ['math'], microSkills: ['1.math.addition.within10'] },
+                    { type: 'multiple_choice', q: 'What is 6 + 4?', answers: [10, 9, 11, 8], correct: 0, level: 1.3, domains: ['math'], microSkills: ['1.math.addition.within10'] },
+                    { type: 'fill_in_blank_simple', q: '8 - 3 = __', correct: '5', level: 1.4, domains: ['math'], microSkills: ['1.math.subtraction.within10'] },
+                    { type: 'emotion_check_in', q: 'When you solve a hard problem, how do you feel?', answers: ['💪 Brave', '🎉 Proud', '😊 Happy', '😌 Calm'], correct: 1, level: 1.0, domains: ['emotions'], microSkills: [] },
+                    // Additional Grade 1 Math
+                    { type: 'multiple_choice', q: 'What is 7 + 3?', answers: [10, 9, 11, 8], correct: 0, level: 1.3, domains: ['math'], microSkills: ['1.math.addition.within10'] },
+                    { type: 'fill_in_blank_simple', q: '9 - 4 = __', correct: '5', level: 1.4, domains: ['math'], microSkills: ['1.math.subtraction.within10'] },
+                    { type: 'multiple_choice', q: 'What is 1 + 8?', answers: [9, 8, 10, 7], correct: 0, level: 1.2, domains: ['math'], microSkills: ['1.math.addition.within10'] },
+                    { type: 'multiple_choice', q: 'What is 10 - 7?', answers: [3, 2, 4, 5], correct: 0, level: 1.3, domains: ['math'], microSkills: ['1.math.subtraction.within10'] },
+                    { type: 'fill_in_blank_simple', q: '5 + 4 = __', correct: '9', level: 1.2, domains: ['math'], microSkills: ['1.math.addition.within10'] },
+                    { type: 'multiple_choice', q: 'What is 8 + 2?', answers: [10, 9, 11, 8], correct: 0, level: 1.1, domains: ['math'], microSkills: ['1.math.addition.within10'] },
+                    { type: 'matching', q: '14 has how many tens?', answers: [1, 2, 3, 4], correct: 0, level: 1.5, domains: ['math'], microSkills: ['1.math.place_value.tens_ones'] },
+                    { type: 'multiple_choice', q: 'What is 12 + 3?', answers: [15, 14, 16, 13], correct: 0, level: 1.6, domains: ['math'], microSkills: ['1.math.addition.within20'] },
+                    { type: 'fill_in_blank_simple', q: '20 - 5 = __', correct: '15', level: 1.7, domains: ['math'], microSkills: ['1.math.addition.within20'] },
+                    { type: 'multiple_choice', q: 'What is 11 + 6?', answers: [17, 16, 18, 15], correct: 0, level: 1.8, domains: ['math'], microSkills: ['1.math.addition.within20'] },
+                    { type: 'sequence', q: 'Order these: 15, 9, 12', answers: ['9, 12, 15', '15, 12, 9', '12, 9, 15'], correct: 0, level: 1.5, domains: ['math', 'executive'], microSkills: ['1.math.place_value.tens_ones'] },
+                    { type: 'matching', q: 'Which equals 18?', answers: ['10 + 8', '10 + 10', '9 + 8', '7 + 10'], correct: 0, level: 1.6, domains: ['math'], microSkills: ['1.math.addition.within20'] },
+                    { type: 'multiple_choice', q: 'If you have 10 crayons and get 5 more, how many total?', answers: [15, 14, 16, 13], correct: 0, level: 1.6, domains: ['math'], microSkills: ['1.math.addition.within20'] },
+                    { type: 'fill_in_blank_simple', q: '13 - 8 = __', correct: '5', level: 1.7, domains: ['math'], microSkills: ['1.math.addition.within20'] },
+                    { type: 'emotion_check_in', q: 'When addition gets tricky, what helps you?', answers: ['✋ Count on fingers', '🧠 Think slowly', '🙋 Ask for help'], correct: 0, level: 1.0, domains: ['emotions', 'executive'], microSkills: [] }
                 ],
                 2: [
-                    { type: 'multiple_choice', q: 'What is 4 + 4?', answers: [8, 7, 9, 6], correct: 0, level: 2.0, domains: ['math'] },
-                    { type: 'multiple_choice', q: 'What is 10 - 3?', answers: [7, 6, 8, 9], correct: 0, level: 2.0, domains: ['math'] },
-                    { type: 'multiple_choice', q: 'What is 6 × 2?', answers: [12, 10, 14, 8], correct: 0, level: 2.0, domains: ['math','executive'] },
+                    { type: 'multiple_choice', q: 'What is 4 + 4?', answers: [8, 7, 9, 6], correct: 0, level: 2.0, domains: ['math'], microSkills: ['2.math.addition.within100'] },
+                    { type: 'multiple_choice', q: 'What is 10 - 3?', answers: [7, 6, 8, 9], correct: 0, level: 2.0, domains: ['math'], microSkills: ['2.math.subtraction.within100'] },
+                    { type: 'multiple_choice', q: 'What is 6 × 2?', answers: [12, 10, 14, 8], correct: 0, level: 2.0, domains: ['math','executive'], microSkills: ['2.math.multiplication.intro'] },
                     { type: 'multiple_choice', q: 'What is 15 ÷ 3?', answers: [5, 4, 6, 3], correct: 0, level: 2.1, domains: ['math','executive'] },
                     { type: 'fill_in_blank_simple', q: 'If you have 12 apples and give away 5, you have __ left', correct: '7', level: 2.2, domains: ['math', 'comprehension'] },
                     { type: 'multiple_choice', q: 'Which is even? 7, 8, 9, 11', answers: [8, 7, 9, 11], correct: 0, level: 2.3, domains: ['math'] },
                     { type: 'sequence', q: 'Skip count by 2s: Which comes next after 2, 4, 6, __?', answers: [8, 7, 10, 5], correct: 0, level: 2.2, domains: ['math'] },
                     { type: 'multiple_choice', q: 'What is 3 × 5?', answers: [15, 12, 18, 10], correct: 0, level: 2.4, domains: ['math'] },
                     { type: 'matching', q: 'Which shape has 4 equal sides?', answers: ['Square', 'Rectangle', 'Triangle', 'Circle'], correct: 0, level: 2.1, domains: ['math'] },
-                    { type: 'emotion_check_in', q: 'If a problem feels too hard, what should you do?', answers: ['💪 Keep trying', '🙋 Ask for help', '😌 Take a break'], correct: 1, level: 2.0, domains: ['emotions', 'executive'] }
+                    { type: 'emotion_check_in', q: 'If a problem feels too hard, what should you do?', answers: ['💪 Keep trying', '🙋 Ask for help', '😌 Take a break'], correct: 1, level: 2.0, domains: ['emotions', 'executive'], microSkills: [] },
+                    // Additional Grade 2 Math Questions
+                    { type: 'multiple_choice', q: 'What is 15 + 7?', answers: [22, 21, 23, 20], correct: 0, level: 2.2, domains: ['math'], microSkills: ['2.math.addition.within100'] },
+                    { type: 'multiple_choice', q: 'What is 25 - 8?', answers: [17, 16, 18, 15], correct: 0, level: 2.2, domains: ['math'], microSkills: ['2.math.subtraction.within100'] },
+                    { type: 'fill_in_blank_simple', q: '30 + 15 = __', correct: '45', level: 2.3, domains: ['math'], microSkills: ['2.math.addition.within100'] },
+                    { type: 'multiple_choice', q: 'What is 40 - 12?', answers: [28, 27, 29, 26], correct: 0, level: 2.3, domains: ['math'], microSkills: ['2.math.subtraction.within100'] },
+                    { type: 'multiple_choice', q: 'What is 4 × 3?', answers: [12, 11, 13, 10], correct: 0, level: 2.1, domains: ['math'], microSkills: ['2.math.multiplication.intro'] },
+                    { type: 'multiple_choice', q: 'What is 5 × 4?', answers: [20, 19, 21, 18], correct: 0, level: 2.2, domains: ['math'], microSkills: ['2.math.multiplication.intro'] },
+                    { type: 'fill_in_blank_simple', q: '2 × 6 = __', correct: '12', level: 2.1, domains: ['math'], microSkills: ['2.math.multiplication.intro'] },
+                    { type: 'multiple_choice', q: 'Skip count by 5s: 10, 15, 20, __', answers: [25, 24, 26, 23], correct: 0, level: 2.2, domains: ['math'], microSkills: ['2.math.addition.within100'] },
+                    { type: 'multiple_choice', q: 'What is 18 ÷ 2?', answers: [9, 8, 10, 7], correct: 0, level: 2.2, domains: ['math'], microSkills: ['2.math.multiplication.intro'] },
+                    { type: 'matching', q: 'Which number is odd?', answers: [7, 8, 10, 12], correct: 0, level: 2.3, domains: ['math'], microSkills: ['2.math.addition.within100'] },
+                    { type: 'multiple_choice', q: 'What is 50 + 25?', answers: [75, 74, 76, 73], correct: 0, level: 2.4, domains: ['math'], microSkills: ['2.math.addition.within100'] },
+                    { type: 'fill_in_blank_simple', q: '60 - 15 = __', correct: '45', level: 2.4, domains: ['math'], microSkills: ['2.math.subtraction.within100'] },
+                    { type: 'multiple_choice', q: 'What is 3 × 7?', answers: [21, 20, 22, 19], correct: 0, level: 2.3, domains: ['math'], microSkills: ['2.math.multiplication.intro'] },
+                    { type: 'sequence', q: 'Order from smallest to largest: 45, 23, 67', answers: ['23, 45, 67', '67, 45, 23', '45, 23, 67'], correct: 0, level: 2.3, domains: ['math', 'executive'], microSkills: ['2.math.place_value.hundreds'] },
+                    { type: 'multiple_choice', q: 'How many inches in a foot?', answers: [12, 10, 11, 13], correct: 0, level: 2.3, domains: ['math'], microSkills: ['2.math.measurement.length'] },
+                    { type: 'multiple_choice', q: 'What is 70 - 35?', answers: [35, 34, 36, 33], correct: 0, level: 2.5, domains: ['math'], microSkills: ['2.math.subtraction.within100'] },
+                    { type: 'fill_in_blank_simple', q: '45 + 30 = __', correct: '75', level: 2.5, domains: ['math'], microSkills: ['2.math.addition.within100'] },
+                    { type: 'multiple_choice', q: 'What is 8 × 2?', answers: [16, 15, 17, 14], correct: 0, level: 2.2, domains: ['math'], microSkills: ['2.math.multiplication.intro'] },
+                    { type: 'matching', q: 'Which is a rectangle?', answers: ['⬜ (long)', '⬛ (square)', '⭕', '🔺'], correct: 0, level: 2.1, domains: ['math'], microSkills: ['2.math.measurement.length'] },
+                    { type: 'emotion_check_in', q: 'When you get stuck on multiplication, what can help?', answers: ['✋ Count by groups', '📝 Draw it out', '🔄 Try again'], correct: 0, level: 2.0, domains: ['emotions', 'executive'], microSkills: [] }
                 ],
                 3: [
                     { type: 'multiple_choice', q: 'What is 7 × 8?', answers: [56, 54, 64, 48], correct: 0, level: 3.0, domains: ['math'] },
@@ -1849,7 +1993,7 @@
                 return;
             }
 
-            const question = pool[Math.floor(Math.random() * pool.length)];
+            const question = selectWeightedQuestion(pool);
             gameState.session.currentQuestion = question;
 
             renderQuestion(question);
@@ -1857,13 +2001,251 @@
         }
 
         // ========================================
-        // UNIFIED QUESTION RENDERER
+        // WEIGHTED QUESTION SELECTION (ADAPTIVE)
+        // ========================================
+
+        function selectWeightedQuestion(pool) {
+            if (!pool || pool.length === 0) return null;
+
+            // Calculate weights for each question based on microSkill mastery
+            const weights = pool.map(q => {
+                if (!q.microSkills || q.microSkills.length === 0) {
+                    return 1.0; // Default weight for questions without microSkills
+                }
+
+                // Calculate average mastery for question's microSkills
+                let totalMastery = 0;
+                let skillCount = 0;
+
+                q.microSkills.forEach(skillId => {
+                    const mastery = gameState.microSkillMastery[skillId];
+                    if (mastery) {
+                        const masteryLevel = mastery.correct / (mastery.attempts || 1);
+                        totalMastery += masteryLevel;
+                        skillCount++;
+                    } else {
+                        // Never attempted - high priority
+                        totalMastery += 0;
+                        skillCount++;
+                    }
+                });
+
+                const avgMastery = skillCount > 0 ? totalMastery / skillCount : 0.5;
+
+                // Lower mastery = higher weight (inverse relationship)
+                // Convert mastery (0-1) to weight (higher for lower mastery)
+                return 1.5 - avgMastery; // Weight ranges from 0.5 to 1.5
+            });
+
+            // Weighted random selection
+            const totalWeight = weights.reduce((sum, w) => sum + w, 0);
+            let random = Math.random() * totalWeight;
+
+            for (let i = 0; i < pool.length; i++) {
+                random -= weights[i];
+                if (random <= 0) {
+                    return pool[i];
+                }
+            }
+
+            // Fallback to last question
+            return pool[pool.length - 1];
+        }
+
+        // ========================================
+        // ANSWER SHUFFLING
+        // ========================================
+
+        function shuffleAnswers(answers, correctIndex) {
+            if (!answers || answers.length === 0) return { shuffled: [], newCorrectIndex: 0 };
+
+            const correctAnswer = answers[correctIndex];
+            const shuffled = [...answers];
+
+            // Fisher-Yates shuffle
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+
+            // Find new correct index
+            const newCorrectIndex = shuffled.indexOf(correctAnswer);
+
+            return { shuffled, newCorrectIndex };
+        }
+
+        // ========================================
+        // ADHD-FRIENDLY FEATURES
+        // ========================================
+
+        // Read question aloud using Web Speech API
+        function readQuestionAloud(text) {
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9; // Slightly slower for clarity
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+
+                // Use a friendly voice if available
+                const voices = window.speechSynthesis.getVoices();
+                const preferredVoice = voices.find(v => v.name.includes('Google') || v.name.includes('Female'));
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                }
+
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Show hint for current question
+        function showHint() {
+            const q = gameState.session.currentQuestion;
+            if (!q) return;
+
+            gameState.session.hintsUsed++;
+
+            const hintMessages = [
+                "💡 Take your time and read it again.",
+                "💡 Think about what you already know!",
+                "💡 Try eliminating answers that don't make sense.",
+                "💡 Break the problem into smaller steps.",
+                "💡 It's okay to use your fingers or draw it out!"
+            ];
+
+            const randomHint = hintMessages[Math.floor(Math.random() * hintMessages.length)];
+            updateGatorMessage(randomHint, 'gatorPracticeMessage');
+
+            // For fill-in-blank, show first letter
+            if (q.type === 'fill_in_blank_simple' && q.correct) {
+                const firstLetter = String(q.correct).charAt(0);
+                updateGatorMessage(`💡 Hint: The answer starts with "${firstLetter}"`, 'gatorPracticeMessage');
+            }
+        }
+
+        // Badge unlocking system
+        function unlockBadge(badgeName) {
+            if (!gameState.badges.includes(badgeName)) {
+                gameState.badges.push(badgeName);
+                saveState();
+
+                // Show badge notification
+                const notification = document.createElement('div');
+                notification.className = 'badge-notification';
+                notification.innerHTML = `
+                    <div class="badge-content">
+                        <div class="badge-icon">🏆</div>
+                        <div class="badge-text">
+                            <strong>Badge Unlocked!</strong>
+                            <p>${badgeName}</p>
+                        </div>
+                    </div>
+                `;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(139, 92, 246, 0.2));
+                    backdrop-filter: blur(20px);
+                    border: 2px solid var(--neon-blue);
+                    border-radius: 16px;
+                    padding: 20px;
+                    box-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
+                    z-index: 10000;
+                    animation: slideInRight 0.5s ease-out;
+                `;
+
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.animation = 'fadeOut 0.5s ease-out';
+                    setTimeout(() => notification.remove(), 500);
+                }, 3000);
+            }
+        }
+
+        // Check for badge milestones
+        function checkBadgeMilestones() {
+            const session = gameState.session;
+            const correct = session.correctAnswers;
+            const total = session.questionsAnswered;
+
+            // Milestone badges
+            if (correct === 5) unlockBadge('First 5 Correct ⭐');
+            if (correct === 10) unlockBadge('10 in a Row 🎯');
+            if (correct === 25) unlockBadge('Quarter Century 🏅');
+            if (correct === 50) unlockBadge('Half Century 🎖️');
+            if (correct === 100) unlockBadge('Century Master 👑');
+
+            // Streak badges
+            if (session.currentStreak === 3) unlockBadge('Triple Threat 🔥');
+            if (session.currentStreak === 5) unlockBadge('Five Alive ⚡');
+            if (session.currentStreak === 10) unlockBadge('Perfect Ten 💫');
+
+            // Persistence badges
+            if (total === 20) unlockBadge('Persistent Learner 💪');
+            if (total === 50) unlockBadge('Dedicated Student 📚');
+
+            // Subject-specific badges
+            const subject = gameState.student.subject;
+            if (subject === 'math' && correct >= 20) unlockBadge('Math Wizard 🧙‍♂️');
+            if (subject === 'reading' && correct >= 20) unlockBadge('Reading Rockstar 📖');
+        }
+
+        // Update microSkill mastery after answer
+        function updateMicroSkillMastery(question, isCorrect) {
+            if (!question.microSkills || question.microSkills.length === 0) return;
+
+            question.microSkills.forEach(skillId => {
+                if (!gameState.microSkillMastery[skillId]) {
+                    gameState.microSkillMastery[skillId] = {
+                        attempts: 0,
+                        correct: 0,
+                        lastAttempt: null
+                    };
+                }
+
+                const mastery = gameState.microSkillMastery[skillId];
+                mastery.attempts++;
+                if (isCorrect) mastery.correct++;
+                mastery.lastAttempt = new Date().toISOString();
+            });
+
+            saveState();
+        }
+
+        // ========================================
+        // UNIFIED QUESTION RENDERER (WITH SHUFFLING & AUDIO)
         // ========================================
 
         function renderQuestion(question) {
-            document.getElementById('questionText').textContent = question.q;
+            const questionTextEl = document.getElementById('questionText');
+            questionTextEl.textContent = question.q;
+
             const container = document.getElementById('answersContainer');
             container.innerHTML = '';
+
+            // Add ADHD-friendly controls (audio + hint buttons)
+            const controlsDiv = document.createElement('div');
+            controlsDiv.style.cssText = 'margin: 15px 0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;';
+
+            const audioBtn = document.createElement('button');
+            audioBtn.className = 'btn-secondary';
+            audioBtn.innerHTML = '<span>🔊 Read Question</span>';
+            audioBtn.style.cssText = 'padding: 10px 20px; font-size: 0.9em;';
+            audioBtn.onclick = () => readQuestionAloud(question.q);
+
+            const hintBtn = document.createElement('button');
+            hintBtn.className = 'btn-secondary';
+            hintBtn.innerHTML = '<span>💡 Hint</span>';
+            hintBtn.style.cssText = 'padding: 10px 20px; font-size: 0.9em;';
+            hintBtn.onclick = () => showHint();
+
+            controlsDiv.appendChild(audioBtn);
+            controlsDiv.appendChild(hintBtn);
+            container.appendChild(controlsDiv);
 
             const qType = question.type || 'multiple_choice';
 
@@ -1902,8 +2284,14 @@
                 setTimeout(() => input.focus(), 100);
 
             } else {
+                // Shuffle answers for multiple-choice questions
+                const { shuffled, newCorrectIndex } = shuffleAnswers(question.answers, question.correct);
+
+                // Store the shuffled correct index temporarily
+                question._shuffledCorrect = newCorrectIndex;
+
                 // Render as multiple-choice buttons (works for MC, matching, rhyming, sequence, emotion_check_in)
-                question.answers.forEach((answer, index) => {
+                shuffled.forEach((answer, index) => {
                     const btn = document.createElement('button');
                     btn.className = 'answer-btn';
                     btn.textContent = answer;
@@ -1944,11 +2332,13 @@
                 }
             } else {
                 // Multiple choice / matching / rhyming / sequence / emotion_check_in
-                isCorrect = selectedIndexOrValue === question.correct;
+                // Use shuffled correct index if available
+                const correctIndex = question._shuffledCorrect !== undefined ? question._shuffledCorrect : question.correct;
+                isCorrect = selectedIndexOrValue === correctIndex;
 
                 const buttons = document.querySelectorAll('.answer-btn');
                 buttons[selectedIndexOrValue].classList.add(isCorrect ? 'correct' : 'incorrect');
-                buttons[question.correct].classList.add('correct');
+                buttons[correctIndex].classList.add('correct');
                 buttons.forEach(btn => btn.disabled = true);
             }
 
@@ -1962,6 +2352,12 @@
             } else {
                 s.currentStreak = 0;
             }
+
+            // Update microSkill mastery tracking
+            updateMicroSkillMastery(question, isCorrect);
+
+            // Check for badge milestones
+            checkBadgeMilestones();
 
             const moodKey = calculateMood();
             updateLaBuBuMood(moodKey);
