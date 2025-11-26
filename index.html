@@ -2900,13 +2900,26 @@
 
             radarCtx.save();
             radarCtx.translate(centerX, centerY);
-            radarCtx.strokeStyle = 'rgba(148,163,184,0.5)';
-            radarCtx.lineWidth = 1;
 
-            // Rings
-            const rings = 4;
-            for (let r = 1; r <= rings; r++) {
-                const rVal = radius * (r / rings);
+            // THREE-GRADE SYSTEM VISUALIZATION
+            // Maps K-5 grades (0-5) to radius position
+            const gradeToRadius = (grade) => {
+                // Grade range: 0 (K) to 5 (5th grade)
+                // Map to radius: 0.2 (minimum) to 1.0 (maximum)
+                const normalized = Math.max(0, Math.min(5, grade)) / 5;
+                return radius * (0.2 + normalized * 0.8);
+            };
+
+            // Calculate grade-based radii
+            const enrolledRadius = gradeToRadius(gameState.student.gradeEnrolled);
+            const currentRadius = gradeToRadius(gameState.student.gradeCurrent);
+            const targetRadius = gradeToRadius(gameState.student.gradeTarget);
+
+            // Draw background rings (grade levels K-5)
+            radarCtx.strokeStyle = 'rgba(148,163,184,0.3)';
+            radarCtx.lineWidth = 1;
+            for (let grade = 0; grade <= 5; grade++) {
+                const rVal = gradeToRadius(grade);
                 radarCtx.beginPath();
                 for (let i = 0; i < axes.length; i++) {
                     const angle = i * angleStep - Math.PI / 2;
@@ -2917,10 +2930,18 @@
                 }
                 radarCtx.closePath();
                 radarCtx.stroke();
+
+                // Label each grade level
+                radarCtx.fillStyle = 'rgba(148,163,184,0.5)';
+                radarCtx.font = '10px Rajdhani';
+                radarCtx.textAlign = 'right';
+                const gradeLabel = grade === 0 ? 'K' : `${grade}`;
+                radarCtx.fillText(gradeLabel, -5, -rVal + 4);
             }
 
-            // Axes
-            radarCtx.strokeStyle = 'rgba(148,163,184,0.7)';
+            // Draw axes
+            radarCtx.strokeStyle = 'rgba(148,163,184,0.5)';
+            radarCtx.lineWidth = 1;
             for (let i = 0; i < axes.length; i++) {
                 const angle = i * angleStep - Math.PI / 2;
                 const x = Math.cos(angle) * radius;
@@ -2931,11 +2952,49 @@
                 radarCtx.stroke();
             }
 
-            // Polygon
+            // LAYER 1: ENROLLED GRADE (Reference baseline - yellow)
+            radarCtx.beginPath();
+            for (let i = 0; i < axes.length; i++) {
+                const angle = i * angleStep - Math.PI / 2;
+                const x = Math.cos(angle) * enrolledRadius;
+                const y = Math.sin(angle) * enrolledRadius;
+                if (i === 0) radarCtx.moveTo(x, y);
+                else radarCtx.lineTo(x, y);
+            }
+            radarCtx.closePath();
+            radarCtx.strokeStyle = 'rgba(250, 204, 21, 0.6)'; // Yellow for enrolled
+            radarCtx.lineWidth = 2;
+            radarCtx.fillStyle = 'rgba(250, 204, 21, 0.1)';
+            radarCtx.fill();
+            radarCtx.stroke();
+
+            // LAYER 2: TARGET GRADE (Goal outline - green dashed)
+            radarCtx.beginPath();
+            for (let i = 0; i < axes.length; i++) {
+                const angle = i * angleStep - Math.PI / 2;
+                const x = Math.cos(angle) * targetRadius;
+                const y = Math.sin(angle) * targetRadius;
+                if (i === 0) radarCtx.moveTo(x, y);
+                else radarCtx.lineTo(x, y);
+            }
+            radarCtx.closePath();
+            radarCtx.setLineDash([5, 5]);
+            radarCtx.strokeStyle = 'rgba(16, 185, 129, 0.8)'; // Green for target
+            radarCtx.lineWidth = 3;
+            radarCtx.fillStyle = 'rgba(16, 185, 129, 0.05)';
+            radarCtx.fill();
+            radarCtx.stroke();
+            radarCtx.setLineDash([]);
+
+            // LAYER 3: CURRENT PERFORMANCE (Actual - blue polygon with domain variation)
             radarCtx.beginPath();
             axes.forEach((axis, i) => {
-                const val = (gameState.domains[axis]?.score ?? 0.3);
-                const rVal = radius * val;
+                // Use domain score to add variation around current grade level
+                const domainScore = (gameState.domains[axis]?.score ?? 0.5);
+                // Map domain score (-0.5 to +0.5 grade variance) around current grade
+                const gradeVariance = (domainScore - 0.5) * 1.0; // ±0.5 grade variation
+                const effectiveGrade = gameState.student.gradeCurrent + gradeVariance;
+                const rVal = gradeToRadius(effectiveGrade);
                 const angle = i * angleStep - Math.PI / 2;
                 const x = Math.cos(angle) * rVal;
                 const y = Math.sin(angle) * rVal;
@@ -2945,15 +3004,15 @@
             radarCtx.closePath();
 
             const grad = radarCtx.createRadialGradient(0,0,0,0,0,radius);
-            grad.addColorStop(0, 'rgba(0,240,255,0.7)');
-            grad.addColorStop(0.5, 'rgba(139,92,246,0.5)');
-            grad.addColorStop(1, 'rgba(255,0,110,0.2)');
+            grad.addColorStop(0, 'rgba(59, 130, 246, 0.7)'); // Blue for current
+            grad.addColorStop(0.5, 'rgba(139, 92, 246, 0.5)');
+            grad.addColorStop(1, 'rgba(59, 130, 246, 0.2)');
 
             radarCtx.fillStyle = grad;
-            radarCtx.strokeStyle = 'rgba(0,240,255,0.8)';
-            radarCtx.lineWidth = 2;
-            radarCtx.shadowColor = 'rgba(0,240,255,0.8)';
-            radarCtx.shadowBlur = 20;
+            radarCtx.strokeStyle = 'rgba(59, 130, 246, 0.9)';
+            radarCtx.lineWidth = 3;
+            radarCtx.shadowColor = 'rgba(59, 130, 246, 0.6)';
+            radarCtx.shadowBlur = 15;
             radarCtx.fill();
             radarCtx.stroke();
 
@@ -3010,13 +3069,22 @@
 
             headerRadarCtx.save();
             headerRadarCtx.translate(centerX, centerY);
-            headerRadarCtx.strokeStyle = 'rgba(148,163,184,0.5)';
-            headerRadarCtx.lineWidth = 1;
 
-            // Rings (simplified - just 2)
-            const rings = 2;
-            for (let r = 1; r <= rings; r++) {
-                const rVal = radius * (r / rings);
+            // THREE-GRADE SYSTEM (Simplified for header)
+            const gradeToRadius = (grade) => {
+                const normalized = Math.max(0, Math.min(5, grade)) / 5;
+                return radius * (0.2 + normalized * 0.8);
+            };
+
+            const enrolledRadius = gradeToRadius(gameState.student.gradeEnrolled);
+            const currentRadius = gradeToRadius(gameState.student.gradeCurrent);
+            const targetRadius = gradeToRadius(gameState.student.gradeTarget);
+
+            // Simple background rings
+            headerRadarCtx.strokeStyle = 'rgba(148,163,184,0.3)';
+            headerRadarCtx.lineWidth = 0.5;
+            for (let r = 1; r <= 3; r++) {
+                const rVal = radius * (r / 3);
                 headerRadarCtx.beginPath();
                 for (let i = 0; i < axes.length; i++) {
                     const angle = i * angleStep - Math.PI / 2;
@@ -3029,8 +3097,9 @@
                 headerRadarCtx.stroke();
             }
 
-            // Axes (simplified)
-            headerRadarCtx.strokeStyle = 'rgba(148,163,184,0.5)';
+            // Axes
+            headerRadarCtx.strokeStyle = 'rgba(148,163,184,0.4)';
+            headerRadarCtx.lineWidth = 0.5;
             for (let i = 0; i < axes.length; i++) {
                 const angle = i * angleStep - Math.PI / 2;
                 const x = Math.cos(angle) * radius;
@@ -3041,11 +3110,43 @@
                 headerRadarCtx.stroke();
             }
 
-            // Polygon
+            // ENROLLED grade ring (yellow, thin)
+            headerRadarCtx.beginPath();
+            for (let i = 0; i < axes.length; i++) {
+                const angle = i * angleStep - Math.PI / 2;
+                const x = Math.cos(angle) * enrolledRadius;
+                const y = Math.sin(angle) * enrolledRadius;
+                if (i === 0) headerRadarCtx.moveTo(x, y);
+                else headerRadarCtx.lineTo(x, y);
+            }
+            headerRadarCtx.closePath();
+            headerRadarCtx.strokeStyle = 'rgba(250, 204, 21, 0.5)';
+            headerRadarCtx.lineWidth = 1;
+            headerRadarCtx.stroke();
+
+            // TARGET grade ring (green, dashed)
+            headerRadarCtx.beginPath();
+            for (let i = 0; i < axes.length; i++) {
+                const angle = i * angleStep - Math.PI / 2;
+                const x = Math.cos(angle) * targetRadius;
+                const y = Math.sin(angle) * targetRadius;
+                if (i === 0) headerRadarCtx.moveTo(x, y);
+                else headerRadarCtx.lineTo(x, y);
+            }
+            headerRadarCtx.closePath();
+            headerRadarCtx.setLineDash([3, 3]);
+            headerRadarCtx.strokeStyle = 'rgba(16, 185, 129, 0.6)';
+            headerRadarCtx.lineWidth = 1.5;
+            headerRadarCtx.stroke();
+            headerRadarCtx.setLineDash([]);
+
+            // CURRENT performance polygon (blue, filled)
             headerRadarCtx.beginPath();
             axes.forEach((axis, i) => {
-                const val = (gameState.domains[axis]?.score ?? 0.3);
-                const rVal = radius * val;
+                const domainScore = (gameState.domains[axis]?.score ?? 0.5);
+                const gradeVariance = (domainScore - 0.5) * 1.0;
+                const effectiveGrade = gameState.student.gradeCurrent + gradeVariance;
+                const rVal = gradeToRadius(effectiveGrade);
                 const angle = i * angleStep - Math.PI / 2;
                 const x = Math.cos(angle) * rVal;
                 const y = Math.sin(angle) * rVal;
@@ -3055,15 +3156,15 @@
             headerRadarCtx.closePath();
 
             const grad = headerRadarCtx.createRadialGradient(0,0,0,0,0,radius);
-            grad.addColorStop(0, 'rgba(0,240,255,0.6)');
-            grad.addColorStop(0.5, 'rgba(139,92,246,0.4)');
-            grad.addColorStop(1, 'rgba(255,0,110,0.2)');
+            grad.addColorStop(0, 'rgba(59, 130, 246, 0.6)');
+            grad.addColorStop(0.5, 'rgba(139, 92, 246, 0.4)');
+            grad.addColorStop(1, 'rgba(59, 130, 246, 0.2)');
 
             headerRadarCtx.fillStyle = grad;
-            headerRadarCtx.strokeStyle = 'rgba(0,240,255,0.8)';
+            headerRadarCtx.strokeStyle = 'rgba(59, 130, 246, 0.8)';
             headerRadarCtx.lineWidth = 2;
-            headerRadarCtx.shadowColor = 'rgba(0,240,255,0.6)';
-            headerRadarCtx.shadowBlur = 15;
+            headerRadarCtx.shadowColor = 'rgba(59, 130, 246, 0.5)';
+            headerRadarCtx.shadowBlur = 10;
             headerRadarCtx.fill();
             headerRadarCtx.stroke();
 
@@ -4370,27 +4471,78 @@
             if (!out) return;
 
             const lastQ = gameState.session.currentQuestion;
+
+            // Calculate progress toward target
+            const gradeRange = gameState.student.gradeTarget - gameState.student.gradeEnrolled;
+            const gradeProgress = gameState.student.gradeCurrent - gameState.student.gradeEnrolled;
+            const progressPercent = gradeRange !== 0 ? (gradeProgress / gradeRange * 100).toFixed(1) : 0;
+
+            // Calculate domain-level grade estimates
+            const domainGrades = {};
+            Object.entries(gameState.domains).forEach(([key, val]) => {
+                const domainScore = val.score ?? 0.5;
+                const gradeVariance = (domainScore - 0.5) * 1.0;
+                const effectiveGrade = gameState.student.gradeCurrent + gradeVariance;
+                domainGrades[key] = effectiveGrade.toFixed(2);
+            });
+
             const snapshot = {
-                student: gameState.student,
-                session: {
+                "🎯 Three-Grade System": {
+                    enrolled: `Grade ${gameState.student.gradeEnrolled} (currently attending)`,
+                    current: `Grade ${gameState.student.gradeCurrent} (performance level)`,
+                    target: `Grade ${gameState.student.gradeTarget} (goal by end of period)`,
+                    progressToTarget: `${progressPercent}% toward target`,
+                    gradeGap: `${(gameState.student.gradeTarget - gameState.student.gradeCurrent).toFixed(2)} grades to go`
+                },
+                "📊 Domain Performance (Grade Levels)": domainGrades,
+                "👤 Student Profile": {
+                    name: gameState.student.name || '(not set)',
+                    subject: gameState.student.subject,
+                    context: gameState.student.context,
+                    language: gameState.student.language
+                },
+                "📝 Session Stats": {
                     questionsAnswered: gameState.session.questionsAnswered,
                     correctAnswers: gameState.session.correctAnswers,
+                    accuracy: gameState.session.questionsAnswered > 0
+                        ? `${(gameState.session.correctAnswers / gameState.session.questionsAnswered * 100).toFixed(1)}%`
+                        : 'N/A',
                     currentStreak: gameState.session.currentStreak,
                     maxStreak: gameState.session.maxStreak,
-                    mood: gameState.session.mood
+                    mood: gameState.session.mood,
+                    hintsUsed: gameState.session.hintsUsed
                 },
-                lastQuestion: lastQ ? {
+                "🎨 Domain Scores (0-1 scale)": Object.fromEntries(
+                    Object.entries(gameState.domains).map(([k, v]) => [k, v.score.toFixed(3)])
+                ),
+                "🔍 Last Question": lastQ ? {
                     type: lastQ.type,
                     domains: lastQ.domains,
                     level: lastQ.level
-                } : null,
-                domains: Object.fromEntries(
-                    Object.entries(gameState.domains).map(([k, v]) => [k, { score: v.score.toFixed(2) }])
-                ),
-                dataIntegrity: {
+                } : 'No question yet',
+                "✅ Data Integrity Checks": {
                     studentNameSet: !!gameState.student.name,
+                    gradesValid: {
+                        enrolledInRange: gameState.student.gradeEnrolled >= 0 && gameState.student.gradeEnrolled <= 5,
+                        currentInRange: gameState.student.gradeCurrent >= 0 && gameState.student.gradeCurrent <= 5,
+                        targetInRange: gameState.student.gradeTarget >= 0 && gameState.student.gradeTarget <= 5,
+                        logicalProgression: gameState.student.gradeTarget >= gameState.student.gradeEnrolled
+                    },
                     domainsValid: Object.keys(gameState.domains).length === 6,
-                    historyEntries: gameState.history.length
+                    allDomainScoresInRange: Object.values(gameState.domains).every(d => d.score >= 0 && d.score <= 1),
+                    historyEntries: gameState.history.length,
+                    sessionActive: !!gameState.session,
+                    trackingInitialized: !!gameState.tracking.lastActive
+                },
+                "💾 Storage": {
+                    localStorageAvailable: typeof(Storage) !== "undefined",
+                    savedStateExists: !!localStorage.getItem('learningSpectrumState'),
+                    lastSaved: new Date().toISOString()
+                },
+                "🔧 System Info": {
+                    timestamp: new Date().toISOString(),
+                    sessionID: gameState.tracking.sessionStart || 'not started',
+                    version: '2.0.0-diagnostic-radar'
                 }
             };
             out.textContent = JSON.stringify(snapshot, null, 2);
