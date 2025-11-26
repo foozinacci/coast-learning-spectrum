@@ -1618,7 +1618,32 @@
                     </div>
                 </div>
 
-                <!-- 4. Interactive Spectrum (Radar + Clickable Badges) -->
+                <!-- 4. Tracking Info (Name, Date/Time, Active/Idle, Effectiveness) -->
+                <div id="headerTracking" class="hidden header-tracking" style="display:flex; flex-direction:column; gap:5px; font-size:0.85em; min-width:200px;">
+                    <div id="headerStudentName" style="font-weight:600; color:var(--neon-blue);"></div>
+                    <div id="headerDateTime" style="color:var(--text-muted);"></div>
+                    <div style="display:flex; gap:10px;">
+                        <div>
+                            <span style="color:var(--neon-green);">Active:</span>
+                            <span id="headerActiveTime">0m</span>
+                        </div>
+                        <div>
+                            <span style="color:var(--neon-orange);">Idle:</span>
+                            <span id="headerIdleTime">0m</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:5px;">
+                        <div style="font-size:0.8em; margin-bottom:3px;">
+                            <span>Effectiveness: </span>
+                            <span id="headerEffectiveness" style="font-weight:700; color:var(--neon-green);">--</span>
+                        </div>
+                        <div style="width:100%; height:8px; background:rgba(0,0,0,0.3); border-radius:4px; overflow:hidden;">
+                            <div id="headerEffectivenessBar" style="height:100%; width:0%; background:linear-gradient(90deg, var(--neon-pink), var(--neon-yellow), var(--neon-green)); transition:width 0.3s;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Interactive Spectrum (Radar + Clickable Badges) -->
                 <div id="headerSpectrum" class="hidden header-spectrum">
                     <canvas id="headerRadar" width="100" height="100"></canvas>
                     <div id="headerStats" class="header-stats-badges">
@@ -1911,7 +1936,14 @@
                 gradeCurrent: 1.0,
                 gradeTarget: 2.5,
                 subject: 'math',
-                context: 'home' // home | school
+                context: 'home', // home | school
+                language: 'en', // en | es | etc
+                preferences: {
+                    preferredBreak: null,
+                    preferredFeedback: null,
+                    preferredHelp: null,
+                    copingStrategies: []
+                }
             },
             domains: {
                 decoding:      { score: 0.4, history: [] },
@@ -1920,6 +1952,25 @@
                 math:          { score: 0.4, history: [] },
                 executive:     { score: 0.4, history: [] },
                 emotions:      { score: 0.4, history: [] }
+            },
+            settings: {
+                ttsEnabled: false,
+                ttsVoice: 'female',
+                musicEnabled: true,
+                sfxEnabled: true,
+                volume: 0.5,
+                modules: {
+                    reading: true,
+                    math: true,
+                    executive: true,
+                    emotions: true
+                }
+            },
+            tracking: {
+                sessionStart: null,
+                lastActive: Date.now(),
+                activeTime: 0,
+                idleTime: 0
             },
             // Mastery tracking for 48 microSkills
             microSkillMastery: {},
@@ -2248,6 +2299,56 @@
                 ]
             }
         };
+
+        // ========================================
+        // SELF-ADVOCACY / PREFERENCE QUESTIONS
+        // ========================================
+        // These have NO wrong answers - all choices are valid preferences
+
+        const preferenceQuestions = [
+            {
+                type: 'preference',
+                q: 'What helps you most when things feel hard?',
+                answers: ['Take a short break', 'Ask for help', 'Try a different way', 'Keep going slowly'],
+                preferenceKey: 'preferredHelp',
+                domains: ['emotions', 'executive']
+            },
+            {
+                type: 'preference',
+                q: 'What kind of break works best for you?',
+                answers: ['Walk around', 'Quiet time', 'Fidget/doodle', 'Stretch'],
+                preferenceKey: 'preferredBreak',
+                domains: ['emotions', 'executive']
+            },
+            {
+                type: 'preference',
+                q: 'When you get an answer right, what feels best?',
+                answers: ['🎉 Celebrate!', '😊 Quiet smile', '➡️ Keep going', '🤝 Share with someone'],
+                preferenceKey: 'preferredFeedback',
+                domains: ['emotions']
+            },
+            {
+                type: 'preference',
+                q: 'When you feel frustrated, what helps you calm down?',
+                answers: ['Deep breaths', 'Count to 10', 'Talk to someone', 'Take a break'],
+                preferenceKey: 'copingStrategies',
+                domains: ['emotions', 'executive']
+            },
+            {
+                type: 'preference',
+                q: 'How do you like to learn new things?',
+                answers: ['See examples first', 'Try it myself', 'Have someone explain', 'Read about it'],
+                preferenceKey: 'learningStyle',
+                domains: ['executive']
+            },
+            {
+                type: 'preference',
+                q: 'When you're stuck on a problem, what do you want to do?',
+                answers: ['Ask for a hint', 'Try again on my own', 'Skip and come back', 'Work with someone'],
+                preferenceKey: 'problemSolving',
+                domains: ['executive', 'emotions']
+            }
+        ];
 
         // ========================================
         // MOOD SYSTEM
@@ -2672,16 +2773,54 @@
 
         function initApp() {
             ensureDomains();
+
+            // Check if there's saved state
             if (loadState() && gameState.student.name) {
-                showDashboard();
+                // Show Resume/New Session modal
+                document.getElementById('resumeStudentName').textContent = gameState.student.name;
+                document.getElementById('resumeModal').classList.remove('hidden');
             } else {
+                // No saved state, go to setup
                 showScreen('setupScreen');
             }
+
             initMoodButtons();
             initRadar();
             initHeaderRadar();
             initGradeDials();
             updateDiagnostics();
+        }
+
+        function resumeExistingSession() {
+            // Close modal and show dashboard
+            document.getElementById('resumeModal').classList.add('hidden');
+            showDashboard();
+        }
+
+        function startFreshSession() {
+            // Keep profile but reset session stats
+            gameState.session = {
+                questionsAnswered: 0,
+                correctAnswers: 0,
+                currentStreak: 0,
+                maxStreak: 0,
+                currentQuestion: null,
+                mood: 'curious',
+                hintsUsed: 0
+            };
+
+            // Reset tracking
+            if (gameState.tracking) {
+                gameState.tracking.sessionStart = Date.now();
+                gameState.tracking.lastActive = Date.now();
+                gameState.tracking.activeTime = 0;
+                gameState.tracking.idleTime = 0;
+            }
+
+            saveState();
+            document.getElementById('resumeModal').classList.add('hidden');
+            showDashboard();
+            updateGatorMessage(`Welcome back, ${gameState.student.name}! Ready for a fresh start today? Let's see what you can do!`);
         }
 
         function startLearning() {
@@ -2718,6 +2857,21 @@
             updateDashboard();
             drawSpectrumRadar();
             drawHeaderRadar();
+
+            // Show header sections
+            document.getElementById('headerGrades').classList.remove('hidden');
+            document.getElementById('headerSession').classList.remove('hidden');
+            document.getElementById('headerSpectrum').classList.remove('hidden');
+            document.getElementById('headerTracking').classList.remove('hidden');
+
+            // Initialize session tracking if not already done
+            if (!gameState.tracking.sessionStart) {
+                gameState.tracking.sessionStart = Date.now();
+                gameState.tracking.lastActive = Date.now();
+            }
+
+            updateHeaderValues();
+            updateTrackingInfo();
         }
 
         function updateDashboard() {
@@ -2806,6 +2960,17 @@
         }
 
         function loadNextQuestion() {
+            // Every 8-10 questions, show a preference question instead
+            const totalAnswered = gameState.session.questionsAnswered;
+            if (totalAnswered > 0 && totalAnswered % 8 === 0 && preferenceQuestions.length > 0) {
+                // Pick a random preference question
+                const prefQuestion = preferenceQuestions[Math.floor(Math.random() * preferenceQuestions.length)];
+                gameState.session.currentQuestion = prefQuestion;
+                renderQuestion(prefQuestion);
+                updateGatorMessage('Let me ask you something to help me support you better.', 'gatorPracticeMessage');
+                return;
+            }
+
             const subject = gameState.student.subject;
             const currentGrade = gameState.student.gradeCurrent;
             const enrolledGrade = gameState.student.gradeEnrolled;
@@ -2838,6 +3003,25 @@
             // Fallback: all questions from subject
             if (pool.length === 0 && questions[subject]) {
                 pool = Object.values(questions[subject]).flat();
+            }
+
+            // Filter by enabled modules
+            if (gameState.settings && gameState.settings.modules) {
+                pool = pool.filter(q => {
+                    if (!q.domains || q.domains.length === 0) return true;
+                    // Check if at least one domain is enabled
+                    const hasReading = q.domains.some(d => ['decoding', 'comprehension', 'fluency'].includes(d));
+                    const hasMath = q.domains.includes('math');
+                    const hasExec = q.domains.includes('executive');
+                    const hasEmotions = q.domains.includes('emotions');
+
+                    return (
+                        (!hasReading || gameState.settings.modules.reading) &&
+                        (!hasMath || gameState.settings.modules.math) &&
+                        (!hasExec || gameState.settings.modules.executive) &&
+                        (!hasEmotions || gameState.settings.modules.emotions)
+                    );
+                });
             }
 
             if (pool.length === 0) {
@@ -3165,6 +3349,75 @@
             const qType = question.type || 'multiple_choice';
             let isCorrect = false;
 
+            // ========================================
+            // PREFERENCE QUESTIONS (NO WRONG ANSWERS)
+            // ========================================
+            if (qType === 'preference') {
+                // All answers are valid for preference questions
+                const buttons = document.querySelectorAll('.answer-btn');
+                const selectedAnswer = question.answers[selectedIndexOrValue];
+
+                // Highlight selection with validating color (not "correct" or "incorrect")
+                buttons[selectedIndexOrValue].style.borderColor = 'var(--neon-blue)';
+                buttons[selectedIndexOrValue].style.background = 'linear-gradient(135deg, rgba(0, 240, 255, 0.3), rgba(139, 92, 246, 0.2))';
+                buttons[selectedIndexOrValue].style.boxShadow = '0 0 40px rgba(0, 240, 255, 0.6)';
+                buttons.forEach(btn => btn.disabled = true);
+
+                // Save preference to student profile
+                if (question.preferenceKey) {
+                    if (!gameState.student.preferences) {
+                        gameState.student.preferences = {};
+                    }
+
+                    // For copingStrategies, store as array; for others, single value
+                    if (question.preferenceKey === 'copingStrategies') {
+                        if (!Array.isArray(gameState.student.preferences.copingStrategies)) {
+                            gameState.student.preferences.copingStrategies = [];
+                        }
+                        if (!gameState.student.preferences.copingStrategies.includes(selectedAnswer)) {
+                            gameState.student.preferences.copingStrategies.push(selectedAnswer);
+                        }
+                    } else {
+                        gameState.student.preferences[question.preferenceKey] = selectedAnswer;
+                    }
+                }
+
+                // Validating feedback from Gator
+                const validationMessages = [
+                    "Good choice. We'll try that to help you.",
+                    "I hear you. That's what works for you.",
+                    "Thanks for sharing. I'll remember that.",
+                    "That makes sense. Everyone learns differently.",
+                    "Great! Now I know how to support you better."
+                ];
+                const message = validationMessages[Math.floor(Math.random() * validationMessages.length)];
+                updateGatorMessage(message, 'gatorPracticeMessage');
+
+                // Track as answered but not as correct/incorrect
+                gameState.session.questionsAnswered++;
+
+                // Log as preference, not skill check
+                gameState.history.push({
+                    t: Date.now(),
+                    subject: 'preferences',
+                    type: 'preference',
+                    text: question.q,
+                    selected: selectedIndexOrValue,
+                    selectedAnswer: selectedAnswer,
+                    preferenceKey: question.preferenceKey,
+                    domains: question.domains || []
+                });
+
+                saveState();
+                updateHeaderValues();
+                setTimeout(loadNextQuestion, 2500);
+                return; // Exit early - don't run skill-based logic
+            }
+
+            // ========================================
+            // SKILL QUESTIONS (HAVE RIGHT/WRONG ANSWERS)
+            // ========================================
+
             if (qType === 'fill_in_blank_simple') {
                 // Compare text (case-insensitive)
                 const correctAnswer = (question.correct || '').toString().toLowerCase().trim();
@@ -3462,7 +3715,142 @@
             if (streakEl) {
                 streakEl.textContent = gameState.session.currentStreak;
             }
+
+            // Update tracking info
+            updateTrackingInfo();
         }
+
+        function updateTrackingInfo() {
+            // Update student name
+            const nameEl = document.getElementById('headerStudentName');
+            if (nameEl && gameState.student.name) {
+                nameEl.textContent = gameState.student.name;
+            }
+
+            // Update date/time
+            const dateTimeEl = document.getElementById('headerDateTime');
+            if (dateTimeEl) {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                dateTimeEl.textContent = `${dateStr} • ${timeStr}`;
+            }
+
+            // Calculate and update active/idle time
+            if (gameState.tracking) {
+                const activeMinutes = Math.floor(gameState.tracking.activeTime / 60000);
+                const idleMinutes = Math.floor(gameState.tracking.idleTime / 60000);
+
+                const activeEl = document.getElementById('headerActiveTime');
+                const idleEl = document.getElementById('headerIdleTime');
+
+                if (activeEl) activeEl.textContent = `${activeMinutes}m`;
+                if (idleEl) idleEl.textContent = `${idleMinutes}m`;
+            }
+
+            // Calculate and update effectiveness meter
+            calculateEffectiveness();
+        }
+
+        function calculateEffectiveness() {
+            const tracking = gameState.tracking;
+            const session = gameState.session;
+
+            if (!tracking || !session) return;
+
+            const totalTime = tracking.activeTime + tracking.idleTime;
+            if (totalTime === 0) {
+                updateEffectivenessDisplay(0);
+                return;
+            }
+
+            // Effectiveness formula:
+            // (0.5 × activeRatio) + (0.3 × accuracy) + (0.2 × pace)
+            const activeRatio = tracking.activeTime / totalTime;
+            const accuracy = session.questionsAnswered > 0
+                ? session.correctAnswers / session.questionsAnswered
+                : 0;
+            const questionsPerMinute = tracking.activeTime > 0
+                ? (session.questionsAnswered / (tracking.activeTime / 60000))
+                : 0;
+            const pace = Math.min(questionsPerMinute / 10, 1); // Cap at 10 questions/min = 100%
+
+            const effectiveness = (0.5 * activeRatio + 0.3 * accuracy + 0.2 * pace) * 100;
+            updateEffectivenessDisplay(Math.round(effectiveness));
+        }
+
+        function updateEffectivenessDisplay(percent) {
+            const effectivenessEl = document.getElementById('headerEffectiveness');
+            const barEl = document.getElementById('headerEffectivenessBar');
+
+            if (effectivenessEl) {
+                effectivenessEl.textContent = `${percent}%`;
+
+                // Color based on effectiveness
+                if (percent >= 70) {
+                    effectivenessEl.style.color = 'var(--neon-green)';
+                } else if (percent >= 40) {
+                    effectivenessEl.style.color = 'var(--neon-yellow)';
+                } else {
+                    effectivenessEl.style.color = 'var(--neon-pink)';
+                }
+            }
+
+            if (barEl) {
+                barEl.style.width = `${percent}%`;
+            }
+        }
+
+        // Track user activity
+        function trackActivity() {
+            if (!gameState.tracking) return;
+
+            const now = Date.now();
+            const lastActive = gameState.tracking.lastActive;
+            const timeSinceActive = now - lastActive;
+
+            // If more than 30 seconds since last activity, count as idle
+            if (timeSinceActive > 30000) {
+                gameState.tracking.idleTime += timeSinceActive;
+            } else {
+                gameState.tracking.activeTime += timeSinceActive;
+            }
+
+            gameState.tracking.lastActive = now;
+            updateTrackingInfo();
+        }
+
+        // Track user interactions
+        document.addEventListener('click', () => {
+            if (gameState.tracking) {
+                gameState.tracking.lastActive = Date.now();
+            }
+        });
+
+        document.addEventListener('keypress', () => {
+            if (gameState.tracking) {
+                gameState.tracking.lastActive = Date.now();
+            }
+        });
+
+        // Update tracking every 5 seconds
+        setInterval(() => {
+            if (gameState.tracking && gameState.tracking.sessionStart) {
+                trackActivity();
+                saveState();
+            }
+        }, 5000);
+
+        // Update date/time every minute
+        setInterval(() => {
+            const dateTimeEl = document.getElementById('headerDateTime');
+            if (dateTimeEl && !dateTimeEl.classList.contains('hidden')) {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                dateTimeEl.textContent = `${dateStr} • ${timeStr}`;
+            }
+        }, 60000);
 
         function updateHeaderStats() {
             const container = document.getElementById('headerStats');
@@ -3559,6 +3947,36 @@
 
         window.onload = initApp;
     </script>
+
+    <!-- Resume/New Session Modal -->
+    <div id="resumeModal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>👋 Welcome Back, <span id="resumeStudentName"></span>!</h2>
+            </div>
+
+            <div class="modal-body" style="text-align: center; padding: 30px 20px;">
+                <p style="font-size: 1.1em; margin-bottom: 30px; color: var(--text-light);">
+                    Do you want to:
+                </p>
+
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <button class="btn btn-primary" onclick="resumeExistingSession()" style="padding: 20px;">
+                        <span style="font-size: 1.2em;">▶️ Resume Session</span>
+                        <br>
+                        <small style="opacity: 0.8;">Continue where you left off</small>
+                    </button>
+
+                    <button class="btn btn-secondary" onclick="startFreshSession()" style="padding: 20px;">
+                        <span style="font-size: 1.2em;">🆕 Start New Session</span>
+                        <br>
+                        <small style="opacity: 0.8;">Keep profile, reset today's stats</small>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Domain Tips Modal -->
     <div id="domainTipsModal" class="modal hidden">
