@@ -2920,6 +2920,17 @@
         }
 
         function loadNextQuestion() {
+            // Every 8-10 questions, show a preference question instead
+            const totalAnswered = gameState.session.questionsAnswered;
+            if (totalAnswered > 0 && totalAnswered % 8 === 0 && preferenceQuestions.length > 0) {
+                // Pick a random preference question
+                const prefQuestion = preferenceQuestions[Math.floor(Math.random() * preferenceQuestions.length)];
+                gameState.session.currentQuestion = prefQuestion;
+                renderQuestion(prefQuestion);
+                updateGatorMessage('Let me ask you something to help me support you better.', 'gatorPracticeMessage');
+                return;
+            }
+
             const subject = gameState.student.subject;
             const currentGrade = gameState.student.gradeCurrent;
             const enrolledGrade = gameState.student.gradeEnrolled;
@@ -2952,6 +2963,25 @@
             // Fallback: all questions from subject
             if (pool.length === 0 && questions[subject]) {
                 pool = Object.values(questions[subject]).flat();
+            }
+
+            // Filter by enabled modules
+            if (gameState.settings && gameState.settings.modules) {
+                pool = pool.filter(q => {
+                    if (!q.domains || q.domains.length === 0) return true;
+                    // Check if at least one domain is enabled
+                    const hasReading = q.domains.some(d => ['decoding', 'comprehension', 'fluency'].includes(d));
+                    const hasMath = q.domains.includes('math');
+                    const hasExec = q.domains.includes('executive');
+                    const hasEmotions = q.domains.includes('emotions');
+
+                    return (
+                        (!hasReading || gameState.settings.modules.reading) &&
+                        (!hasMath || gameState.settings.modules.math) &&
+                        (!hasExec || gameState.settings.modules.executive) &&
+                        (!hasEmotions || gameState.settings.modules.emotions)
+                    );
+                });
             }
 
             if (pool.length === 0) {
