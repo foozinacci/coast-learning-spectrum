@@ -1019,6 +1019,57 @@
             background: rgba(15, 23, 42, 0.8);
         }
 
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(148, 163, 184, 0.2);
+            border: 2px solid rgba(148, 163, 184, 0.3);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 2px;
+            bottom: 2px;
+            background-color: var(--text-muted);
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: rgba(0, 240, 255, 0.3);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+            background-color: var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
         /* Hidden */
         .hidden {
             display: none !important;
@@ -1744,6 +1795,34 @@
                 </select>
             </div>
 
+            <div class="form-group">
+                <label for="languageSelect">🌍 Language:</label>
+                <select id="languageSelect">
+                    <option value="en">English</option>
+                    <option value="es">Español (Spanish)</option>
+                    <option value="fr">Français (French)</option>
+                    <option value="zh">中文 (Chinese)</option>
+                    <option value="ar">العربية (Arabic)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="ttsVoiceSelect">🔊 Voice:</label>
+                <select id="ttsVoiceSelect">
+                    <option value="female">Female Voice</option>
+                    <option value="male">Male Voice</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                <label style="margin: 0;">🔊 Text-to-Speech:</label>
+                <label class="switch" style="margin: 0;">
+                    <input type="checkbox" id="ttsToggle">
+                    <span class="slider"></span>
+                </label>
+                <span id="ttsStatus" style="font-size: 0.9em; color: var(--text-muted);">Off</span>
+            </div>
+
             <button class="btn btn-primary" onclick="startLearning()"><span>🚀 Launch Journey</span></button>
         </div>
 
@@ -1808,6 +1887,46 @@
                 <button class="btn btn-secondary" onclick="exportProfile()"><span>💾 Export</span></button>
                 <button class="btn btn-secondary" onclick="importProfile()"><span>📥 Import</span></button>
                 <button class="btn btn-secondary" onclick="resetApp()"><span>🔄 Reset</span></button>
+
+                <!-- Learning Modules Toggle -->
+                <div style="margin-top: 25px; padding-top: 20px; border-top: 2px solid rgba(148, 163, 184, 0.2);">
+                    <h3 style="font-size: 1.1em; margin-bottom: 15px; color: var(--neon-yellow);">📚 Learning Modules</h3>
+                    <p style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 15px;">Toggle which learning areas are included in practice sessions:</p>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(15, 23, 42, 0.4); border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.2);">
+                            <span style="font-weight: 600;">📖 Reading</span>
+                            <label class="switch">
+                                <input type="checkbox" id="moduleReading" checked onchange="updateModuleSettings()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(15, 23, 42, 0.4); border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.2);">
+                            <span style="font-weight: 600;">🔢 Math</span>
+                            <label class="switch">
+                                <input type="checkbox" id="moduleMath" checked onchange="updateModuleSettings()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(15, 23, 42, 0.4); border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.2);">
+                            <span style="font-weight: 600;">🧠 Executive Skills</span>
+                            <label class="switch">
+                                <input type="checkbox" id="moduleExecutive" checked onchange="updateModuleSettings()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(15, 23, 42, 0.4); border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.2);">
+                            <span style="font-weight: 600;">❤️ Emotions</span>
+                            <label class="switch">
+                                <input type="checkbox" id="moduleEmotions" checked onchange="updateModuleSettings()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Diagnostics -->
@@ -2848,7 +2967,109 @@
             initRadar();
             initHeaderRadar();
             initGradeDials();
+            initTTSToggle();
             updateDiagnostics();
+        }
+
+        // ========================================
+        // TTS (TEXT-TO-SPEECH) SYSTEM
+        // ========================================
+
+        function initTTSToggle() {
+            const ttsToggle = document.getElementById('ttsToggle');
+            const ttsStatus = document.getElementById('ttsStatus');
+
+            if (ttsToggle && ttsStatus) {
+                ttsToggle.addEventListener('change', (e) => {
+                    ttsStatus.textContent = e.target.checked ? 'On' : 'Off';
+                    ttsStatus.style.color = e.target.checked ? 'var(--neon-green)' : 'var(--text-muted)';
+                });
+            }
+        }
+
+        function speak(text) {
+            if (!gameState.settings || !gameState.settings.ttsEnabled) {
+                return; // TTS is disabled
+            }
+
+            // Check if Web Speech API is available
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+
+                const utterance = new SpeechSynthesisUtterance(text);
+
+                // Set language
+                const langMap = {
+                    'en': 'en-US',
+                    'es': 'es-ES',
+                    'fr': 'fr-FR',
+                    'zh': 'zh-CN',
+                    'ar': 'ar-SA'
+                };
+                utterance.lang = langMap[gameState.student.language] || 'en-US';
+
+                // Set voice preference (male/female)
+                const voices = window.speechSynthesis.getVoices();
+                const preferredVoice = voices.find(voice => {
+                    const matchesLang = voice.lang.startsWith(utterance.lang.split('-')[0]);
+                    const matchesGender = gameState.settings.ttsVoice === 'female'
+                        ? voice.name.toLowerCase().includes('female') || voice.name.toLowerCase().includes('woman')
+                        : voice.name.toLowerCase().includes('male') || voice.name.toLowerCase().includes('man');
+                    return matchesLang && matchesGender;
+                });
+
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                }
+
+                // Set rate and pitch
+                utterance.rate = 0.9; // Slightly slower for clarity
+                utterance.pitch = 1.0;
+                utterance.volume = gameState.settings.volume || 0.5;
+
+                window.speechSynthesis.speak(utterance);
+            } else {
+                console.warn('Text-to-Speech not supported in this browser');
+            }
+        }
+
+        // ========================================
+        // LEARNING MODULES MANAGEMENT
+        // ========================================
+
+        function initializeModuleToggles() {
+            if (!gameState.settings || !gameState.settings.modules) return;
+
+            const modules = gameState.settings.modules;
+            const toggles = {
+                reading: document.getElementById('moduleReading'),
+                math: document.getElementById('moduleMath'),
+                executive: document.getElementById('moduleExecutive'),
+                emotions: document.getElementById('moduleEmotions')
+            };
+
+            // Set toggle states based on saved settings
+            Object.keys(toggles).forEach(key => {
+                if (toggles[key]) {
+                    toggles[key].checked = modules[key] !== false;
+                }
+            });
+        }
+
+        function updateModuleSettings() {
+            if (!gameState.settings) {
+                ensureSettings();
+            }
+
+            gameState.settings.modules = {
+                reading: document.getElementById('moduleReading')?.checked ?? true,
+                math: document.getElementById('moduleMath')?.checked ?? true,
+                executive: document.getElementById('moduleExecutive')?.checked ?? true,
+                emotions: document.getElementById('moduleEmotions')?.checked ?? true
+            };
+
+            saveState();
         }
 
         function resumeExistingSession() {
@@ -2890,6 +3111,9 @@
             const targetDial = document.getElementById('targetDial');
             const subject = document.getElementById('subject').value;
             const context = document.getElementById('contextMode').value;
+            const language = document.getElementById('languageSelect').value;
+            const ttsVoice = document.getElementById('ttsVoiceSelect').value;
+            const ttsEnabled = document.getElementById('ttsToggle').checked;
 
             if (!name || !enrolledDial) {
                 alert('Please fill in all fields!');
@@ -2902,6 +3126,10 @@
             gameState.student.gradeTarget = parseFloat(targetDial.value);
             gameState.student.subject = subject;
             gameState.student.context = context;
+            gameState.student.language = language;
+
+            gameState.settings.ttsEnabled = ttsEnabled;
+            gameState.settings.ttsVoice = ttsVoice;
 
             gameState.session.questionsAnswered = 0;
             gameState.session.correctAnswers = 0;
@@ -2953,6 +3181,9 @@
             document.getElementById('questionsAnswered').textContent = session.questionsAnswered;
             document.getElementById('correctAnswers').textContent = session.correctAnswers;
             document.getElementById('currentStreak').textContent = session.currentStreak;
+
+            // Initialize module toggles
+            initializeModuleToggles();
 
             if (session.questionsAnswered === 0) {
                 updateGatorMessage(`Hey ${student.name}, ready to check your Learning Spectrum today?`);
