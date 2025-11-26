@@ -3104,7 +3104,11 @@
             const targetDial = document.getElementById('targetDial');
             const studentName = document.getElementById('studentName');
 
-            if (!enrolledDial) return;
+            // CRITICAL FIX: Check all three dials exist, not just enrolledDial
+            if (!enrolledDial || !currentDial || !targetDial) {
+                console.error('Grade dials not found:', { enrolledDial: !!enrolledDial, currentDial: !!currentDial, targetDial: !!targetDial });
+                return;
+            }
 
             // Update displays when dials move
             enrolledDial.addEventListener('input', (e) => {
@@ -3463,15 +3467,33 @@
             const ttsVoice = document.getElementById('ttsVoiceSelect').value;
             const ttsEnabled = document.getElementById('ttsToggle').checked;
 
-            if (!name || !enrolledDial) {
-                alert('Please fill in all fields!');
+            // CRITICAL FIX: Validate all required elements exist before proceeding
+            if (!name || !enrolledDial || !currentDial || !targetDial) {
+                console.error('Missing required setup fields:', {
+                    name: !!name,
+                    enrolledDial: !!enrolledDial,
+                    currentDial: !!currentDial,
+                    targetDial: !!targetDial
+                });
+                alert('Please fill in all fields! Make sure all grade levels are set.');
+                return;
+            }
+
+            // Validate grade values are numbers
+            const gradeEnrolled = parseFloat(enrolledDial.value);
+            const gradeCurrent = parseFloat(currentDial.value);
+            const gradeTarget = parseFloat(targetDial.value);
+
+            if (isNaN(gradeEnrolled) || isNaN(gradeCurrent) || isNaN(gradeTarget)) {
+                console.error('Invalid grade values:', { gradeEnrolled, gradeCurrent, gradeTarget });
+                alert('Invalid grade levels detected. Please refresh the page and try again.');
                 return;
             }
 
             gameState.student.name = name;
-            gameState.student.gradeEnrolled = parseFloat(enrolledDial.value);
-            gameState.student.gradeCurrent = parseFloat(currentDial.value);
-            gameState.student.gradeTarget = parseFloat(targetDial.value);
+            gameState.student.gradeEnrolled = gradeEnrolled;
+            gameState.student.gradeCurrent = gradeCurrent;
+            gameState.student.gradeTarget = gradeTarget;
             gameState.student.subject = subject;
             gameState.student.context = context;
             gameState.student.language = language;
