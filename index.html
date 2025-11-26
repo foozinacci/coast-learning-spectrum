@@ -185,6 +185,203 @@
             z-index: 1;
         }
 
+        /* Header Grid Layout */
+        .header-grid {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto auto;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-title {
+            min-width: 240px;
+        }
+
+        /* Header Grades */
+        .header-grades {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .header-grade-box {
+            text-align: center;
+            padding: 8px 14px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: default;
+            min-width: 70px;
+        }
+
+        .grade-enrolled {
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.4);
+        }
+
+        .grade-current {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+        }
+
+        .grade-target {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+        }
+
+        .header-grade-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 240, 255, 0.3);
+        }
+
+        .grade-label {
+            font-size: 0.65em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 4px;
+        }
+
+        .grade-value {
+            font-size: 1.4em;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .grade-enrolled .grade-value {
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+
+        .grade-current .grade-value {
+            color: var(--neon-green);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .grade-target .grade-value {
+            color: var(--neon-purple);
+            text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+
+        /* Header Session Stats */
+        .header-session {
+            display: flex;
+            gap: 12px;
+        }
+
+        .session-stat {
+            text-align: center;
+            padding: 6px 12px;
+            background: rgba(0, 240, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            transition: all 0.3s ease;
+            min-width: 65px;
+        }
+
+        .session-stat:hover {
+            background: rgba(0, 240, 255, 0.1);
+            border-color: rgba(0, 240, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .session-value {
+            font-size: 1.3em;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+
+        .session-label {
+            font-size: 0.65em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        /* Header Spectrum */
+        .header-spectrum {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #headerRadar {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        #headerRadar:hover {
+            transform: scale(1.05);
+        }
+
+        .header-stats-badges {
+            display: grid;
+            grid-template-columns: repeat(2, auto);
+            gap: 6px;
+            font-size: 0.7em;
+        }
+
+        .header-stat-badge {
+            padding: 5px 10px;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 8px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .header-stat-badge:hover {
+            background: rgba(0, 240, 255, 0.25);
+            border-color: rgba(0, 240, 255, 0.6);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            transform: scale(1.05);
+        }
+
+        .header-stat-badge:active {
+            transform: scale(0.98);
+        }
+
+        /* Responsive Header */
+        @media (max-width: 1200px) {
+            .header-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .header-grades,
+            .header-session,
+            .header-spectrum {
+                justify-content: center;
+            }
+
+            .header-title {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-grades {
+                flex-wrap: wrap;
+            }
+
+            .header-session {
+                flex-wrap: wrap;
+            }
+
+            .header-stats-badges {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* Glassmorphism cards */
         .card {
             background: var(--card-bg);
@@ -1145,6 +1342,235 @@
                 grid-template-columns: repeat(2, auto);
             }
         }
+
+        /* ========================================
+           MODAL STYLES
+           ======================================== */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+        }
+
+        .modal-content {
+            position: relative;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
+            border: 2px solid rgba(0, 240, 255, 0.4);
+            border-radius: 20px;
+            padding: 0;
+            box-shadow:
+                0 0 60px rgba(0, 240, 255, 0.5),
+                inset 0 0 30px rgba(139, 92, 246, 0.2);
+            animation: modalSlideIn 0.3s ease-out;
+            max-width: 650px;
+            max-height: 85vh;
+            overflow-y: auto;
+            width: 90%;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(0, 240, 255, 0.15));
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 2em;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close-btn:hover {
+            background: rgba(255, 0, 110, 0.2);
+            color: var(--neon-pink);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding: 20px 25px;
+            border-top: 1px solid rgba(0, 240, 255, 0.2);
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .domain-score-card {
+            background: rgba(0, 240, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+        }
+
+        .domain-score-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .domain-score-label {
+            font-size: 0.95em;
+            color: var(--text-muted);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .domain-score-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .domain-progress-bar {
+            height: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .domain-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-green));
+            transition: width 0.6s ease;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+        }
+
+        .tips-section, .exercises-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.15em;
+            margin-bottom: 15px;
+            color: var(--neon-green);
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tip-item {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: rgba(0, 240, 255, 0.05);
+            border-left: 3px solid var(--neon-green);
+            border-radius: 8px;
+            color: var(--text-light);
+            transition: all 0.2s ease;
+        }
+
+        .tip-item:hover {
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-blue);
+            transform: translateX(5px);
+        }
+
+        .exercises-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .exercise-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(0, 240, 255, 0.2));
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-btn:hover {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.4), rgba(0, 240, 255, 0.4));
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .exercise-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Modal scrollbar */
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: rgba(0, 240, 255, 0.5);
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 240, 255, 0.7);
+        }
     </style>
 </head>
 <body>
@@ -1153,23 +1579,50 @@
 
     <header>
         <div class="container">
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
-                <!-- Left: Title -->
-                <div>
+            <div class="header-grid">
+                <!-- 1. Title (Left) -->
+                <div class="header-title">
                     <h1>🌈 LEARNING SPECTRUM</h1>
                     <p class="tagline">Every color of how they learn</p>
                 </div>
 
-                <!-- Right: Mini Spectrum (always visible except on setup) -->
-                <div id="headerSpectrum" class="hidden">
-                    <!-- Mini radar chart -->
-                    <div style="position: relative;">
-                        <canvas id="headerRadar" width="120" height="120"></canvas>
+                <!-- 2. Spectrum Status (Three Grades) -->
+                <div id="headerGrades" class="hidden header-grades">
+                    <div class="header-grade-box grade-enrolled">
+                        <div class="grade-label">ENROLLED</div>
+                        <div id="headerEnrolled" class="grade-value">2</div>
                     </div>
+                    <div class="header-grade-box grade-current">
+                        <div class="grade-label">CURRENT</div>
+                        <div id="headerCurrent" class="grade-value">1.4</div>
+                    </div>
+                    <div class="header-grade-box grade-target">
+                        <div class="grade-label">TARGET</div>
+                        <div id="headerTarget" class="grade-value">2.5</div>
+                    </div>
+                </div>
 
-                    <!-- Compact stats -->
-                    <div id="headerStats">
-                        <!-- Stats badges will be dynamically generated -->
+                <!-- 3. Session Data (Stats) -->
+                <div id="headerSession" class="hidden header-session">
+                    <div class="session-stat">
+                        <div id="headerQuestions" class="session-value">0</div>
+                        <div class="session-label">Questions</div>
+                    </div>
+                    <div class="session-stat">
+                        <div id="headerCorrect" class="session-value">0</div>
+                        <div class="session-label">Correct</div>
+                    </div>
+                    <div class="session-stat">
+                        <div id="headerStreak" class="session-value">0</div>
+                        <div class="session-label">Streak</div>
+                    </div>
+                </div>
+
+                <!-- 4. Interactive Spectrum (Radar + Clickable Badges) -->
+                <div id="headerSpectrum" class="hidden header-spectrum">
+                    <canvas id="headerRadar" width="100" height="100"></canvas>
+                    <div id="headerStats" class="header-stats-badges">
+                        <!-- Clickable badges will be inserted here -->
                     </div>
                 </div>
             </div>
@@ -1319,32 +1772,7 @@
                     </div>
                 </div>
 
-                <!-- Stats + Spectrum Map -->
-                <div class="card">
-                    <h2>📊 Session Data</h2>
-                    <div class="stats">
-                        <div class="stat">
-                            <div class="stat-value" id="questionsAnswered">0</div>
-                            <div class="stat-label">Questions</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value" id="correctAnswers">0</div>
-                            <div class="stat-label">Correct</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value" id="currentStreak">0</div>
-                            <div class="stat-label">Streak</div>
-                        </div>
-                    </div>
-
-                    <div class="spectrum-card">
-                        <h3 style="font-family:'Orbitron',sans-serif; margin-bottom:10px; font-size:1em;">🧬 Spectrum Map</h3>
-                        <div class="spectrum-layout">
-                            <canvas id="spectrumRadar" width="220" height="220"></canvas>
-                            <div class="spectrum-domain-tags" id="spectrumTags"></div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Note: Stats and Spectrum Map now consolidated in header -->
             </div>
 
             <!-- Actions -->
@@ -1924,17 +2352,32 @@
             });
             document.getElementById(screenId).classList.remove('hidden');
 
-            // Toggle header spectrum visibility
+            // Toggle header elements visibility
             const headerSpectrum = document.getElementById('headerSpectrum');
-            if (headerSpectrum) {
-                // Hide on setup, show everywhere else
-                if (screenId === 'setupScreen') {
-                    headerSpectrum.classList.add('hidden');
-                } else {
+            const headerGrades = document.getElementById('headerGrades');
+            const headerSession = document.getElementById('headerSession');
+
+            if (screenId === 'setupScreen') {
+                // Hide everything except title on setup screen
+                if (headerSpectrum) headerSpectrum.classList.add('hidden');
+                if (headerGrades) headerGrades.classList.add('hidden');
+                if (headerSession) headerSession.classList.add('hidden');
+            } else {
+                // Show everything on other screens
+                if (headerSpectrum) {
                     headerSpectrum.classList.remove('hidden');
-                    // Redraw header spectrum when showing
                     drawHeaderRadar();
+                    updateHeaderStats();
                 }
+                if (headerGrades) {
+                    headerGrades.classList.remove('hidden');
+                }
+                if (headerSession) {
+                    headerSession.classList.remove('hidden');
+                }
+
+                // Update all header values
+                updateHeaderValues();
             }
         }
 
@@ -2790,6 +3233,10 @@
 
             saveState();
 
+            // Update header in real-time
+            updateHeaderValues();
+            updateHeaderStats();
+
             setTimeout(loadNextQuestion, 2500);
         }
 
@@ -2881,10 +3328,281 @@
         }
 
         // ========================================
+        // DOMAIN TIPS & INTERACTIVE SPECTRUM
+        // ========================================
+
+        const domainTipsData = {
+            decoding: {
+                title: '📚 Reading Skills',
+                emoji: '📖',
+                tips: [
+                    'Practice sounding out words slowly and carefully',
+                    'Break long words into smaller chunks (syllables)',
+                    'Use finger tracking to follow along while reading',
+                    'Read aloud daily for 10-15 minutes'
+                ],
+                exercises: [
+                    { label: 'Phonics Practice', icon: '🔤' },
+                    { label: 'Sight Words', icon: '👁️' },
+                    { label: 'Word Families', icon: '👨‍👩‍👧' },
+                    { label: 'Rhyming Games', icon: '🎵' }
+                ]
+            },
+            comprehension: {
+                title: '🧠 Understanding',
+                emoji: '💭',
+                tips: [
+                    'Ask yourself questions while reading: Who? What? Where? When? Why?',
+                    'Visualize the story in your mind like a movie',
+                    'Summarize each paragraph in your own words',
+                    'Connect what you read to your own experiences'
+                ],
+                exercises: [
+                    { label: 'Story Retelling', icon: '📖' },
+                    { label: 'Main Idea Practice', icon: '🎯' },
+                    { label: 'Inference Games', icon: '🔍' },
+                    { label: 'Prediction Activities', icon: '🔮' }
+                ]
+            },
+            fluency: {
+                title: '⚡ Fluency',
+                emoji: '🏃',
+                tips: [
+                    'Practice reading the same passage multiple times',
+                    'Record yourself reading and listen back',
+                    'Pay attention to punctuation and pauses',
+                    'Read with expression and emotion'
+                ],
+                exercises: [
+                    { label: 'Timed Readings', icon: '⏱️' },
+                    { label: 'Echo Reading', icon: '🔊' },
+                    { label: 'Choral Reading', icon: '👥' },
+                    { label: 'Poetry Performance', icon: '🎭' }
+                ]
+            },
+            math: {
+                title: '🔢 Math',
+                emoji: '➕',
+                tips: [
+                    'Draw pictures or use objects to visualize problems',
+                    'Break complex problems into smaller steps',
+                    'Check your work by using the opposite operation',
+                    'Look for patterns in numbers'
+                ],
+                exercises: [
+                    { label: 'Mental Math', icon: '🧠' },
+                    { label: 'Word Problems', icon: '📝' },
+                    { label: 'Number Patterns', icon: '🔢' },
+                    { label: 'Math Games', icon: '🎲' }
+                ]
+            },
+            executive: {
+                title: '🎯 Focus & Planning',
+                emoji: '🧩',
+                tips: [
+                    'Use a timer to break work into focused chunks (Pomodoro)',
+                    'Make a checklist before starting tasks',
+                    'Minimize distractions (quiet space, turn off notifications)',
+                    'Take short breaks between activities'
+                ],
+                exercises: [
+                    { label: 'Sequencing Activities', icon: '🔢' },
+                    { label: 'Pattern Recognition', icon: '🧩' },
+                    { label: 'Memory Games', icon: '🧠' },
+                    { label: 'Planning Tasks', icon: '📋' }
+                ]
+            },
+            emotions: {
+                title: '💪 Effort & Feelings',
+                emoji: '❤️',
+                tips: [
+                    'It\'s okay to make mistakes - they help you learn!',
+                    'Celebrate small wins and progress',
+                    'Ask for help when you need it',
+                    'Take deep breaths when feeling frustrated'
+                ],
+                exercises: [
+                    { label: 'Growth Mindset Practice', icon: '🌱' },
+                    { label: 'Emotion Check-ins', icon: '😊' },
+                    { label: 'Positive Self-Talk', icon: '💬' },
+                    { label: 'Celebration Rituals', icon: '🎉' }
+                ]
+            }
+        };
+
+        let currentFocusDomain = null;
+
+        function updateHeaderValues() {
+            // Update grades
+            const enrolledEl = document.getElementById('headerEnrolled');
+            const currentEl = document.getElementById('headerCurrent');
+            const targetEl = document.getElementById('headerTarget');
+
+            if (enrolledEl) {
+                enrolledEl.textContent = gameState.student.gradeEnrolled === 0 ? 'K' : gameState.student.gradeEnrolled;
+            }
+            if (currentEl) {
+                currentEl.textContent = gameState.student.gradeCurrent.toFixed(1);
+            }
+            if (targetEl) {
+                targetEl.textContent = gameState.student.gradeTarget.toFixed(1);
+            }
+
+            // Update session stats
+            const questionsEl = document.getElementById('headerQuestions');
+            const correctEl = document.getElementById('headerCorrect');
+            const streakEl = document.getElementById('headerStreak');
+
+            if (questionsEl) {
+                questionsEl.textContent = gameState.session.questionsAnswered;
+            }
+            if (correctEl) {
+                correctEl.textContent = gameState.session.correctAnswers;
+            }
+            if (streakEl) {
+                streakEl.textContent = gameState.session.currentStreak;
+            }
+        }
+
+        function updateHeaderStats() {
+            const container = document.getElementById('headerStats');
+            if (!container) return;
+
+            container.innerHTML = '';
+            const domainNames = {
+                decoding: 'Reading',
+                comprehension: 'Understanding',
+                fluency: 'Fluency',
+                math: 'Math',
+                executive: 'Focus',
+                emotions: 'Effort'
+            };
+
+            Object.entries(domainNames).forEach(([key, label]) => {
+                const score = (gameState.domains[key]?.score ?? 0) * 100;
+                const badge = document.createElement('div');
+                badge.className = 'header-stat-badge';
+                badge.textContent = `${label} ${score.toFixed(0)}%`;
+                badge.dataset.domain = key;
+                badge.onclick = () => openDomainTips(key);
+                badge.style.cursor = 'pointer';
+                badge.title = `Click for ${label} tips`;
+                container.appendChild(badge);
+            });
+        }
+
+        function openDomainTips(domain) {
+            currentFocusDomain = domain;
+            const data = domainTipsData[domain];
+            if (!data) return;
+
+            const score = (gameState.domains[domain]?.score ?? 0) * 100;
+
+            // Update modal content
+            document.getElementById('modalDomainTitle').textContent = data.title;
+            document.getElementById('modalDomainScore').textContent = `${score.toFixed(0)}%`;
+            document.getElementById('modalDomainProgress').style.width = `${score}%`;
+
+            // Populate tips
+            const tipsList = document.getElementById('modalTipsList');
+            tipsList.innerHTML = '';
+            data.tips.forEach(tip => {
+                const li = document.createElement('li');
+                li.className = 'tip-item';
+                li.textContent = `• ${tip}`;
+                tipsList.appendChild(li);
+            });
+
+            // Populate exercises
+            const exercisesList = document.getElementById('modalExercisesList');
+            exercisesList.innerHTML = '';
+            data.exercises.forEach(ex => {
+                const btn = document.createElement('button');
+                btn.className = 'exercise-btn';
+                btn.textContent = `${ex.icon} ${ex.label}`;
+                btn.onclick = () => {
+                    closeDomainTips();
+                    showGatorMessage(`Starting ${ex.label} for ${data.title}!`);
+                    // In real implementation, would filter questions by domain
+                };
+                exercisesList.appendChild(btn);
+            });
+
+            // Show modal
+            document.getElementById('domainTipsModal').classList.remove('hidden');
+        }
+
+        function closeDomainTips() {
+            document.getElementById('domainTipsModal').classList.add('hidden');
+            currentFocusDomain = null;
+        }
+
+        function startFocusedPractice() {
+            if (!currentFocusDomain) return;
+
+            const domainData = domainTipsData[currentFocusDomain];
+            closeDomainTips();
+
+            // Show message and start session
+            showGatorMessage(`Let's focus on ${domainData.title}! Ready to practice?`);
+
+            // Filter questions by domain (in real implementation)
+            // For now, just start a normal session
+            setTimeout(() => {
+                startSession();
+            }, 1000);
+        }
+
+        // ========================================
         // START APP
         // ========================================
 
         window.onload = initApp;
     </script>
+
+    <!-- Domain Tips Modal -->
+    <div id="domainTipsModal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closeDomainTips()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalDomainTitle">📚 Reading Skills</h2>
+                <button class="modal-close-btn" onclick="closeDomainTips()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Current Score -->
+                <div class="domain-score-card">
+                    <div class="domain-score-row">
+                        <span class="domain-score-label">Current Strength</span>
+                        <span id="modalDomainScore" class="domain-score-value">40%</span>
+                    </div>
+                    <div class="domain-progress-bar">
+                        <div id="modalDomainProgress" class="domain-progress-fill" style="width: 40%;"></div>
+                    </div>
+                </div>
+
+                <!-- Tips Section -->
+                <div class="tips-section">
+                    <h3 class="section-title">💡 Tips to Improve</h3>
+                    <ul id="modalTipsList" class="tips-list">
+                        <!-- Tips will be inserted here -->
+                    </ul>
+                </div>
+
+                <!-- Exercises Section -->
+                <div class="exercises-section">
+                    <h3 class="section-title">🎯 Practice Exercises</h3>
+                    <div id="modalExercisesList" class="exercises-grid">
+                        <!-- Exercises will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="startFocusedPractice()"><span>🚀 Start Focused Practice</span></button>
+                <button class="btn btn-secondary" onclick="closeDomainTips()"><span>Close</span></button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
