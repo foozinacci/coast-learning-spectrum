@@ -669,6 +669,56 @@
             75% { transform: translateX(10px); }
         }
 
+        /* Fill-in-blank input */
+        .fill-input-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .fill-input {
+            padding: 15px 25px;
+            font-size: 1.5em;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid var(--neon-blue);
+            border-radius: 12px;
+            color: var(--text-light);
+            text-align: center;
+            min-width: 200px;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+            transition: all 0.3s;
+        }
+
+        .fill-input:focus {
+            outline: none;
+            border-color: var(--neon-green);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+        }
+
+        .submit-btn {
+            padding: 15px 40px;
+            font-size: 1.3em;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            border: 2px solid var(--neon-blue);
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
+        }
+
         /* Stats with neon counters */
         .stats {
             display: grid;
@@ -1242,28 +1292,158 @@
         }
 
         // ========================================
-        // QUESTIONS DATABASE (WITH DOMAIN TAGS)
+        // GRADE-AWARE QUESTIONS DATABASE
         // ========================================
 
         const questions = {
-            math: [
-                { q: 'What is 2 + 3?', answers: [5, 4, 6, 7], correct: 0, level: 1.0, domains: ['math'] },
-                { q: 'What is 5 - 2?', answers: [3, 2, 4, 5], correct: 0, level: 1.0, domains: ['math'] },
-                { q: 'What is 4 + 4?', answers: [8, 7, 9, 6], correct: 0, level: 1.2, domains: ['math'] },
-                { q: 'What is 10 - 3?', answers: [7, 6, 8, 9], correct: 0, level: 1.2, domains: ['math'] },
-                { q: 'What is 6 × 2?', answers: [12, 10, 14, 8], correct: 0, level: 2.0, domains: ['math','executive'] },
-                { q: 'What is 15 ÷ 3?', answers: [5, 4, 6, 3], correct: 0, level: 2.0, domains: ['math','executive'] },
-                { q: 'What is 7 + 8?', answers: [15, 14, 16, 13], correct: 0, level: 1.5, domains: ['math'] },
-                { q: 'What is 20 - 7?', answers: [13, 12, 14, 15], correct: 0, level: 1.5, domains: ['math'] }
-            ],
-            reading: [
-                { q: 'What sound does "cat" start with?', answers: ['k', 't', 's', 'a'], correct: 0, level: 1.0, domains: ['decoding'] },
-                { q: 'How many syllables in "butterfly"?', answers: [3, 2, 4, 5], correct: 0, level: 1.5, domains: ['fluency','decoding'] },
-                { q: 'Which word rhymes with "dog"?', answers: ['fog', 'cat', 'run', 'tree'], correct: 0, level: 1.2, domains: ['fluency'] },
-                { q: 'What is the vowel in "sun"?', answers: ['u', 'o', 'a', 'i'], correct: 0, level: 1.0, domains: ['decoding'] },
-                { q: 'Which is a compound word?', answers: ['rainbow', 'happy', 'jump', 'red'], correct: 0, level: 2.0, domains: ['comprehension'] },
-                { q: 'What\'s the plural of "box"?', answers: ['boxes', 'boxs', 'boxies', 'boxen'], correct: 0, level: 1.8, domains: ['comprehension','fluency'] }
-            ]
+            math: {
+                K: [
+                    { type: 'multiple_choice', q: 'How many fingers am I holding up? ✋', answers: [5, 3, 4, 2], correct: 0, level: 0.5, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'Which number comes after 2?', answers: [3, 4, 1, 5], correct: 0, level: 0.5, domains: ['math'] },
+                    { type: 'fill_in_blank_simple', q: 'Count with me! 1, 2, 3, __', correct: '4', level: 0.6, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'Which group has MORE? 🍎🍎 or 🍎🍎🍎', answers: ['🍎🍎🍎', '🍎🍎', 'Same', "Don't know"], correct: 0, level: 0.7, domains: ['math'] },
+                    { type: 'matching', q: 'Which shape is a circle?', answers: ['⭕', '⬛', '🔺', '⬜'], correct: 0, level: 0.5, domains: ['math'] },
+                    { type: 'sequence', q: 'Which shows the numbers in order?', answers: ['1, 2, 3', '3, 1, 2', '2, 3, 1', '3, 2, 1'], correct: 0, level: 0.6, domains: ['math', 'executive'] },
+                    { type: 'multiple_choice', q: 'What is 1 + 1?', answers: [2, 1, 3, 4], correct: 0, level: 0.8, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'Which number is bigger: 5 or 3?', answers: [5, 3], correct: 0, level: 0.7, domains: ['math'] },
+                    { type: 'fill_in_blank_simple', q: '2 + 1 = __', correct: '3', level: 0.9, domains: ['math'] },
+                    { type: 'emotion_check_in', q: 'How does this bunny feel when sharing carrots? 🐰🥕', answers: ['😊 Happy', '😢 Sad', '😠 Mad'], correct: 0, level: 0.5, domains: ['emotions'] }
+                ],
+                1: [
+                    { type: 'multiple_choice', q: 'What is 2 + 3?', answers: [5, 4, 6, 7], correct: 0, level: 1.0, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'What is 5 - 2?', answers: [3, 2, 4, 5], correct: 0, level: 1.0, domains: ['math'] },
+                    { type: 'fill_in_blank_simple', q: '4 + 3 = __', correct: '7', level: 1.1, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'What is 10 - 5?', answers: [5, 6, 4, 3], correct: 0, level: 1.2, domains: ['math'] },
+                    { type: 'sequence', q: 'Put these in order from smallest to biggest: 7, 3, 5', answers: ['3, 5, 7', '7, 5, 3', '5, 3, 7', '3, 7, 5'], correct: 0, level: 1.3, domains: ['math', 'executive'] },
+                    { type: 'multiple_choice', q: 'How many tens are in 20?', answers: [2, 1, 3, 4], correct: 0, level: 1.4, domains: ['math'] },
+                    { type: 'matching', q: 'Which matches? 5 + 5', answers: [10, 9, 11, 8], correct: 0, level: 1.2, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'What is 6 + 4?', answers: [10, 9, 11, 8], correct: 0, level: 1.3, domains: ['math'] },
+                    { type: 'fill_in_blank_simple', q: '8 - 3 = __', correct: '5', level: 1.4, domains: ['math'] },
+                    { type: 'emotion_check_in', q: 'When you solve a hard problem, how do you feel?', answers: ['💪 Brave', '🎉 Proud', '😊 Happy', '😌 Calm'], correct: 1, level: 1.0, domains: ['emotions'] }
+                ],
+                2: [
+                    { type: 'multiple_choice', q: 'What is 4 + 4?', answers: [8, 7, 9, 6], correct: 0, level: 2.0, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'What is 10 - 3?', answers: [7, 6, 8, 9], correct: 0, level: 2.0, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'What is 6 × 2?', answers: [12, 10, 14, 8], correct: 0, level: 2.0, domains: ['math','executive'] },
+                    { type: 'multiple_choice', q: 'What is 15 ÷ 3?', answers: [5, 4, 6, 3], correct: 0, level: 2.1, domains: ['math','executive'] },
+                    { type: 'fill_in_blank_simple', q: 'If you have 12 apples and give away 5, you have __ left', correct: '7', level: 2.2, domains: ['math', 'comprehension'] },
+                    { type: 'multiple_choice', q: 'Which is even? 7, 8, 9, 11', answers: [8, 7, 9, 11], correct: 0, level: 2.3, domains: ['math'] },
+                    { type: 'sequence', q: 'Skip count by 2s: Which comes next after 2, 4, 6, __?', answers: [8, 7, 10, 5], correct: 0, level: 2.2, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'What is 3 × 5?', answers: [15, 12, 18, 10], correct: 0, level: 2.4, domains: ['math'] },
+                    { type: 'matching', q: 'Which shape has 4 equal sides?', answers: ['Square', 'Rectangle', 'Triangle', 'Circle'], correct: 0, level: 2.1, domains: ['math'] },
+                    { type: 'emotion_check_in', q: 'If a problem feels too hard, what should you do?', answers: ['💪 Keep trying', '🙋 Ask for help', '😌 Take a break'], correct: 1, level: 2.0, domains: ['emotions', 'executive'] }
+                ],
+                3: [
+                    { type: 'multiple_choice', q: 'What is 7 × 8?', answers: [56, 54, 64, 48], correct: 0, level: 3.0, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'What is 45 ÷ 5?', answers: [9, 8, 10, 7], correct: 0, level: 3.0, domains: ['math'] },
+                    { type: 'fill_in_blank_simple', q: 'A triangle has __ sides', correct: '3', level: 3.1, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'What is 1/2 + 1/2?', answers: [1, 2, '1/4', '2/2'], correct: 0, level: 3.2, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'If each box holds 6 toys and you have 4 boxes, how many toys total?', answers: [24, 20, 18, 26], correct: 0, level: 3.3, domains: ['math', 'executive'] },
+                    { type: 'sequence', q: 'What comes next? 10, 20, 30, __', answers: [40, 35, 50, 25], correct: 0, level: 3.2, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'What is the perimeter of a square with side 5?', answers: [20, 25, 15, 10], correct: 0, level: 3.4, domains: ['math'] },
+                    { type: 'matching', q: 'Which fraction is larger: 1/2 or 1/4?', answers: ['1/2', '1/4', 'Same'], correct: 0, level: 3.3, domains: ['math'] },
+                    { type: 'fill_in_blank_simple', q: '100 - 37 = __', correct: '63', level: 3.4, domains: ['math'] },
+                    { type: 'emotion_check_in', q: 'When your friend struggles with a problem, what can you do?', answers: ['😊 Encourage them', '🤝 Help them', '👍 Cheer for them'], correct: 1, level: 3.0, domains: ['emotions'] }
+                ],
+                4: [
+                    { type: 'multiple_choice', q: 'What is 12 × 12?', answers: [144, 124, 156, 132], correct: 0, level: 4.0, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'What is 3/4 + 1/4?', answers: [1, '4/8', '4/4', '2/4'], correct: 0, level: 4.1, domains: ['math'] },
+                    { type: 'fill_in_blank_simple', q: 'A rectangle has __ right angles', correct: '4', level: 4.0, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'What is 0.5 + 0.3?', answers: [0.8, 0.7, 0.9, 0.6], correct: 0, level: 4.2, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'If you buy 3 items at $1.25 each, what is the total?', answers: ['$3.75', '$3.25', '$4.00', '$3.50'], correct: 0, level: 4.3, domains: ['math', 'executive'] },
+                    { type: 'sequence', q: 'Order from least to greatest: 0.7, 0.5, 0.9', answers: ['0.5, 0.7, 0.9', '0.9, 0.7, 0.5', '0.7, 0.5, 0.9'], correct: 0, level: 4.2, domains: ['math', 'executive'] },
+                    { type: 'matching', q: 'Which is equivalent to 50%?', answers: ['1/2', '1/4', '3/4', '1/3'], correct: 0, level: 4.3, domains: ['math'] },
+                    { type: 'fill_in_blank_simple', q: 'The area of a rectangle 5×8 is __', correct: '40', level: 4.4, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'What is 7.2 - 3.5?', answers: [3.7, 3.5, 4.0, 3.2], correct: 0, level: 4.4, domains: ['math'] },
+                    { type: 'emotion_check_in', q: 'When you make a mistake, what helps you most?', answers: ['🔄 Try again', '💭 Think differently', '🙋 Ask questions'], correct: 0, level: 4.0, domains: ['emotions', 'executive'] }
+                ],
+                5: [
+                    { type: 'multiple_choice', q: 'What is 15% of 200?', answers: [30, 25, 35, 20], correct: 0, level: 5.0, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'What is 2/3 × 3/4?', answers: ['1/2', '2/4', '6/12', '5/7'], correct: 0, level: 5.1, domains: ['math'] },
+                    { type: 'fill_in_blank_simple', q: 'If x + 7 = 12, then x = __', correct: '5', level: 5.2, domains: ['math', 'executive'] },
+                    { type: 'multiple_choice', q: 'What is the volume of a cube with side 3?', answers: [27, 9, 18, 24], correct: 0, level: 5.3, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'If a train travels 60 miles in 1 hour, how far in 2.5 hours?', answers: [150, 120, 180, 140], correct: 0, level: 5.4, domains: ['math', 'executive'] },
+                    { type: 'sequence', q: 'Order these fractions: 2/3, 1/2, 3/4', answers: ['1/2, 2/3, 3/4', '2/3, 1/2, 3/4', '3/4, 2/3, 1/2'], correct: 0, level: 5.2, domains: ['math', 'executive'] },
+                    { type: 'matching', q: 'Which equals 0.75?', answers: ['3/4', '2/3', '4/5', '1/2'], correct: 0, level: 5.1, domains: ['math'] },
+                    { type: 'fill_in_blank_simple', q: 'The mean of 10, 20, 30 is __', correct: '20', level: 5.3, domains: ['math'] },
+                    { type: 'multiple_choice', q: 'What is 3² + 4²?', answers: [25, 24, 26, 20], correct: 0, level: 5.4, domains: ['math'] },
+                    { type: 'emotion_check_in', q: 'When facing a multi-step problem, what strategy works best?', answers: ['📝 Break it down', '⏸️ Take breaks', '🤔 Review each step'], correct: 0, level: 5.0, domains: ['emotions', 'executive'] }
+                ]
+            },
+            reading: {
+                K: [
+                    { type: 'multiple_choice', q: 'What letter does "apple" start with?', answers: ['A', 'B', 'C', 'D'], correct: 0, level: 0.5, domains: ['decoding'] },
+                    { type: 'rhyming', q: 'Which word rhymes with "cat"?', answers: ['hat', 'dog', 'run', 'yes'], correct: 0, level: 0.6, domains: ['fluency', 'decoding'] },
+                    { type: 'multiple_choice', q: 'How many letters are in your name? (Pick for "Sam")', answers: [3, 2, 4, 5], correct: 0, level: 0.5, domains: ['decoding'] },
+                    { type: 'matching', q: 'Match the letter to the sound: What says "mmmm"?', answers: ['M', 'S', 'T', 'B'], correct: 0, level: 0.6, domains: ['decoding'] },
+                    { type: 'rhyming', q: 'Do "sun" and "fun" rhyme?', answers: ['Yes! ☀️', 'No'], correct: 0, level: 0.7, domains: ['fluency'] },
+                    { type: 'multiple_choice', q: 'Which is a vowel?', answers: ['A', 'B', 'C', 'D'], correct: 0, level: 0.8, domains: ['decoding'] },
+                    { type: 'sequence', q: 'Put these letters in ABC order: C, A, B', answers: ['A, B, C', 'C, B, A', 'B, A, C'], correct: 0, level: 0.7, domains: ['decoding', 'executive'] },
+                    { type: 'fill_in_blank_simple', q: 'The first letter of "ball" is __', correct: 'b', level: 0.8, domains: ['decoding'] },
+                    { type: 'multiple_choice', q: 'How many words are in "I see you"?', answers: [3, 2, 4, 1], correct: 0, level: 0.9, domains: ['comprehension'] },
+                    { type: 'emotion_check_in', q: 'How do you feel when reading a new book?', answers: ['🤔 Curious', '😊 Excited', '😌 Calm'], correct: 0, level: 0.5, domains: ['emotions'] }
+                ],
+                1: [
+                    { type: 'multiple_choice', q: 'What sound does "cat" start with?', answers: ['k', 't', 's', 'a'], correct: 0, level: 1.0, domains: ['decoding'] },
+                    { type: 'multiple_choice', q: 'How many syllables in "butterfly"?', answers: [3, 2, 4, 5], correct: 0, level: 1.5, domains: ['fluency','decoding'] },
+                    { type: 'rhyming', q: 'Which word rhymes with "dog"?', answers: ['fog', 'cat', 'run', 'tree'], correct: 0, level: 1.2, domains: ['fluency'] },
+                    { type: 'multiple_choice', q: 'What is the vowel in "sun"?', answers: ['u', 'o', 'a', 'i'], correct: 0, level: 1.0, domains: ['decoding'] },
+                    { type: 'fill_in_blank_simple', q: 'The word "mat" ends with the sound __', correct: 't', level: 1.1, domains: ['decoding'] },
+                    { type: 'multiple_choice', q: 'Which is a compound word?', answers: ['rainbow', 'happy', 'jump', 'red'], correct: 0, level: 1.8, domains: ['comprehension'] },
+                    { type: 'matching', q: 'Match: "sh" makes the sound in which word?', answers: ['ship', 'cat', 'dog', 'run'], correct: 0, level: 1.3, domains: ['decoding'] },
+                    { type: 'sequence', q: 'Put the story in order: "He ate. He cooked. He sat."', answers: ['He cooked. He ate. He sat.', 'He ate. He cooked. He sat.', 'He sat. He cooked. He ate.'], correct: 0, level: 1.6, domains: ['comprehension', 'executive'] },
+                    { type: 'rhyming', q: 'Which words rhyme? "bee" and __', answers: ['tree', 'dog', 'sun', 'hat'], correct: 0, level: 1.4, domains: ['fluency'] },
+                    { type: 'emotion_check_in', q: 'When a word is hard to read, what do you do?', answers: ['💪 Sound it out', '🙋 Ask for help', '📖 Read it again'], correct: 0, level: 1.0, domains: ['emotions', 'executive'] }
+                ],
+                2: [
+                    { type: 'multiple_choice', q: 'What\'s the plural of "box"?', answers: ['boxes', 'boxs', 'boxies', 'boxen'], correct: 0, level: 2.0, domains: ['comprehension','fluency'] },
+                    { type: 'multiple_choice', q: 'Which word has a silent "e"?', answers: ['cake', 'cat', 'dog', 'run'], correct: 0, level: 2.1, domains: ['decoding'] },
+                    { type: 'fill_in_blank_simple', q: 'A synonym for "happy" is __', correct: 'glad', level: 2.2, domains: ['comprehension'] },
+                    { type: 'rhyming', q: 'Which word rhymes with "night"?', answers: ['light', 'day', 'sun', 'moon'], correct: 0, level: 2.0, domains: ['fluency'] },
+                    { type: 'multiple_choice', q: '"The cat sat." Who sat?', answers: ['The cat', 'The dog', 'The bird', 'The mat'], correct: 0, level: 2.1, domains: ['comprehension'] },
+                    { type: 'sequence', q: 'Order the events: "She woke up. She ate breakfast. She went to school."', answers: ['Woke, ate, school', 'Ate, school, woke', 'School, woke, ate'], correct: 0, level: 2.3, domains: ['comprehension', 'executive'] },
+                    { type: 'matching', q: 'Which word means the opposite of "hot"?', answers: ['cold', 'warm', 'cool', 'freeze'], correct: 0, level: 2.2, domains: ['comprehension'] },
+                    { type: 'multiple_choice', q: 'How many syllables in "elephant"?', answers: [3, 2, 4, 5], correct: 0, level: 2.3, domains: ['fluency', 'decoding'] },
+                    { type: 'fill_in_blank_simple', q: 'A word that describes is called an __', correct: 'adjective', level: 2.4, domains: ['comprehension'] },
+                    { type: 'emotion_check_in', q: 'When you finish a chapter, how do you feel?', answers: ['🎉 Proud', '😊 Happy', '🤔 Curious for more'], correct: 0, level: 2.0, domains: ['emotions'] }
+                ],
+                3: [
+                    { type: 'multiple_choice', q: '"The brave knight fought the dragon." What is the main idea?', answers: ['Knight vs dragon', 'Knight is brave', 'Dragons exist', 'Fighting'], correct: 0, level: 3.0, domains: ['comprehension'] },
+                    { type: 'fill_in_blank_simple', q: 'A word opposite to "big" is __', correct: 'small', level: 3.0, domains: ['comprehension'] },
+                    { type: 'multiple_choice', q: 'What does "enormous" mean?', answers: ['Very big', 'Very small', 'Very fast', 'Very slow'], correct: 0, level: 3.1, domains: ['comprehension'] },
+                    { type: 'sequence', q: 'Order these story parts: climax, beginning, end', answers: ['Beginning, climax, end', 'Climax, beginning, end', 'End, climax, beginning'], correct: 0, level: 3.3, domains: ['comprehension', 'executive'] },
+                    { type: 'rhyming', q: 'Which word rhymes with "bright"?', answers: ['light', 'dark', 'dim', 'shine'], correct: 0, level: 3.0, domains: ['fluency'] },
+                    { type: 'multiple_choice', q: '"She whispered softly." How did she speak?', answers: ['Quietly', 'Loudly', 'Quickly', 'Slowly'], correct: 0, level: 3.2, domains: ['comprehension'] },
+                    { type: 'matching', q: 'Which is a metaphor? "Time is money" or "The cat is black"?', answers: ['Time is money', 'The cat is black'], correct: 0, level: 3.4, domains: ['comprehension'] },
+                    { type: 'fill_in_blank_simple', q: 'The prefix "un-" means __', correct: 'not', level: 3.3, domains: ['decoding', 'comprehension'] },
+                    { type: 'multiple_choice', q: 'What is the root word of "unhappy"?', answers: ['happy', 'un', 'unhap', 'py'], correct: 0, level: 3.2, domains: ['decoding'] },
+                    { type: 'emotion_check_in', q: 'If a story makes you sad, is that okay?', answers: ['😢 Yes, stories can make us feel', '😐 No, just read', '😊 Only happy stories'], correct: 0, level: 3.0, domains: ['emotions'] }
+                ],
+                4: [
+                    { type: 'multiple_choice', q: 'What is a theme of "The Tortoise and the Hare"?', answers: ['Slow and steady wins', 'Speed is best', 'Animals can talk', 'Racing is fun'], correct: 0, level: 4.0, domains: ['comprehension'] },
+                    { type: 'fill_in_blank_simple', q: 'A simile uses "like" or __', correct: 'as', level: 4.1, domains: ['comprehension'] },
+                    { type: 'multiple_choice', q: 'What point of view is "I went to the store"?', answers: ['First person', 'Second person', 'Third person'], correct: 0, level: 4.2, domains: ['comprehension'] },
+                    { type: 'sequence', q: 'Organize an essay: intro, body, conclusion. What comes first?', answers: ['Intro', 'Body', 'Conclusion'], correct: 0, level: 4.1, domains: ['comprehension', 'executive'] },
+                    { type: 'matching', q: 'Which literary device: "The wind whispered secrets"?', answers: ['Personification', 'Simile', 'Metaphor', 'Alliteration'], correct: 0, level: 4.3, domains: ['comprehension'] },
+                    { type: 'multiple_choice', q: '"She was as busy as a bee." This is a __', answers: ['Simile', 'Metaphor', 'Personification', 'Alliteration'], correct: 0, level: 4.2, domains: ['comprehension'] },
+                    { type: 'fill_in_blank_simple', q: 'An inference is a conclusion based on __ and evidence', correct: 'reasoning', level: 4.4, domains: ['comprehension', 'executive'] },
+                    { type: 'rhyming', q: 'Find the rhyme scheme: "Roses are red / Violets are blue"', answers: ['A A B B', 'A B A B', 'A B C D'], correct: 0, level: 4.3, domains: ['fluency', 'comprehension'] },
+                    { type: 'multiple_choice', q: 'Context clues help you figure out __', answers: ['Unknown words', 'Page numbers', 'Author names', 'Book titles'], correct: 0, level: 4.1, domains: ['comprehension'] },
+                    { type: 'emotion_check_in', q: 'When you disagree with a character\'s choice, what can you do?', answers: ['🤔 Think about why', '📝 Write your thoughts', '💭 Imagine different ending'], correct: 0, level: 4.0, domains: ['emotions', 'executive'] }
+                ],
+                5: [
+                    { type: 'multiple_choice', q: 'What is irony?', answers: ['Opposite of what\'s expected', 'Very funny', 'Very serious', 'A type of poem'], correct: 0, level: 5.0, domains: ['comprehension'] },
+                    { type: 'fill_in_blank_simple', q: 'The author\'s purpose might be to inform, entertain, or __', correct: 'persuade', level: 5.1, domains: ['comprehension'] },
+                    { type: 'multiple_choice', q: 'Which is an example of foreshadowing?', answers: ['Dark clouds hint at a storm', 'The sun is bright', 'She ate lunch', 'They walked home'], correct: 0, level: 5.2, domains: ['comprehension'] },
+                    { type: 'sequence', q: 'Arrange argument structure: claim, evidence, reasoning', answers: ['Claim, evidence, reasoning', 'Evidence, claim, reasoning', 'Reasoning, claim, evidence'], correct: 0, level: 5.3, domains: ['comprehension', 'executive'] },
+                    { type: 'matching', q: 'Which text structure compares two things?', answers: ['Compare/contrast', 'Chronological', 'Problem/solution', 'Cause/effect'], correct: 0, level: 5.2, domains: ['comprehension'] },
+                    { type: 'multiple_choice', q: 'A protagonist is the __', answers: ['Main character', 'Villain', 'Setting', 'Conflict'], correct: 0, level: 5.1, domains: ['comprehension'] },
+                    { type: 'fill_in_blank_simple', q: 'To analyze a text means to __ it deeply', correct: 'examine', level: 5.3, domains: ['comprehension', 'executive'] },
+                    { type: 'rhyming', q: 'In poetry, what is a stanza?', answers: ['A group of lines', 'A rhyme', 'A metaphor', 'A character'], correct: 0, level: 5.2, domains: ['comprehension'] },
+                    { type: 'multiple_choice', q: 'What does "bias" mean in a text?', answers: ['Author\'s preference', 'Facts only', 'No opinion', 'Very detailed'], correct: 0, level: 5.4, domains: ['comprehension', 'executive'] },
+                    { type: 'emotion_check_in', q: 'When analyzing complex texts, what helps you stay focused?', answers: ['📝 Take notes', '⏸️ Take breaks', '🔄 Reread sections'], correct: 0, level: 5.0, domains: ['emotions', 'executive'] }
+                ]
+            }
         };
 
         // ========================================
@@ -1323,7 +1503,7 @@
         }
 
         // ========================================
-        // GATOR MESSAGES
+        // CONTEXT-SENSITIVE GATOR MESSAGES
         // ========================================
 
         function updateGatorMessage(message, elementId = 'gatorMessage') {
@@ -1332,6 +1512,8 @@
         }
 
         function getEncouragementMessage(isCorrect) {
+            const ctx = gameState.student.context;
+
             if (isCorrect) {
                 const messages = [
                     'Excellent work!',
@@ -1342,12 +1524,16 @@
                 ];
                 return messages[Math.floor(Math.random() * messages.length)];
             } else {
-                const messages = [
+                const messages = ctx === 'school' ? [
+                    'Almost there! Want to try another?',
+                    'Good try! If this feels tricky, you can raise your hand.',
+                    'That\'s okay! Let\'s keep going.',
+                    'You\'re learning! Your teacher is here to help.'
+                ] : [
                     'Almost there! Let\'s try another one.',
                     'Good try! Want to keep going?',
-                    'I can see you\'re thinking hard. Let me help!',
                     'That\'s okay! Let\'s try a different one.',
-                    'You\'re learning! Let\'s keep going.'
+                    'You\'re learning! Ask your grown-up if you need help.'
                 ];
                 return messages[Math.floor(Math.random() * messages.length)];
             }
@@ -1517,7 +1703,7 @@
 
             gameState.student.name = name;
             gameState.student.gradeEnrolled = grade === 'K' ? 0 : parseInt(grade);
-            gameState.student.gradeCurrent = gameState.student.gradeEnrolled - 0.8;
+            gameState.student.gradeCurrent = Math.max(0, gameState.student.gradeEnrolled - 0.8);
             gameState.student.gradeTarget = gameState.student.gradeEnrolled + 0.5;
             gameState.student.subject = subject;
             gameState.student.context = context;
@@ -1540,7 +1726,7 @@
         function updateDashboard() {
             const { student, session } = gameState;
 
-            document.getElementById('enrolledGrade').textContent = student.gradeEnrolled;
+            document.getElementById('enrolledGrade').textContent = student.gradeEnrolled === 0 ? 'K' : student.gradeEnrolled;
             document.getElementById('currentGrade').textContent = student.gradeCurrent.toFixed(1);
             document.getElementById('targetGrade').textContent = student.gradeTarget.toFixed(1);
 
@@ -1614,17 +1800,49 @@
         }
 
         // ========================================
-        // QUESTION MANAGEMENT
+        // GRADE-AWARE QUESTION SELECTION
         // ========================================
+
+        function getGradeKey(gradeNumber) {
+            if (gradeNumber === 0) return 'K';
+            return Math.floor(Math.max(0, Math.min(5, gradeNumber))).toString();
+        }
 
         function loadNextQuestion() {
             const subject = gameState.student.subject;
-            const available = questions[subject] || [];
-            const filtered = available.filter(
-                q => q.level <= gameState.student.gradeCurrent + 0.5
-            );
+            const currentGrade = gameState.student.gradeCurrent;
+            const enrolledGrade = gameState.student.gradeEnrolled;
+            const targetGrade = gameState.student.gradeTarget;
 
-            const pool = filtered.length > 0 ? filtered : available;
+            // Get questions from current grade level, with some from adjacent levels
+            const currentKey = getGradeKey(currentGrade);
+            const lowerKey = getGradeKey(Math.max(0, currentGrade - 1));
+            const higherKey = getGradeKey(Math.min(5, currentGrade + 1));
+
+            let pool = [];
+
+            // Primary pool: current level (70%)
+            if (questions[subject] && questions[subject][currentKey]) {
+                pool = pool.concat(questions[subject][currentKey]);
+                pool = pool.concat(questions[subject][currentKey]);
+                pool = pool.concat(questions[subject][currentKey]);
+            }
+
+            // Support pool: lower level (15%)
+            if (questions[subject] && questions[subject][lowerKey] && lowerKey !== currentKey) {
+                pool = pool.concat(questions[subject][lowerKey]);
+            }
+
+            // Challenge pool: higher level (15%)
+            if (questions[subject] && questions[subject][higherKey] && higherKey !== currentKey) {
+                pool = pool.concat(questions[subject][higherKey]);
+            }
+
+            // Fallback: all questions from subject
+            if (pool.length === 0 && questions[subject]) {
+                pool = Object.values(questions[subject]).flat();
+            }
+
             if (pool.length === 0) {
                 updateGatorMessage('You\'ve completed all available questions! Great job!', 'gatorPracticeMessage');
                 setTimeout(endSession, 3000);
@@ -1634,27 +1852,107 @@
             const question = pool[Math.floor(Math.random() * pool.length)];
             gameState.session.currentQuestion = question;
 
-            document.getElementById('questionText').textContent = question.q;
-
-            const answersContainer = document.getElementById('answersContainer');
-            answersContainer.innerHTML = '';
-
-            question.answers.forEach((answer, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'answer-btn';
-                btn.textContent = answer;
-                btn.onclick = () => checkAnswer(index);
-                answersContainer.appendChild(btn);
-            });
-
+            renderQuestion(question);
             updateGatorMessage('Let\'s solve this together!', 'gatorPracticeMessage');
         }
 
-        function checkAnswer(selectedIndex) {
+        // ========================================
+        // UNIFIED QUESTION RENDERER
+        // ========================================
+
+        function renderQuestion(question) {
+            document.getElementById('questionText').textContent = question.q;
+            const container = document.getElementById('answersContainer');
+            container.innerHTML = '';
+
+            const qType = question.type || 'multiple_choice';
+
+            if (qType === 'fill_in_blank_simple') {
+                // Render input + submit button
+                const inputContainer = document.createElement('div');
+                inputContainer.className = 'fill-input-container';
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'fill-input';
+                input.placeholder = 'Type your answer...';
+                input.id = 'fillBlankInput';
+
+                const submitBtn = document.createElement('button');
+                submitBtn.className = 'submit-btn';
+                submitBtn.textContent = 'Submit';
+                submitBtn.onclick = () => {
+                    const answer = input.value.trim().toLowerCase();
+                    checkAnswer(answer);
+                };
+
+                // Also submit on Enter key
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        const answer = input.value.trim().toLowerCase();
+                        checkAnswer(answer);
+                    }
+                });
+
+                inputContainer.appendChild(input);
+                inputContainer.appendChild(submitBtn);
+                container.appendChild(inputContainer);
+
+                // Focus the input
+                setTimeout(() => input.focus(), 100);
+
+            } else {
+                // Render as multiple-choice buttons (works for MC, matching, rhyming, sequence, emotion_check_in)
+                question.answers.forEach((answer, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'answer-btn';
+                    btn.textContent = answer;
+                    btn.onclick = () => checkAnswer(index);
+                    container.appendChild(btn);
+                });
+            }
+        }
+
+        // ========================================
+        // UNIFIED ANSWER CHECKER
+        // ========================================
+
+        function checkAnswer(selectedIndexOrValue) {
             const question = gameState.session.currentQuestion;
             if (!question) return;
-            const isCorrect = selectedIndex === question.correct;
 
+            const qType = question.type || 'multiple_choice';
+            let isCorrect = false;
+
+            if (qType === 'fill_in_blank_simple') {
+                // Compare text (case-insensitive)
+                const correctAnswer = (question.correct || '').toString().toLowerCase().trim();
+                const userAnswer = (selectedIndexOrValue || '').toString().toLowerCase().trim();
+                isCorrect = userAnswer === correctAnswer;
+
+                // For fill-in-blank, we'll just show feedback without highlighting buttons
+                const input = document.getElementById('fillBlankInput');
+                if (input) {
+                    input.disabled = true;
+                    if (isCorrect) {
+                        input.style.borderColor = 'var(--neon-green)';
+                        input.style.boxShadow = '0 0 30px rgba(0, 255, 136, 0.6)';
+                    } else {
+                        input.style.borderColor = 'var(--neon-pink)';
+                        input.style.boxShadow = '0 0 30px rgba(255, 0, 110, 0.5)';
+                    }
+                }
+            } else {
+                // Multiple choice / matching / rhyming / sequence / emotion_check_in
+                isCorrect = selectedIndexOrValue === question.correct;
+
+                const buttons = document.querySelectorAll('.answer-btn');
+                buttons[selectedIndexOrValue].classList.add(isCorrect ? 'correct' : 'incorrect');
+                buttons[question.correct].classList.add('correct');
+                buttons.forEach(btn => btn.disabled = true);
+            }
+
+            // Update session stats
             const s = gameState.session;
             s.questionsAnswered++;
             if (isCorrect) {
@@ -1664,11 +1962,6 @@
             } else {
                 s.currentStreak = 0;
             }
-
-            const buttons = document.querySelectorAll('.answer-btn');
-            buttons[selectedIndex].classList.add(isCorrect ? 'correct' : 'incorrect');
-            buttons[question.correct].classList.add('correct');
-            buttons.forEach(btn => btn.disabled = true);
 
             const moodKey = calculateMood();
             updateLaBuBuMood(moodKey);
@@ -1681,16 +1974,17 @@
             gameState.history.push({
                 t: Date.now(),
                 subject: gameState.student.subject,
+                type: qType,
                 text: question.q,
-                selected: selectedIndex,
-                correctIndex: question.correct,
+                selected: selectedIndexOrValue,
+                correctAnswer: question.correct,
                 correct: isCorrect,
                 domains: question.domains || []
             });
 
             saveState();
 
-            setTimeout(loadNextQuestion, 2000);
+            setTimeout(loadNextQuestion, 2500);
         }
 
         // ========================================
@@ -1746,12 +2040,14 @@
         }
 
         // ========================================
-        // DIAGNOSTICS
+        // ENHANCED DIAGNOSTICS
         // ========================================
 
         function updateDiagnostics() {
             const out = document.getElementById('diagnosticsOutput');
             if (!out) return;
+
+            const lastQ = gameState.session.currentQuestion;
             const snapshot = {
                 student: gameState.student,
                 session: {
@@ -1761,9 +2057,19 @@
                     maxStreak: gameState.session.maxStreak,
                     mood: gameState.session.mood
                 },
+                lastQuestion: lastQ ? {
+                    type: lastQ.type,
+                    domains: lastQ.domains,
+                    level: lastQ.level
+                } : null,
                 domains: Object.fromEntries(
-                    Object.entries(gameState.domains).map(([k, v]) => [k, { score: v.score }])
-                )
+                    Object.entries(gameState.domains).map(([k, v]) => [k, { score: v.score.toFixed(2) }])
+                ),
+                dataIntegrity: {
+                    studentNameSet: !!gameState.student.name,
+                    domainsValid: Object.keys(gameState.domains).length === 6,
+                    historyEntries: gameState.history.length
+                }
             };
             out.textContent = JSON.stringify(snapshot, null, 2);
         }
