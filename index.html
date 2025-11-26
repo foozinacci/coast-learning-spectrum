@@ -988,6 +988,104 @@
             opacity: 0.8;
         }
 
+        /* Grade Dials */
+        .grade-dials-container {
+            display: grid;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .dial-group {
+            position: relative;
+        }
+
+        .grade-dial {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 12px;
+            background: linear-gradient(to right,
+                var(--neon-blue) 0%,
+                var(--neon-green) 50%,
+                var(--neon-purple) 100%);
+            border-radius: 10px;
+            outline: none;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+            cursor: pointer;
+        }
+
+        .grade-dial:hover {
+            opacity: 1;
+        }
+
+        .grade-dial::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border: 3px solid var(--neon-blue);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0,240,255,0.6);
+            transition: all 0.2s;
+        }
+
+        .grade-dial::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 25px rgba(0,240,255,0.9);
+        }
+
+        .grade-dial::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border: 3px solid var(--neon-blue);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0,240,255,0.6);
+            transition: all 0.2s;
+        }
+
+        .grade-dial::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 25px rgba(0,240,255,0.9);
+        }
+
+        /* Header Spectrum */
+        #headerSpectrum {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            justify-content: flex-end;
+        }
+
+        #headerRadar {
+            display: block;
+            background: radial-gradient(circle at center, rgba(15,23,42,0.9), rgba(15,23,42,0.2));
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        #headerStats {
+            display: grid;
+            grid-template-columns: repeat(3, auto);
+            gap: 8px;
+            font-size: 0.75em;
+        }
+
+        .header-stat-badge {
+            padding: 4px 8px;
+            background: rgba(0,240,255,0.1);
+            border: 1px solid rgba(0,240,255,0.3);
+            border-radius: 6px;
+            white-space: nowrap;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             header h1 {
@@ -1037,6 +1135,15 @@
                 width: 100% !important;
                 height: auto !important;
             }
+
+            #headerSpectrum {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            #headerStats {
+                grid-template-columns: repeat(2, auto);
+            }
         }
     </style>
 </head>
@@ -1046,8 +1153,26 @@
 
     <header>
         <div class="container">
-            <h1>🌈 LEARNING SPECTRUM</h1>
-            <p class="tagline">Every color of how they learn</p>
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
+                <!-- Left: Title -->
+                <div>
+                    <h1>🌈 LEARNING SPECTRUM</h1>
+                    <p class="tagline">Every color of how they learn</p>
+                </div>
+
+                <!-- Right: Mini Spectrum (always visible except on setup) -->
+                <div id="headerSpectrum" class="hidden">
+                    <!-- Mini radar chart -->
+                    <div style="position: relative;">
+                        <canvas id="headerRadar" width="120" height="120"></canvas>
+                    </div>
+
+                    <!-- Compact stats -->
+                    <div id="headerStats">
+                        <!-- Stats badges will be dynamically generated -->
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -1064,17 +1189,65 @@
                 <input type="text" id="studentName" placeholder="Enter your name...">
             </div>
 
+            <!-- Interactive Grade Dials -->
             <div class="form-group">
-                <label for="gradeEnrolled">📊 Current Level:</label>
-                <select id="gradeEnrolled">
-                    <option value="">Select grade level</option>
-                    <option value="K">Kindergarten</option>
-                    <option value="1">Grade 1</option>
-                    <option value="2">Grade 2</option>
-                    <option value="3">Grade 3</option>
-                    <option value="4">Grade 4</option>
-                    <option value="5">Grade 5</option>
-                </select>
+                <h3 style="color: var(--neon-blue); font-family: 'Orbitron', sans-serif; margin-bottom: 10px;">📊 Grade Level Setup</h3>
+                <p style="color: var(--text-muted); font-size: 0.9em; margin-bottom: 20px;">
+                    Adjust the dials to set where your student is in their learning journey
+                </p>
+
+                <div class="grade-dials-container">
+                    <!-- Enrolled Grade -->
+                    <div class="dial-group">
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--neon-blue);">
+                            📘 Enrolled Grade
+                            <span id="enrolledDisplay" style="float: right; font-size: 1.2em;">2</span>
+                        </label>
+                        <input type="range" id="enrolledDial"
+                               min="0" max="5" step="1" value="2"
+                               class="grade-dial">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: var(--text-muted); margin-top: 4px;">
+                            <span>K</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+                        </div>
+                    </div>
+
+                    <!-- Current Level -->
+                    <div class="dial-group">
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--neon-green);">
+                            📗 Current Level
+                            <span id="currentDisplay" style="float: right; font-size: 1.2em;">1.4</span>
+                        </label>
+                        <input type="range" id="currentDial"
+                               min="0" max="6" step="0.1" value="1.4"
+                               class="grade-dial">
+                        <div style="font-size: 0.8em; color: var(--text-muted); margin-top: 4px; text-align: center;">
+                            Early K to Advanced 5th
+                        </div>
+                    </div>
+
+                    <!-- Target Level -->
+                    <div class="dial-group">
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--neon-purple);">
+                            🎯 Target Level
+                            <span id="targetDisplay" style="float: right; font-size: 1.2em;">2.5</span>
+                        </label>
+                        <input type="range" id="targetDial"
+                               min="0" max="6" step="0.1" value="2.5"
+                               class="grade-dial">
+                        <div style="font-size: 0.8em; color: var(--text-muted); margin-top: 4px; text-align: center;">
+                            Goal by end of year
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Preview -->
+                <div style="margin-top: 20px; padding: 15px; background: rgba(0,240,255,0.05); border-radius: 10px; border: 1px solid rgba(0,240,255,0.2);">
+                    <p style="margin: 0; font-size: 0.9em;">
+                        <strong id="studentNamePreview">Student</strong> is enrolled in <strong id="enrolledPreview">Grade 2</strong>,
+                        currently performing at <strong id="currentPreview">1.4 level</strong>,
+                        with a target of <strong id="targetPreview">2.5</strong> by year end.
+                    </p>
+                </div>
             </div>
 
             <div class="form-group">
@@ -1750,6 +1923,19 @@
                 screen.classList.add('hidden');
             });
             document.getElementById(screenId).classList.remove('hidden');
+
+            // Toggle header spectrum visibility
+            const headerSpectrum = document.getElementById('headerSpectrum');
+            if (headerSpectrum) {
+                // Hide on setup, show everywhere else
+                if (screenId === 'setupScreen') {
+                    headerSpectrum.classList.add('hidden');
+                } else {
+                    headerSpectrum.classList.remove('hidden');
+                    // Redraw header spectrum when showing
+                    drawHeaderRadar();
+                }
+            }
         }
 
         // ========================================
@@ -1862,6 +2048,166 @@
             });
         }
 
+        // ========================================
+        // HEADER SPECTRUM (Mini Radar + Stats)
+        // ========================================
+
+        let headerRadarCtx = null;
+
+        function initHeaderRadar() {
+            const c = document.getElementById('headerRadar');
+            if (!c) return;
+            headerRadarCtx = c.getContext('2d');
+            drawHeaderRadar();
+        }
+
+        function drawHeaderRadar() {
+            if (!headerRadarCtx) return;
+            const c = headerRadarCtx.canvas;
+            const w = c.width;
+            const h = c.height;
+            headerRadarCtx.clearRect(0, 0, w, h);
+
+            const centerX = w / 2;
+            const centerY = h / 2;
+            const radius = Math.min(w, h) * 0.42;
+            const axes = ['decoding','comprehension','fluency','math','executive','emotions'];
+            const angleStep = (Math.PI * 2) / axes.length;
+
+            headerRadarCtx.save();
+            headerRadarCtx.translate(centerX, centerY);
+            headerRadarCtx.strokeStyle = 'rgba(148,163,184,0.5)';
+            headerRadarCtx.lineWidth = 1;
+
+            // Rings (simplified - just 2)
+            const rings = 2;
+            for (let r = 1; r <= rings; r++) {
+                const rVal = radius * (r / rings);
+                headerRadarCtx.beginPath();
+                for (let i = 0; i < axes.length; i++) {
+                    const angle = i * angleStep - Math.PI / 2;
+                    const x = Math.cos(angle) * rVal;
+                    const y = Math.sin(angle) * rVal;
+                    if (i === 0) headerRadarCtx.moveTo(x, y);
+                    else headerRadarCtx.lineTo(x, y);
+                }
+                headerRadarCtx.closePath();
+                headerRadarCtx.stroke();
+            }
+
+            // Axes (simplified)
+            headerRadarCtx.strokeStyle = 'rgba(148,163,184,0.5)';
+            for (let i = 0; i < axes.length; i++) {
+                const angle = i * angleStep - Math.PI / 2;
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius;
+                headerRadarCtx.beginPath();
+                headerRadarCtx.moveTo(0, 0);
+                headerRadarCtx.lineTo(x, y);
+                headerRadarCtx.stroke();
+            }
+
+            // Polygon
+            headerRadarCtx.beginPath();
+            axes.forEach((axis, i) => {
+                const val = (gameState.domains[axis]?.score ?? 0.3);
+                const rVal = radius * val;
+                const angle = i * angleStep - Math.PI / 2;
+                const x = Math.cos(angle) * rVal;
+                const y = Math.sin(angle) * rVal;
+                if (i === 0) headerRadarCtx.moveTo(x, y);
+                else headerRadarCtx.lineTo(x, y);
+            });
+            headerRadarCtx.closePath();
+
+            const grad = headerRadarCtx.createRadialGradient(0,0,0,0,0,radius);
+            grad.addColorStop(0, 'rgba(0,240,255,0.6)');
+            grad.addColorStop(0.5, 'rgba(139,92,246,0.4)');
+            grad.addColorStop(1, 'rgba(255,0,110,0.2)');
+
+            headerRadarCtx.fillStyle = grad;
+            headerRadarCtx.strokeStyle = 'rgba(0,240,255,0.8)';
+            headerRadarCtx.lineWidth = 2;
+            headerRadarCtx.shadowColor = 'rgba(0,240,255,0.6)';
+            headerRadarCtx.shadowBlur = 15;
+            headerRadarCtx.fill();
+            headerRadarCtx.stroke();
+
+            headerRadarCtx.restore();
+            updateHeaderStats();
+        }
+
+        function updateHeaderStats() {
+            const container = document.getElementById('headerStats');
+            if (!container) return;
+
+            container.innerHTML = '';
+            const domainNames = {
+                decoding: 'Reading',
+                comprehension: 'Understanding',
+                fluency: 'Fluency',
+                math: 'Math',
+                executive: 'Focus',
+                emotions: 'Effort'
+            };
+
+            Object.entries(domainNames).forEach(([key, label]) => {
+                const score = (gameState.domains[key]?.score ?? 0) * 100;
+                const badge = document.createElement('div');
+                badge.className = 'header-stat-badge';
+                badge.textContent = `${label} ${score.toFixed(0)}%`;
+                container.appendChild(badge);
+            });
+        }
+
+        // ========================================
+        // INTERACTIVE GRADE DIALS
+        // ========================================
+
+        function initGradeDials() {
+            const enrolledDial = document.getElementById('enrolledDial');
+            const currentDial = document.getElementById('currentDial');
+            const targetDial = document.getElementById('targetDial');
+            const studentName = document.getElementById('studentName');
+
+            if (!enrolledDial) return;
+
+            // Update displays when dials move
+            enrolledDial.addEventListener('input', (e) => {
+                const val = e.target.value;
+                const gradeLabel = val === '0' ? 'K' : val;
+                document.getElementById('enrolledDisplay').textContent = gradeLabel;
+                document.getElementById('enrolledPreview').textContent = val === '0' ? 'Kindergarten' : `Grade ${val}`;
+
+                // Auto-adjust current and target based on enrolled
+                const enrolled = parseFloat(val);
+                currentDial.value = Math.max(0, enrolled - 0.6);
+                targetDial.value = enrolled + 0.5;
+                currentDial.dispatchEvent(new Event('input'));
+                targetDial.dispatchEvent(new Event('input'));
+            });
+
+            currentDial.addEventListener('input', (e) => {
+                const val = parseFloat(e.target.value).toFixed(1);
+                document.getElementById('currentDisplay').textContent = val;
+                document.getElementById('currentPreview').textContent = `${val} level`;
+            });
+
+            targetDial.addEventListener('input', (e) => {
+                const val = parseFloat(e.target.value).toFixed(1);
+                document.getElementById('targetDisplay').textContent = val;
+                document.getElementById('targetPreview').textContent = val;
+            });
+
+            // Update student name preview
+            if (studentName) {
+                studentName.addEventListener('input', (e) => {
+                    const name = e.target.value || 'Student';
+                    document.getElementById('studentNamePreview').textContent = name;
+                });
+            }
+        }
+
         function nudgeDomains(domains, isCorrect) {
             domains.forEach(d => {
                 const dom = gameState.domains[d];
@@ -1874,6 +2220,7 @@
                 });
             });
             drawSpectrumRadar();
+            drawHeaderRadar();
         }
 
         // ========================================
@@ -1889,24 +2236,28 @@
             }
             initMoodButtons();
             initRadar();
+            initHeaderRadar();
+            initGradeDials();
             updateDiagnostics();
         }
 
         function startLearning() {
             const name = document.getElementById('studentName').value;
-            const grade = document.getElementById('gradeEnrolled').value;
+            const enrolledDial = document.getElementById('enrolledDial');
+            const currentDial = document.getElementById('currentDial');
+            const targetDial = document.getElementById('targetDial');
             const subject = document.getElementById('subject').value;
             const context = document.getElementById('contextMode').value;
 
-            if (!name || !grade) {
+            if (!name || !enrolledDial) {
                 alert('Please fill in all fields!');
                 return;
             }
 
             gameState.student.name = name;
-            gameState.student.gradeEnrolled = grade === 'K' ? 0 : parseInt(grade);
-            gameState.student.gradeCurrent = Math.max(0, gameState.student.gradeEnrolled - 0.8);
-            gameState.student.gradeTarget = gameState.student.gradeEnrolled + 0.5;
+            gameState.student.gradeEnrolled = parseFloat(enrolledDial.value);
+            gameState.student.gradeCurrent = parseFloat(currentDial.value);
+            gameState.student.gradeTarget = parseFloat(targetDial.value);
             gameState.student.subject = subject;
             gameState.student.context = context;
 
@@ -1923,6 +2274,7 @@
             showScreen('dashboardScreen');
             updateDashboard();
             drawSpectrumRadar();
+            drawHeaderRadar();
         }
 
         function updateDashboard() {
