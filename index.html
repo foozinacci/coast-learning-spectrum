@@ -1019,6 +1019,57 @@
             background: rgba(15, 23, 42, 0.8);
         }
 
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(148, 163, 184, 0.2);
+            border: 2px solid rgba(148, 163, 184, 0.3);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 2px;
+            bottom: 2px;
+            background-color: var(--text-muted);
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: rgba(0, 240, 255, 0.3);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+            background-color: var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
         /* Hidden */
         .hidden {
             display: none !important;
@@ -1285,22 +1336,70 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            /* Base sizing - no zoom required */
+            body {
+                font-size: 16px;
+            }
+
+            .container {
+                padding: 10px;
+                max-width: 100%;
+            }
+
+            header {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+
             header h1 {
-                font-size: 1.5em;
+                font-size: 1.3em;
+            }
+
+            header .tagline {
+                font-size: 0.85em;
+            }
+
+            .header-tracking {
+                font-size: 0.75em !important;
+                min-width: unset !important;
+            }
+
+            /* Cards - full width, vertical stack */
+            .card {
+                padding: 15px;
+                margin-bottom: 12px;
+            }
+
+            .card h2 {
+                font-size: 1.2em;
             }
 
             .three-grade {
                 grid-template-columns: 1fr;
+                gap: 15px;
             }
 
             .dashboard-grid {
                 grid-template-columns: 1fr;
+                gap: 12px;
             }
 
+            /* Characters */
             .labubu {
-                width: 70px;
-                height: 70px;
-                font-size: 2em;
+                width: 60px;
+                height: 60px;
+                font-size: 1.8em;
+            }
+
+            .gator {
+                width: 60px;
+                height: 60px;
+                font-size: 1.8em;
+            }
+
+            .speech-bubble {
+                font-size: 0.9em;
+                padding: 12px;
             }
 
             .speech-bubble::before {
@@ -1309,21 +1408,49 @@
                 transform: translateX(-50%);
             }
 
+            /* Buttons */
             .btn {
-                padding: 8px 18px;
-                font-size: 0.85em;
+                padding: 12px 20px;
+                font-size: 0.9em;
+                width: 100%;
+                margin-bottom: 10px;
             }
 
+            .btn span {
+                font-size: 1em;
+            }
+
+            /* Setup screen - grade dials */
+            .dial-group {
+                margin-bottom: 20px;
+            }
+
+            .dial-group label {
+                font-size: 0.95em;
+            }
+
+            .grade-dial {
+                height: 50px;
+            }
+
+            /* Questions and answers */
             .question {
-                font-size: 1.05em;
-                padding: 15px;
+                font-size: 1em;
+                padding: 12px;
+            }
+
+            .answers {
+                grid-template-columns: 1fr;
+                gap: 10px;
             }
 
             .answer-btn {
                 font-size: 0.95em;
-                padding: 12px;
+                padding: 14px;
+                min-height: 50px;
             }
 
+            /* Spectrum radar */
             .spectrum-layout {
                 flex-direction: column;
             }
@@ -1331,6 +1458,7 @@
             #spectrumRadar {
                 width: 100% !important;
                 height: auto !important;
+                max-height: 300px;
             }
 
             #headerSpectrum {
@@ -1338,8 +1466,135 @@
                 width: 100%;
             }
 
+            #headerRadar {
+                width: 120px !important;
+                height: 120px !important;
+            }
+
             #headerStats {
-                grid-template-columns: repeat(2, auto);
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .header-stat-badge {
+                font-size: 0.75em;
+                padding: 6px 10px;
+            }
+
+            /* Form inputs */
+            .form-group input,
+            .form-group select {
+                font-size: 1em;
+                padding: 12px;
+            }
+
+            .form-group label {
+                font-size: 0.85em;
+            }
+
+            /* Module toggles */
+            .form-group .switch {
+                width: 50px;
+                height: 28px;
+            }
+
+            .slider:before {
+                height: 22px;
+                width: 22px;
+            }
+
+            input:checked + .slider:before {
+                transform: translateX(22px);
+            }
+
+            /* Progress bars */
+            .progress-bar {
+                height: 30px;
+            }
+
+            .progress-fill {
+                font-size: 0.85em;
+            }
+
+            /* Mood buttons */
+            .mood-button {
+                font-size: 0.8em;
+                padding: 8px 12px;
+            }
+
+            .mood-button .emoji {
+                font-size: 1.2em;
+            }
+
+            /* Modal */
+            .modal-content {
+                margin: 10px;
+                max-width: calc(100% - 20px);
+                max-height: calc(100vh - 40px);
+                overflow-y: auto;
+            }
+
+            .modal-header h2 {
+                font-size: 1.2em;
+            }
+
+            .modal-body {
+                font-size: 0.9em;
+                padding: 15px;
+            }
+
+            /* Diagnostics */
+            .diagnostics-collapse summary {
+                font-size: 0.9em;
+            }
+
+            #diagnosticsOutput {
+                font-size: 0.75em;
+                max-height: 200px;
+                overflow-y: auto;
+            }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 480px) {
+            body {
+                font-size: 15px;
+            }
+
+            .container {
+                padding: 8px;
+            }
+
+            header h1 {
+                font-size: 1.1em;
+            }
+
+            .card {
+                padding: 12px;
+            }
+
+            .card h2 {
+                font-size: 1.1em;
+            }
+
+            .btn {
+                padding: 10px 16px;
+                font-size: 0.85em;
+            }
+
+            .answer-btn {
+                font-size: 0.9em;
+                padding: 12px;
+            }
+
+            #headerRadar {
+                width: 100px !important;
+                height: 100px !important;
+            }
+
+            .header-stat-badge {
+                font-size: 0.7em;
+                padding: 5px 8px;
             }
         }
 
@@ -1744,6 +1999,34 @@
                 </select>
             </div>
 
+            <div class="form-group">
+                <label for="languageSelect">🌍 Language:</label>
+                <select id="languageSelect">
+                    <option value="en">English</option>
+                    <option value="es">Español (Spanish)</option>
+                    <option value="fr">Français (French)</option>
+                    <option value="zh">中文 (Chinese)</option>
+                    <option value="ar">العربية (Arabic)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="ttsVoiceSelect">🔊 Voice:</label>
+                <select id="ttsVoiceSelect">
+                    <option value="female">Female Voice</option>
+                    <option value="male">Male Voice</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                <label style="margin: 0;">🔊 Text-to-Speech:</label>
+                <label class="switch" style="margin: 0;">
+                    <input type="checkbox" id="ttsToggle">
+                    <span class="slider"></span>
+                </label>
+                <span id="ttsStatus" style="font-size: 0.9em; color: var(--text-muted);">Off</span>
+            </div>
+
             <button class="btn btn-primary" onclick="startLearning()"><span>🚀 Launch Journey</span></button>
         </div>
 
@@ -1808,6 +2091,46 @@
                 <button class="btn btn-secondary" onclick="exportProfile()"><span>💾 Export</span></button>
                 <button class="btn btn-secondary" onclick="importProfile()"><span>📥 Import</span></button>
                 <button class="btn btn-secondary" onclick="resetApp()"><span>🔄 Reset</span></button>
+
+                <!-- Learning Modules Toggle -->
+                <div style="margin-top: 25px; padding-top: 20px; border-top: 2px solid rgba(148, 163, 184, 0.2);">
+                    <h3 style="font-size: 1.1em; margin-bottom: 15px; color: var(--neon-yellow);">📚 Learning Modules</h3>
+                    <p style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 15px;">Toggle which learning areas are included in practice sessions:</p>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(15, 23, 42, 0.4); border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.2);">
+                            <span style="font-weight: 600;">📖 Reading</span>
+                            <label class="switch">
+                                <input type="checkbox" id="moduleReading" checked onchange="updateModuleSettings()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(15, 23, 42, 0.4); border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.2);">
+                            <span style="font-weight: 600;">🔢 Math</span>
+                            <label class="switch">
+                                <input type="checkbox" id="moduleMath" checked onchange="updateModuleSettings()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(15, 23, 42, 0.4); border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.2);">
+                            <span style="font-weight: 600;">🧠 Executive Skills</span>
+                            <label class="switch">
+                                <input type="checkbox" id="moduleExecutive" checked onchange="updateModuleSettings()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(15, 23, 42, 0.4); border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.2);">
+                            <span style="font-weight: 600;">❤️ Emotions</span>
+                            <label class="switch">
+                                <input type="checkbox" id="moduleEmotions" checked onchange="updateModuleSettings()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Diagnostics -->
@@ -2004,6 +2327,57 @@
             }
         }
 
+        function ensureSettings() {
+            if (!gameState.settings) {
+                gameState.settings = {
+                    ttsEnabled: false,
+                    ttsVoice: 'female',
+                    musicEnabled: true,
+                    sfxEnabled: true,
+                    volume: 0.5,
+                    modules: {
+                        reading: true,
+                        math: true,
+                        executive: true,
+                        emotions: true
+                    }
+                };
+            }
+            if (!gameState.settings.modules) {
+                gameState.settings.modules = {
+                    reading: true,
+                    math: true,
+                    executive: true,
+                    emotions: true
+                };
+            }
+        }
+
+        function ensureTracking() {
+            if (!gameState.tracking) {
+                gameState.tracking = {
+                    sessionStart: null,
+                    lastActive: Date.now(),
+                    activeTime: 0,
+                    idleTime: 0
+                };
+            }
+        }
+
+        function ensurePreferences() {
+            if (!gameState.student.preferences) {
+                gameState.student.preferences = {
+                    preferredBreak: null,
+                    preferredFeedback: null,
+                    preferredHelp: null,
+                    copingStrategies: []
+                };
+            }
+            if (!gameState.student.language) {
+                gameState.student.language = 'en';
+            }
+        }
+
         // Load saved state from localStorage
         function loadState() {
             const saved = localStorage.getItem('learningSpectrumState');
@@ -2011,6 +2385,9 @@
                 try {
                     gameState = JSON.parse(saved);
                     ensureDomains();
+                    ensureSettings();
+                    ensureTracking();
+                    ensurePreferences();
                     return true;
                 } catch (e) {
                     console.error(e);
@@ -2453,6 +2830,19 @@
             });
             document.getElementById(screenId).classList.remove('hidden');
 
+            // Switch ambience based on screen
+            switch(screenId) {
+                case 'setupScreen':
+                    playAmbience('setup');
+                    break;
+                case 'dashboardScreen':
+                    playAmbience('dashboard');
+                    break;
+                case 'practiceScreen':
+                    playAmbience('practice');
+                    break;
+            }
+
             // Toggle header elements visibility
             const headerSpectrum = document.getElementById('headerSpectrum');
             const headerGrades = document.getElementById('headerGrades');
@@ -2772,10 +3162,16 @@
         // ========================================
 
         function initApp() {
-            ensureDomains();
-
             // Check if there's saved state
-            if (loadState() && gameState.student.name) {
+            const hasSavedState = loadState();
+
+            // Always ensure all required objects exist
+            ensureDomains();
+            ensureSettings();
+            ensureTracking();
+            ensurePreferences();
+
+            if (hasSavedState && gameState.student.name) {
                 // Show Resume/New Session modal
                 document.getElementById('resumeStudentName').textContent = gameState.student.name;
                 document.getElementById('resumeModal').classList.remove('hidden');
@@ -2788,7 +3184,240 @@
             initRadar();
             initHeaderRadar();
             initGradeDials();
+            initTTSToggle();
             updateDiagnostics();
+        }
+
+        // ========================================
+        // TTS (TEXT-TO-SPEECH) SYSTEM
+        // ========================================
+
+        function initTTSToggle() {
+            const ttsToggle = document.getElementById('ttsToggle');
+            const ttsStatus = document.getElementById('ttsStatus');
+
+            if (ttsToggle && ttsStatus) {
+                ttsToggle.addEventListener('change', (e) => {
+                    ttsStatus.textContent = e.target.checked ? 'On' : 'Off';
+                    ttsStatus.style.color = e.target.checked ? 'var(--neon-green)' : 'var(--text-muted)';
+                });
+            }
+        }
+
+        function speak(text) {
+            if (!gameState.settings || !gameState.settings.ttsEnabled) {
+                return; // TTS is disabled
+            }
+
+            // Check if Web Speech API is available
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+
+                const utterance = new SpeechSynthesisUtterance(text);
+
+                // Set language
+                const langMap = {
+                    'en': 'en-US',
+                    'es': 'es-ES',
+                    'fr': 'fr-FR',
+                    'zh': 'zh-CN',
+                    'ar': 'ar-SA'
+                };
+                utterance.lang = langMap[gameState.student.language] || 'en-US';
+
+                // Set voice preference (male/female)
+                const voices = window.speechSynthesis.getVoices();
+                const preferredVoice = voices.find(voice => {
+                    const matchesLang = voice.lang.startsWith(utterance.lang.split('-')[0]);
+                    const matchesGender = gameState.settings.ttsVoice === 'female'
+                        ? voice.name.toLowerCase().includes('female') || voice.name.toLowerCase().includes('woman')
+                        : voice.name.toLowerCase().includes('male') || voice.name.toLowerCase().includes('man');
+                    return matchesLang && matchesGender;
+                });
+
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                }
+
+                // Set rate and pitch
+                utterance.rate = 0.9; // Slightly slower for clarity
+                utterance.pitch = 1.0;
+                utterance.volume = gameState.settings.volume || 0.5;
+
+                window.speechSynthesis.speak(utterance);
+            } else {
+                console.warn('Text-to-Speech not supported in this browser');
+            }
+        }
+
+        // ========================================
+        // AUDIO LAYER SYSTEM
+        // ========================================
+
+        const audioContext = {
+            currentAmbience: null,
+            ambienceAudio: null,
+            sfxVolume: 0.3
+        };
+
+        // Ambient music themes
+        const ambienceThemes = {
+            setup: null, // Calm focus ambience (placeholder)
+            dashboard: null, // Gator "Teacher Room" ambience (placeholder)
+            practice: null, // Curiosity / LaBuBu "Student World" ambience (placeholder)
+            break: null, // Break Time / Regulation ambience (placeholder)
+            timed: null // Focus + Timer ambience (placeholder)
+        };
+
+        function playAmbience(theme) {
+            if (!gameState.settings || !gameState.settings.musicEnabled) {
+                return; // Music is disabled
+            }
+
+            // Stop current ambience if playing
+            if (audioContext.ambienceAudio) {
+                audioContext.ambienceAudio.pause();
+                audioContext.ambienceAudio.currentTime = 0;
+            }
+
+            // Placeholder for actual audio files
+            // When audio files are added, they would be loaded here
+            audioContext.currentAmbience = theme;
+
+            // Example implementation (when audio files exist):
+            // const audioFile = ambienceThemes[theme];
+            // if (audioFile) {
+            //     audioContext.ambienceAudio = new Audio(audioFile);
+            //     audioContext.ambienceAudio.loop = true;
+            //     audioContext.ambienceAudio.volume = gameState.settings.volume || 0.5;
+            //     audioContext.ambienceAudio.play();
+            // }
+        }
+
+        function stopAmbience() {
+            if (audioContext.ambienceAudio) {
+                audioContext.ambienceAudio.pause();
+                audioContext.ambienceAudio.currentTime = 0;
+            }
+            audioContext.currentAmbience = null;
+        }
+
+        function updateAudioVolume(volume) {
+            if (audioContext.ambienceAudio) {
+                audioContext.ambienceAudio.volume = volume;
+            }
+        }
+
+        // Sound effects
+        function playSFX(type) {
+            if (!gameState.settings || !gameState.settings.sfxEnabled) {
+                return; // SFX disabled
+            }
+
+            // Using Web Audio API for procedural sound generation
+            // This avoids need for audio files
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            const volume = (gameState.settings.volume || 0.5) * audioContext.sfxVolume;
+            gainNode.gain.value = volume;
+
+            switch(type) {
+                case 'correct':
+                    // Gentle ascending chime
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    oscillator.frequency.exponentialRampToValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                    oscillator.frequency.exponentialRampToValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    oscillator.start(audioCtx.currentTime);
+                    oscillator.stop(audioCtx.currentTime + 0.3);
+                    break;
+
+                case 'incorrect':
+                    // Soft, gentle "try again" tone (not harsh)
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(392.00, audioCtx.currentTime); // G4
+                    oscillator.frequency.exponentialRampToValueAtTime(349.23, audioCtx.currentTime + 0.15); // F4
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                    oscillator.start(audioCtx.currentTime);
+                    oscillator.stop(audioCtx.currentTime + 0.2);
+                    break;
+
+                case 'click':
+                    // Soft UI click
+                    oscillator.type = 'sine';
+                    oscillator.frequency.value = 800;
+                    gainNode.gain.value = volume * 0.3;
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                    oscillator.start(audioCtx.currentTime);
+                    oscillator.stop(audioCtx.currentTime + 0.05);
+                    break;
+
+                case 'levelup':
+                    // Celebration jingle
+                    oscillator.type = 'triangle';
+                    oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                    oscillator.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
+                    oscillator.frequency.setValueAtTime(1046.50, audioCtx.currentTime + 0.3); // C6
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                    oscillator.start(audioCtx.currentTime);
+                    oscillator.stop(audioCtx.currentTime + 0.5);
+                    break;
+
+                case 'retry':
+                    // Gentle retry chime
+                    oscillator.type = 'sine';
+                    oscillator.frequency.value = 440.00; // A4
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                    oscillator.start(audioCtx.currentTime);
+                    oscillator.stop(audioCtx.currentTime + 0.15);
+                    break;
+            }
+        }
+
+        // ========================================
+        // LEARNING MODULES MANAGEMENT
+        // ========================================
+
+        function initializeModuleToggles() {
+            if (!gameState.settings || !gameState.settings.modules) return;
+
+            const modules = gameState.settings.modules;
+            const toggles = {
+                reading: document.getElementById('moduleReading'),
+                math: document.getElementById('moduleMath'),
+                executive: document.getElementById('moduleExecutive'),
+                emotions: document.getElementById('moduleEmotions')
+            };
+
+            // Set toggle states based on saved settings
+            Object.keys(toggles).forEach(key => {
+                if (toggles[key]) {
+                    toggles[key].checked = modules[key] !== false;
+                }
+            });
+        }
+
+        function updateModuleSettings() {
+            if (!gameState.settings) {
+                ensureSettings();
+            }
+
+            gameState.settings.modules = {
+                reading: document.getElementById('moduleReading')?.checked ?? true,
+                math: document.getElementById('moduleMath')?.checked ?? true,
+                executive: document.getElementById('moduleExecutive')?.checked ?? true,
+                emotions: document.getElementById('moduleEmotions')?.checked ?? true
+            };
+
+            saveState();
         }
 
         function resumeExistingSession() {
@@ -2830,6 +3459,9 @@
             const targetDial = document.getElementById('targetDial');
             const subject = document.getElementById('subject').value;
             const context = document.getElementById('contextMode').value;
+            const language = document.getElementById('languageSelect').value;
+            const ttsVoice = document.getElementById('ttsVoiceSelect').value;
+            const ttsEnabled = document.getElementById('ttsToggle').checked;
 
             if (!name || !enrolledDial) {
                 alert('Please fill in all fields!');
@@ -2842,6 +3474,10 @@
             gameState.student.gradeTarget = parseFloat(targetDial.value);
             gameState.student.subject = subject;
             gameState.student.context = context;
+            gameState.student.language = language;
+
+            gameState.settings.ttsEnabled = ttsEnabled;
+            gameState.settings.ttsVoice = ttsVoice;
 
             gameState.session.questionsAnswered = 0;
             gameState.session.correctAnswers = 0;
@@ -2864,7 +3500,8 @@
             document.getElementById('headerSpectrum').classList.remove('hidden');
             document.getElementById('headerTracking').classList.remove('hidden');
 
-            // Initialize session tracking if not already done
+            // Ensure tracking exists and initialize session tracking if not already done
+            ensureTracking();
             if (!gameState.tracking.sessionStart) {
                 gameState.tracking.sessionStart = Date.now();
                 gameState.tracking.lastActive = Date.now();
@@ -2892,6 +3529,9 @@
             document.getElementById('questionsAnswered').textContent = session.questionsAnswered;
             document.getElementById('correctAnswers').textContent = session.correctAnswers;
             document.getElementById('currentStreak').textContent = session.currentStreak;
+
+            // Initialize module toggles
+            initializeModuleToggles();
 
             if (session.questionsAnswered === 0) {
                 updateGatorMessage(`Hey ${student.name}, ready to check your Learning Spectrum today?`);
@@ -3410,7 +4050,7 @@
 
                 saveState();
                 updateHeaderValues();
-                setTimeout(loadNextQuestion, 2500);
+                setTimeout(loadNextQuestionWrapper, 2500);
                 return; // Exit early - don't run skill-based logic
             }
 
@@ -3446,6 +4086,9 @@
                 buttons[selectedIndexOrValue].classList.add(isCorrect ? 'correct' : 'incorrect');
                 buttons[correctIndex].classList.add('correct');
                 buttons.forEach(btn => btn.disabled = true);
+
+                // Play audio feedback
+                playSFX(isCorrect ? 'correct' : 'incorrect');
             }
 
             // Update session stats
@@ -3490,7 +4133,16 @@
             updateHeaderValues();
             updateHeaderStats();
 
-            setTimeout(loadNextQuestion, 2500);
+            setTimeout(loadNextQuestionWrapper, 2500);
+        }
+
+        // Wrapper to choose between regular and tailored question loading
+        function loadNextQuestionWrapper() {
+            if (gameState.session.tailoredMode && gameState.session.tailoredMode.active) {
+                loadNextTailoredQuestion();
+            } else {
+                loadNextQuestion();
+            }
         }
 
         // ========================================
@@ -3931,14 +4583,95 @@
             const domainData = domainTipsData[currentFocusDomain];
             closeDomainTips();
 
-            // Show message and start session
+            // Show message and start tailored session
             showGatorMessage(`Let's focus on ${domainData.title}! Ready to practice?`);
 
-            // Filter questions by domain (in real implementation)
-            // For now, just start a normal session
+            // Start tailored session filtered by domain
             setTimeout(() => {
-                startSession();
+                startTailoredSession(currentFocusDomain);
             }, 1000);
+        }
+
+        function startTailoredSession(domain) {
+            // Set tailored mode flag
+            if (!gameState.session.tailoredMode) {
+                gameState.session.tailoredMode = {
+                    active: true,
+                    domain: domain,
+                    questionPool: []
+                };
+            } else {
+                gameState.session.tailoredMode.active = true;
+                gameState.session.tailoredMode.domain = domain;
+            }
+
+            // Build question pool filtered by domain
+            const currentGrade = gameState.student.gradeCurrent;
+            const subject = gameState.student.subject;
+            const currentKey = getGradeKey(currentGrade);
+            const lowerKey = getGradeKey(Math.max(0, currentGrade - 1));
+            const higherKey = getGradeKey(Math.min(5, currentGrade + 1));
+
+            let pool = [];
+
+            // Get questions from current, lower, and higher grades
+            [currentKey, lowerKey, higherKey].forEach(gradeKey => {
+                if (questions[subject] && questions[subject][gradeKey]) {
+                    questions[subject][gradeKey].forEach(q => {
+                        // Filter by domain
+                        if (q.domains && q.domains.includes(domain)) {
+                            pool.push(q);
+                        }
+                    });
+                }
+            });
+
+            // Also check reading questions if relevant
+            if (['decoding', 'comprehension', 'fluency'].includes(domain)) {
+                [currentKey, lowerKey, higherKey].forEach(gradeKey => {
+                    if (questions.reading && questions.reading[gradeKey]) {
+                        questions.reading[gradeKey].forEach(q => {
+                            if (q.domains && q.domains.includes(domain)) {
+                                pool.push(q);
+                            }
+                        });
+                    }
+                });
+            }
+
+            if (pool.length === 0) {
+                updateGatorMessage(`I don't have exercises ready for ${domain} yet. Let's pick a nearby level or try a different area.`);
+                gameState.session.tailoredMode.active = false;
+                return;
+            }
+
+            // Store the filtered pool
+            gameState.session.tailoredMode.questionPool = pool;
+
+            // Start practice session
+            showScreen('practiceScreen');
+            loadNextTailoredQuestion();
+        }
+
+        function loadNextTailoredQuestion() {
+            if (!gameState.session.tailoredMode || !gameState.session.tailoredMode.active) {
+                // Fall back to regular question loading
+                loadNextQuestion();
+                return;
+            }
+
+            const pool = gameState.session.tailoredMode.questionPool;
+            if (pool.length === 0) {
+                updateGatorMessage('Great work on these exercises! Let\'s return to the dashboard.', 'gatorPracticeMessage');
+                setTimeout(endSession, 2000);
+                return;
+            }
+
+            const question = selectWeightedQuestion(pool);
+            gameState.session.currentQuestion = question;
+
+            renderQuestion(question);
+            updateGatorMessage(`Let's work on ${gameState.session.tailoredMode.domain}!`, 'gatorPracticeMessage');
         }
 
         // ========================================
