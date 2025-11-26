@@ -3099,23 +3099,54 @@
         // ========================================
 
         function initGradeDials() {
+            console.log('🎯 Initializing grade dials...');
+
             const enrolledDial = document.getElementById('enrolledDial');
             const currentDial = document.getElementById('currentDial');
             const targetDial = document.getElementById('targetDial');
             const studentName = document.getElementById('studentName');
 
+            // Check if all required display elements exist
+            const enrolledDisplay = document.getElementById('enrolledDisplay');
+            const currentDisplay = document.getElementById('currentDisplay');
+            const targetDisplay = document.getElementById('targetDisplay');
+            const enrolledPreview = document.getElementById('enrolledPreview');
+            const currentPreview = document.getElementById('currentPreview');
+            const targetPreview = document.getElementById('targetPreview');
+            const studentNamePreview = document.getElementById('studentNamePreview');
+
             // CRITICAL FIX: Check all three dials exist, not just enrolledDial
             if (!enrolledDial || !currentDial || !targetDial) {
-                console.error('Grade dials not found:', { enrolledDial: !!enrolledDial, currentDial: !!currentDial, targetDial: !!targetDial });
+                console.error('❌ Grade dials not found:', {
+                    enrolledDial: !!enrolledDial,
+                    currentDial: !!currentDial,
+                    targetDial: !!targetDial
+                });
                 return;
             }
+
+            // Check if display elements exist
+            if (!enrolledDisplay || !currentDisplay || !targetDisplay) {
+                console.error('❌ Grade display elements not found:', {
+                    enrolledDisplay: !!enrolledDisplay,
+                    currentDisplay: !!currentDisplay,
+                    targetDisplay: !!targetDisplay
+                });
+                return;
+            }
+
+            console.log('✅ All grade dial elements found, adding event listeners...');
 
             // Update displays when dials move
             enrolledDial.addEventListener('input', (e) => {
                 const val = e.target.value;
                 const gradeLabel = val === '0' ? 'K' : val;
-                document.getElementById('enrolledDisplay').textContent = gradeLabel;
-                document.getElementById('enrolledPreview').textContent = val === '0' ? 'Kindergarten' : `Grade ${val}`;
+                console.log('📘 Enrolled grade changed to:', gradeLabel);
+
+                enrolledDisplay.textContent = gradeLabel;
+                if (enrolledPreview) {
+                    enrolledPreview.textContent = val === '0' ? 'Kindergarten' : `Grade ${val}`;
+                }
 
                 // Auto-adjust current and target based on enrolled
                 const enrolled = parseFloat(val);
@@ -3127,23 +3158,45 @@
 
             currentDial.addEventListener('input', (e) => {
                 const val = parseFloat(e.target.value).toFixed(1);
-                document.getElementById('currentDisplay').textContent = val;
-                document.getElementById('currentPreview').textContent = `${val} level`;
+                console.log('📗 Current level changed to:', val);
+
+                currentDisplay.textContent = val;
+                if (currentPreview) {
+                    currentPreview.textContent = `${val} level`;
+                }
             });
 
             targetDial.addEventListener('input', (e) => {
                 const val = parseFloat(e.target.value).toFixed(1);
-                document.getElementById('targetDisplay').textContent = val;
-                document.getElementById('targetPreview').textContent = val;
+                console.log('🎯 Target level changed to:', val);
+
+                targetDisplay.textContent = val;
+                if (targetPreview) {
+                    targetPreview.textContent = val;
+                }
             });
 
             // Update student name preview
-            if (studentName) {
+            if (studentName && studentNamePreview) {
                 studentName.addEventListener('input', (e) => {
                     const name = e.target.value || 'Student';
-                    document.getElementById('studentNamePreview').textContent = name;
+                    console.log('👤 Student name changed to:', name);
+                    studentNamePreview.textContent = name;
                 });
             }
+
+            console.log('✅ Grade dial event listeners added successfully');
+
+            // Initialize displays with current values
+            enrolledDial.dispatchEvent(new Event('input'));
+            currentDial.dispatchEvent(new Event('input'));
+            targetDial.dispatchEvent(new Event('input'));
+
+            console.log('✅ Grade dials initialized with values:', {
+                enrolled: enrolledDial.value,
+                current: currentDial.value,
+                target: targetDial.value
+            });
         }
 
         function nudgeDomains(domains, isCorrect) {
@@ -3458,6 +3511,8 @@
 
         function startLearning() {
             console.log('🚀 startLearning() called - Launch Journey button clicked');
+            console.log('🔍 Current URL:', window.location.href);
+            console.log('🔍 Document ready state:', document.readyState);
 
             // Get student name, default to "Student" if empty
             const nameInput = document.getElementById('studentName');
@@ -3513,17 +3568,31 @@
             const gradeCurrent = parseFloat(currentDial.value);
             const gradeTarget = parseFloat(targetDial.value);
 
-            console.log('📊 Grade values:', { gradeEnrolled, gradeCurrent, gradeTarget });
+            console.log('📊 Grade values from dials:', {
+                gradeEnrolled: gradeEnrolled,
+                gradeCurrent: gradeCurrent,
+                gradeTarget: gradeTarget
+            });
 
             if (isNaN(gradeEnrolled) || isNaN(gradeCurrent) || isNaN(gradeTarget)) {
                 console.error('❌ Invalid grade values:', { gradeEnrolled, gradeCurrent, gradeTarget });
-                alert('Invalid grade levels detected. Please refresh the page and try again.');
+                alert('Invalid grade levels detected. Please adjust the grade sliders and try again.');
                 return;
             }
 
-            // All validations passed - set up the game state
-            console.log('✅ All validations passed - starting learning journey');
+            // Validate grade relationships make sense
+            if (gradeCurrent > gradeTarget) {
+                console.warn('⚠️ Current level is higher than target - adjusting target');
+                // This is okay, just log it
+            }
 
+            // All validations passed - set up the game state
+            console.log('✅ All validations passed - configuring game state...');
+
+            // Update module settings before saving
+            updateModuleSettings();
+
+            // Update student profile
             gameState.student.name = name;
             gameState.student.gradeEnrolled = gradeEnrolled;
             gameState.student.gradeCurrent = gradeCurrent;
@@ -3532,18 +3601,55 @@
             gameState.student.context = context.value;
             gameState.student.language = language.value;
 
+            console.log('👤 Student profile updated:', {
+                name: gameState.student.name,
+                gradeEnrolled: gameState.student.gradeEnrolled,
+                gradeCurrent: gameState.student.gradeCurrent,
+                gradeTarget: gameState.student.gradeTarget,
+                subject: gameState.student.subject,
+                context: gameState.student.context
+            });
+
+            // Update settings
             gameState.settings.ttsEnabled = ttsEnabled.checked;
             gameState.settings.ttsVoice = ttsVoice.value;
 
+            console.log('⚙️ Settings updated:', {
+                ttsEnabled: gameState.settings.ttsEnabled,
+                ttsVoice: gameState.settings.ttsVoice
+            });
+
+            // Initialize session
             gameState.session.questionsAnswered = 0;
             gameState.session.correctAnswers = 0;
             gameState.session.currentStreak = 0;
             gameState.session.maxStreak = 0;
 
-            console.log('💾 Saving state and showing dashboard...');
+            console.log('📝 Session initialized:', gameState.session);
+
+            // Save state to localStorage
+            console.log('💾 Saving state to localStorage...');
             saveState();
+
+            // Verify state was saved
+            const savedState = localStorage.getItem('learningSpectrumState');
+            if (savedState) {
+                console.log('✅ State saved successfully to localStorage');
+                const parsed = JSON.parse(savedState);
+                console.log('✅ Verified saved grade values:', {
+                    gradeEnrolled: parsed.student.gradeEnrolled,
+                    gradeCurrent: parsed.student.gradeCurrent,
+                    gradeTarget: parsed.student.gradeTarget
+                });
+            } else {
+                console.error('❌ Failed to save state to localStorage');
+            }
+
+            // Transition to dashboard
+            console.log('🎯 Transitioning to dashboard...');
             showDashboard();
-            console.log('✅ Launch complete!');
+
+            console.log('✅ Launch complete! Welcome to Learning Spectrum, ' + name + '!');
         }
 
         function showDashboard() {
