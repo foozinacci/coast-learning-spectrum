@@ -5942,16 +5942,35 @@
                 ? ['reading', 'math']
                 : [subjectFilter];
 
-            // Build question pool
+            // Build question pool - try comprehensive banks first, then fall back to hardcoded
             let pool = [];
 
-            gradesToTest.forEach(grade => {
-                subjectsToTest.forEach((subject) => {
-                    if (questions[subject] && questions[subject][grade]) {
-                        pool = pool.concat(questions[subject][grade]);
-                    }
+            // Try using ComprehensiveQuestionRegistry if available
+            if (typeof window.ComprehensiveQuestionRegistry !== 'undefined') {
+                gradesToTest.forEach(grade => {
+                    subjectsToTest.forEach((subject) => {
+                        const gradeNum = grade === 'K' ? 0 : parseInt(grade);
+                        const categoryName = subject === 'reading' ? 'reading' :
+                                            subject === 'math' ? 'math' : subject;
+
+                        const comprehensiveQuestions = window.ComprehensiveQuestionRegistry.getQuestions(gradeNum, categoryName);
+                        if (comprehensiveQuestions && comprehensiveQuestions.length > 0) {
+                            pool = pool.concat(comprehensiveQuestions);
+                        }
+                    });
                 });
-            });
+            }
+
+            // Fall back to hardcoded questions if comprehensive banks not loaded or empty
+            if (pool.length === 0) {
+                gradesToTest.forEach(grade => {
+                    subjectsToTest.forEach((subject) => {
+                        if (questions[subject] && questions[subject][grade]) {
+                            pool = pool.concat(questions[subject][grade]);
+                        }
+                    });
+                });
+            }
 
             if (pool.length === 0) {
                 console.warn('⚠️ No questions found for the specified criteria');
@@ -8352,5 +8371,14 @@
             </div>
         </div>
     </div>
+
+    <!-- Comprehensive Question Banks -->
+    <script src="questions/grade-K-comprehensive.js"></script>
+    <script src="questions/grade-1-comprehensive.js"></script>
+    <script src="questions/grade-2-comprehensive.js"></script>
+    <script src="questions/grade-3-comprehensive.js"></script>
+    <script src="questions/grade-4-comprehensive.js"></script>
+    <script src="questions/grade-5-comprehensive.js"></script>
+    <script src="load-question-banks.js"></script>
 </body>
 </html>
