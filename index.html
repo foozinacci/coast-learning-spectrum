@@ -1211,6 +1211,150 @@
             50% { opacity: 0.5; }
         }
 
+        /* ===================================
+           CREATIVE REWARD STUDIO
+           =================================== */
+
+        .reward-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .reward-option {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1));
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .reward-option:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-violet);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2));
+        }
+
+        .reward-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 4px 8px rgba(139, 92, 246, 0.3));
+        }
+
+        .reward-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--neon-violet);
+            margin-bottom: 5px;
+        }
+
+        .reward-desc {
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+
+        .btn-small {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 8px;
+            padding: 8px 16px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9em;
+            margin: 0 5px;
+        }
+
+        .btn-small:hover {
+            background: rgba(139, 92, 246, 0.4);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Slime Simulator */
+        .slime-blob {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.9), rgba(16, 185, 129, 0.6));
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            filter: blur(8px) drop-shadow(0 8px 20px rgba(16, 185, 129, 0.6));
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            cursor: grab;
+        }
+
+        .slime-blob:active {
+            cursor: grabbing;
+            filter: blur(12px) drop-shadow(0 12px 30px rgba(16, 185, 129, 0.8));
+        }
+
+        /* Piano Keys */
+        .piano-key {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 10px;
+            cursor: pointer;
+            user-select: none;
+            font-weight: 600;
+            transition: all 0.1s ease;
+        }
+
+        .white-key {
+            width: 60px;
+            height: 200px;
+            background: linear-gradient(180deg, #ffffff, #f0f0f0);
+            border: 2px solid #333;
+            border-radius: 0 0 8px 8px;
+            color: #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .white-key:hover {
+            background: linear-gradient(180deg, #f0f0f0, #e0e0e0);
+            transform: translateY(2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .white-key:active {
+            background: linear-gradient(180deg, #e0e0e0, #d0d0d0);
+            transform: translateY(4px);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Drum Pads */
+        .drum-pad {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(249, 115, 22, 0.2));
+            border: 2px solid rgba(239, 68, 68, 0.4);
+            border-radius: 15px;
+            padding: 25px 20px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1em;
+            transition: all 0.1s ease;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .drum-pad:hover {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(249, 115, 22, 0.3));
+            border-color: var(--neon-red);
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.5);
+        }
+
+        .drum-pad:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+        }
+
         /* Hidden */
         .hidden {
             display: none !important;
@@ -2508,6 +2652,111 @@
                 <div style="text-align: center; margin-top: 25px;">
                     <button class="btn btn-secondary" onclick="takeBreak()"><span>⏸️ Break</span></button>
                     <button class="btn btn-secondary" onclick="endSession()"><span>⏹️ End</span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Creative Reward Studio Screen -->
+        <div id="rewardStudioScreen" class="hidden">
+            <div class="card">
+                <h2>🎨 Creative Reward Studio</h2>
+                <p style="color: var(--text-muted); margin-bottom: 25px; text-align: center;">
+                    Great job on your session! Choose a creative activity to enjoy for 2-3 minutes.
+                </p>
+
+                <!-- Activity Selection -->
+                <div id="rewardSelection" class="reward-options">
+                    <div class="reward-option" onclick="startDrawingCanvas()">
+                        <div class="reward-icon">🎨</div>
+                        <div class="reward-name">Drawing Canvas</div>
+                        <div class="reward-desc">Create colorful artwork</div>
+                    </div>
+                    <div class="reward-option" onclick="startSlimeSimulator()">
+                        <div class="reward-icon">🫧</div>
+                        <div class="reward-name">Slime Simulator</div>
+                        <div class="reward-desc">Squish and stretch slime</div>
+                    </div>
+                    <div class="reward-option" onclick="startInstruments()">
+                        <div class="reward-icon">🎹</div>
+                        <div class="reward-name">Instruments</div>
+                        <div class="reward-desc">Play music and sounds</div>
+                    </div>
+                    <div class="reward-option" onclick="skipReward()">
+                        <div class="reward-icon">⏭️</div>
+                        <div class="reward-name">Skip</div>
+                        <div class="reward-desc">Return to dashboard</div>
+                    </div>
+                </div>
+
+                <!-- Drawing Canvas Activity -->
+                <div id="drawingActivity" class="hidden" style="text-align: center;">
+                    <h3 style="color: var(--neon-violet); margin-bottom: 15px;">🎨 Drawing Canvas</h3>
+                    <div style="margin-bottom: 15px;">
+                        <button class="btn-small" onclick="setDrawColor('#EF4444')" style="background: #EF4444;">Red</button>
+                        <button class="btn-small" onclick="setDrawColor('#F97316')" style="background: #F97316;">Orange</button>
+                        <button class="btn-small" onclick="setDrawColor('#FACC15')" style="background: #FACC15; color: #111;">Yellow</button>
+                        <button class="btn-small" onclick="setDrawColor('#10B981')" style="background: #10B981;">Green</button>
+                        <button class="btn-small" onclick="setDrawColor('#3B82F6')" style="background: #3B82F6;">Blue</button>
+                        <button class="btn-small" onclick="setDrawColor('#8B5CF6')" style="background: #8B5CF6;">Violet</button>
+                        <button class="btn-small" onclick="clearCanvas()" style="background: var(--slate-gray);">Clear</button>
+                    </div>
+                    <canvas id="drawCanvas" width="600" height="400" style="border: 2px solid var(--neon-violet); border-radius: 10px; background: white; cursor: crosshair; max-width: 100%;"></canvas>
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-secondary" onclick="finishReward()"><span>✅ Done</span></button>
+                    </div>
+                </div>
+
+                <!-- Slime Simulator Activity -->
+                <div id="slimeActivity" class="hidden" style="text-align: center;">
+                    <h3 style="color: var(--neon-green); margin-bottom: 15px;">🫧 Slime Simulator</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 15px;">Click and drag to squish and stretch the slime!</p>
+                    <div id="slimeContainer" style="position: relative; width: 100%; max-width: 400px; height: 400px; margin: 0 auto; background: rgba(15, 23, 42, 0.6); border-radius: 20px; overflow: hidden; cursor: grab;">
+                        <div id="slimeBlob" class="slime-blob"></div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <button class="btn-small" onclick="changeSlimeColor('#10B981')">Green Slime</button>
+                        <button class="btn-small" onclick="changeSlimeColor('#EC4899')">Pink Slime</button>
+                        <button class="btn-small" onclick="changeSlimeColor('#3B82F6')">Blue Slime</button>
+                        <button class="btn-small" onclick="changeSlimeColor('#8B5CF6')">Purple Slime</button>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-secondary" onclick="finishReward()"><span>✅ Done</span></button>
+                    </div>
+                </div>
+
+                <!-- Instruments Activity -->
+                <div id="instrumentsActivity" class="hidden" style="text-align: center;">
+                    <h3 style="color: var(--neon-blue); margin-bottom: 15px;">🎹 Musical Instruments</h3>
+
+                    <!-- Piano Keyboard -->
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="color: var(--text-muted); margin-bottom: 10px;">Piano</h4>
+                        <div id="pianoKeyboard" style="display: flex; justify-content: center; gap: 2px;">
+                            <div class="piano-key white-key" data-note="C" onclick="playNote('C4')">C</div>
+                            <div class="piano-key white-key" data-note="D" onclick="playNote('D4')">D</div>
+                            <div class="piano-key white-key" data-note="E" onclick="playNote('E4')">E</div>
+                            <div class="piano-key white-key" data-note="F" onclick="playNote('F4')">F</div>
+                            <div class="piano-key white-key" data-note="G" onclick="playNote('G4')">G</div>
+                            <div class="piano-key white-key" data-note="A" onclick="playNote('A4')">A</div>
+                            <div class="piano-key white-key" data-note="B" onclick="playNote('B4')">B</div>
+                            <div class="piano-key white-key" data-note="C5" onclick="playNote('C5')">C</div>
+                        </div>
+                    </div>
+
+                    <!-- Drum Pads -->
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="color: var(--text-muted); margin-bottom: 10px;">Drums</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; max-width: 500px; margin: 0 auto;">
+                            <button class="drum-pad" onclick="playDrum('kick')">🥁<br>Kick</button>
+                            <button class="drum-pad" onclick="playDrum('snare')">🥁<br>Snare</button>
+                            <button class="drum-pad" onclick="playDrum('hihat')">🎵<br>Hi-Hat</button>
+                            <button class="drum-pad" onclick="playDrum('cymbal')">🎶<br>Cymbal</button>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-secondary" onclick="finishReward()"><span>✅ Done</span></button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -4463,8 +4712,10 @@
             }
 
             saveState();
+
+            // Show Creative Reward Studio as a reward for completing the session
             setTimeout(() => {
-                showDashboard();
+                showRewardStudio();
             }, 2000);
         }
 
@@ -6037,6 +6288,316 @@
 
             showGatorMessage(randomMessage);
             speak(randomMessage);
+        }
+
+        // ========================================
+        // CREATIVE REWARD STUDIO
+        // ========================================
+
+        let currentDrawColor = '#8B5CF6';
+        let drawCanvas, drawCtx;
+        let isDrawing = false;
+        let slimeBlob, slimeContainer;
+        let slimePosition = { x: 50, y: 50 }; // Percentage based
+
+        function showRewardStudio() {
+            console.log('🎨 Showing Creative Reward Studio');
+            document.getElementById('setupScreen').classList.add('hidden');
+            document.getElementById('dashboardScreen').classList.add('hidden');
+            document.getElementById('practiceScreen').classList.add('hidden');
+            document.getElementById('rewardStudioScreen').classList.remove('hidden');
+
+            // Show selection screen
+            document.getElementById('rewardSelection').classList.remove('hidden');
+            document.getElementById('drawingActivity').classList.add('hidden');
+            document.getElementById('slimeActivity').classList.add('hidden');
+            document.getElementById('instrumentsActivity').classList.add('hidden');
+
+            showGatorMessage('Great session! Choose a creative reward to enjoy.');
+            speak('Great session! Choose a creative reward to enjoy.');
+        }
+
+        function startDrawingCanvas() {
+            console.log('🎨 Starting Drawing Canvas');
+            document.getElementById('rewardSelection').classList.add('hidden');
+            document.getElementById('drawingActivity').classList.remove('hidden');
+
+            // Initialize canvas
+            drawCanvas = document.getElementById('drawCanvas');
+            drawCtx = drawCanvas.getContext('2d');
+            drawCtx.lineWidth = 5;
+            drawCtx.lineCap = 'round';
+            drawCtx.strokeStyle = currentDrawColor;
+
+            // Clear canvas
+            drawCtx.fillStyle = 'white';
+            drawCtx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
+
+            // Mouse events
+            drawCanvas.addEventListener('mousedown', startDrawing);
+            drawCanvas.addEventListener('mousemove', draw);
+            drawCanvas.addEventListener('mouseup', stopDrawing);
+            drawCanvas.addEventListener('mouseout', stopDrawing);
+
+            // Touch events
+            drawCanvas.addEventListener('touchstart', handleTouchStart);
+            drawCanvas.addEventListener('touchmove', handleTouchMove);
+            drawCanvas.addEventListener('touchend', stopDrawing);
+
+            showGatorMessage('Draw anything you like! Use the colors to create your masterpiece.');
+            speak('Draw anything you like!');
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = drawCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            drawCtx.beginPath();
+            drawCtx.moveTo(x, y);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const rect = drawCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            drawCtx.lineTo(x, y);
+            drawCtx.stroke();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function handleTouchStart(e) {
+            e.preventDefault();
+            isDrawing = true;
+            const touch = e.touches[0];
+            const rect = drawCanvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            drawCtx.beginPath();
+            drawCtx.moveTo(x, y);
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+            if (!isDrawing) return;
+            const touch = e.touches[0];
+            const rect = drawCanvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            drawCtx.lineTo(x, y);
+            drawCtx.stroke();
+        }
+
+        function setDrawColor(color) {
+            currentDrawColor = color;
+            drawCtx.strokeStyle = color;
+            console.log('🎨 Color changed to:', color);
+        }
+
+        function clearCanvas() {
+            if (drawCtx) {
+                drawCtx.fillStyle = 'white';
+                drawCtx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
+                console.log('🎨 Canvas cleared');
+            }
+        }
+
+        function startSlimeSimulator() {
+            console.log('🫧 Starting Slime Simulator');
+            document.getElementById('rewardSelection').classList.add('hidden');
+            document.getElementById('slimeActivity').classList.remove('hidden');
+
+            slimeBlob = document.getElementById('slimeBlob');
+            slimeContainer = document.getElementById('slimeContainer');
+
+            // Reset position
+            slimePosition = { x: 50, y: 50 };
+            updateSlimePosition();
+
+            // Mouse events
+            slimeBlob.addEventListener('mousedown', startSlimeDrag);
+            document.addEventListener('mousemove', dragSlime);
+            document.addEventListener('mouseup', stopSlimeDrag);
+
+            // Touch events
+            slimeBlob.addEventListener('touchstart', startSlimeDragTouch);
+            document.addEventListener('touchmove', dragSlimeTouch);
+            document.addEventListener('touchend', stopSlimeDrag);
+
+            showGatorMessage('Squish and stretch the slime! It feels so satisfying!');
+            speak('Squish and stretch the slime!');
+        }
+
+        let isDraggingSlime = false;
+
+        function startSlimeDrag(e) {
+            isDraggingSlime = true;
+            slimeBlob.style.transition = 'none';
+        }
+
+        function startSlimeDragTouch(e) {
+            e.preventDefault();
+            isDraggingSlime = true;
+            slimeBlob.style.transition = 'none';
+        }
+
+        function dragSlime(e) {
+            if (!isDraggingSlime) return;
+            const rect = slimeContainer.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            slimePosition = {
+                x: Math.max(10, Math.min(90, x)),
+                y: Math.max(10, Math.min(90, y))
+            };
+            updateSlimePosition();
+        }
+
+        function dragSlimeTouch(e) {
+            if (!isDraggingSlime) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = slimeContainer.getBoundingClientRect();
+            const x = ((touch.clientX - rect.left) / rect.width) * 100;
+            const y = ((touch.clientY - rect.top) / rect.height) * 100;
+            slimePosition = {
+                x: Math.max(10, Math.min(90, x)),
+                y: Math.max(10, Math.min(90, y))
+            };
+            updateSlimePosition();
+        }
+
+        function stopSlimeDrag() {
+            if (isDraggingSlime) {
+                isDraggingSlime = false;
+                slimeBlob.style.transition = 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            }
+        }
+
+        function updateSlimePosition() {
+            slimeBlob.style.left = slimePosition.x + '%';
+            slimeBlob.style.top = slimePosition.y + '%';
+        }
+
+        function changeSlimeColor(color) {
+            const colorMap = {
+                '#10B981': 'rgba(16, 185, 129, 0.9), rgba(16, 185, 129, 0.6)',
+                '#EC4899': 'rgba(236, 72, 153, 0.9), rgba(236, 72, 153, 0.6)',
+                '#3B82F6': 'rgba(59, 130, 246, 0.9), rgba(59, 130, 246, 0.6)',
+                '#8B5CF6': 'rgba(139, 92, 246, 0.9), rgba(139, 92, 246, 0.6)'
+            };
+            slimeBlob.style.background = `radial-gradient(circle, ${colorMap[color]})`;
+            console.log('🫧 Slime color changed to:', color);
+        }
+
+        function startInstruments() {
+            console.log('🎹 Starting Instruments');
+            document.getElementById('rewardSelection').classList.add('hidden');
+            document.getElementById('instrumentsActivity').classList.remove('hidden');
+
+            showGatorMessage('Make some music! Play the piano keys or drum pads.');
+            speak('Make some music!');
+        }
+
+        // Note frequencies for piano
+        const noteFrequencies = {
+            'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23,
+            'G4': 392.00, 'A4': 440.00, 'B4': 493.88, 'C5': 523.25
+        };
+
+        // Audio context for playing notes
+        let audioContext;
+
+        function playNote(note) {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            const frequency = noteFrequencies[note];
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+
+            console.log('🎵 Playing note:', note, frequency + 'Hz');
+        }
+
+        function playDrum(drumType) {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+
+            oscillator.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            // Different drum sounds
+            switch(drumType) {
+                case 'kick':
+                    oscillator.frequency.setValueAtTime(150, audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    gainNode.gain.setValueAtTime(1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    oscillator.type = 'sine';
+                    break;
+                case 'snare':
+                    oscillator.frequency.value = 100;
+                    gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                    oscillator.type = 'triangle';
+                    break;
+                case 'hihat':
+                    oscillator.frequency.value = 250;
+                    filter.type = 'highpass';
+                    filter.frequency.value = 7000;
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                    oscillator.type = 'square';
+                    break;
+                case 'cymbal':
+                    oscillator.frequency.value = 300;
+                    filter.type = 'highpass';
+                    filter.frequency.value = 5000;
+                    gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
+                    oscillator.type = 'sawtooth';
+                    break;
+            }
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 1);
+
+            console.log('🥁 Playing drum:', drumType);
+        }
+
+        function finishReward() {
+            showGatorMessage('Hope you enjoyed that! Back to your dashboard.');
+            speak('Hope you enjoyed that!');
+            setTimeout(() => showDashboard(), 1500);
+        }
+
+        function skipReward() {
+            showGatorMessage('No problem! Returning to your dashboard.');
+            speak('Returning to your dashboard.');
+            setTimeout(() => showDashboard(), 1000);
         }
 
         // ========================================
