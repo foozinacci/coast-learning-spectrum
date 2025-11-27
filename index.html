@@ -1936,8 +1936,8 @@
                             <div id="headerTarget" class="grade-value">2.5</div>
                         </div>
                     </div>
-                    <!-- Progress Bar in Header -->
-                    <div class="progress-bar" style="margin: 0;">
+                    <!-- Progress Bar directly under Spectrum Status -->
+                    <div class="progress-bar" style="margin: 8px 0 0 0; width: 100%;">
                         <div class="progress-fill" id="headerProgressFill" style="width: 0%;">0%</div>
                     </div>
                 </div>
@@ -3432,169 +3432,316 @@
         }
 
         // ========================================
-        // TTS VOICE LOADING & CACHING (FIX)
+        // ENHANCED TTS VOICE LOADING & CACHING
         // ========================================
+        /**
+         * PRODUCTION TTS UPGRADE RECOMMENDATION:
+         * For consistent, reliable TTS across all browsers and devices, consider integrating:
+         *
+         * Option 1: ResponsiveVoice (Free tier available)
+         *   - Consistent voices across all browsers
+         *   - 100+ voices, 50+ languages
+         *   - Add: <script src="https://code.responsivevoice.org/responsivevoice.js?key=YOUR_KEY"></script>
+         *   - Usage: responsiveVoice.speak(text, voiceName);
+         *
+         * Option 2: Google Cloud Text-to-Speech
+         *   - Very high quality voices
+         *   - Requires API key and billing
+         *   - Best for production apps with budget
+         *
+         * Option 3: Amazon Polly
+         *   - Neural voices available
+         *   - AWS account required
+         *   - Good for AWS-hosted apps
+         *
+         * Current implementation uses Web Speech API (free, built-in, but inconsistent)
+         */
+
         let speechVoicesLoaded = false;
         let cachedVoices = [];
         let selectedVoice = null;
+        let voiceLoadAttempts = 0;
+        const MAX_VOICE_LOAD_ATTEMPTS = 3;
 
         function loadVoices() {
-            return new Promise((resolve) => {
+            return new Promise((resolve, reject) => {
+                voiceLoadAttempts++;
+
                 let voices = window.speechSynthesis.getVoices();
+
                 if (voices.length > 0) {
                     cachedVoices = voices;
                     speechVoicesLoaded = true;
+                    console.log(`✅ TTS: Loaded ${voices.length} voices successfully`);
+                    // Log available voices for debugging
+                    console.log('Available voices:', voices.map(v => `${v.name} (${v.lang})`).join(', '));
                     resolve(voices);
                 } else {
+                    // Voices not loaded yet, wait for event
                     window.speechSynthesis.onvoiceschanged = () => {
                         voices = window.speechSynthesis.getVoices();
-                        cachedVoices = voices;
-                        speechVoicesLoaded = true;
-                        resolve(voices);
+                        if (voices.length > 0) {
+                            cachedVoices = voices;
+                            speechVoicesLoaded = true;
+                            console.log(`✅ TTS: Loaded ${voices.length} voices after event`);
+                            resolve(voices);
+                        } else if (voiceLoadAttempts >= MAX_VOICE_LOAD_ATTEMPTS) {
+                            console.warn('⚠️ TTS: Could not load voices after multiple attempts');
+                            reject(new Error('Failed to load voices'));
+                        }
                     };
+
+                    // Timeout fallback
+                    setTimeout(() => {
+                        if (!speechVoicesLoaded && voiceLoadAttempts < MAX_VOICE_LOAD_ATTEMPTS) {
+                            loadVoices().then(resolve).catch(reject);
+                        }
+                    }, 1000);
                 }
             });
         }
 
         function selectConsistentVoice() {
-            if (!gameState || !gameState.settings) return null;
+            if (!gameState || !gameState.settings) {
+                console.warn('⚠️ TTS: gameState not ready for voice selection');
+                return null;
+            }
+
+            if (cachedVoices.length === 0) {
+                console.warn('⚠️ TTS: No voices cached yet');
+                return null;
+            }
 
             const lang = gameState.student?.language || 'en';
-            const voicePref = gameState.settings.ttsVoice || 'neutral';
+            const voicePref = gameState.settings.ttsVoice || 'female';
 
+            // Enhanced language mapping with regional variants
             const langMap = {
                 'en': 'en-US',
                 'es': 'es-ES',
                 'fr': 'fr-FR',
                 'zh': 'zh-CN',
-                'ar': 'ar-SA'
+                'ar': 'ar-SA',
+                'de': 'de-DE',
+                'it': 'it-IT',
+                'ja': 'ja-JP',
+                'ko': 'ko-KR',
+                'pt': 'pt-BR',
+                'ru': 'ru-RU',
+                'hi': 'hi-IN'
             };
 
             const targetLang = langMap[lang] || 'en-US';
             const langPrefix = targetLang.split('-')[0];
 
+            console.log(`🔍 TTS: Looking for voice - Language: ${targetLang}, Preference: ${voicePref}`);
+
+            // Filter voices by language
             const matchingVoices = cachedVoices.filter(voice =>
-                voice.lang.startsWith(langPrefix)
+                voice.lang.startsWith(langPrefix) || voice.lang.startsWith(targetLang)
             );
 
+            console.log(`🔍 TTS: Found ${matchingVoices.length} matching voices for ${langPrefix}`);
+
             if (matchingVoices.length === 0) {
+                console.warn(`⚠️ TTS: No voices found for ${langPrefix}, using default`);
                 selectedVoice = cachedVoices[0];
                 return selectedVoice;
             }
 
+            // Enhanced voice selection based on gender preference
+            let chosenVoice = null;
+
             if (voicePref === 'female') {
-                const femaleVoice = matchingVoices.find(v =>
-                    v.name.toLowerCase().includes('female') ||
-                    v.name.toLowerCase().includes('woman') ||
-                    v.name.toLowerCase().includes('zira') ||
-                    v.name.toLowerCase().includes('samantha')
-                );
-                if (femaleVoice) {
-                    selectedVoice = femaleVoice;
-                    return femaleVoice;
-                }
+                // Try to find female voice - common indicators
+                chosenVoice = matchingVoices.find(v => {
+                    const name = v.name.toLowerCase();
+                    return name.includes('female') ||
+                           name.includes('woman') ||
+                           name.includes('zira') ||
+                           name.includes('samantha') ||
+                           name.includes('victoria') ||
+                           name.includes('karen') ||
+                           name.includes('susan') ||
+                           name.includes('sara') ||
+                           name.includes('fiona') ||
+                           name.includes('alice') ||
+                           name.includes('jenny') ||
+                           name.includes('emily');
+                });
             } else if (voicePref === 'male') {
-                const maleVoice = matchingVoices.find(v =>
-                    v.name.toLowerCase().includes('male') ||
-                    v.name.toLowerCase().includes('man') ||
-                    v.name.toLowerCase().includes('david') ||
-                    v.name.toLowerCase().includes('mark')
-                );
-                if (maleVoice) {
-                    selectedVoice = maleVoice;
-                    return maleVoice;
-                }
+                // Try to find male voice - common indicators
+                chosenVoice = matchingVoices.find(v => {
+                    const name = v.name.toLowerCase();
+                    return name.includes('male') ||
+                           name.includes('man') ||
+                           name.includes('david') ||
+                           name.includes('mark') ||
+                           name.includes('daniel') ||
+                           name.includes('james') ||
+                           name.includes('alex') ||
+                           name.includes('tom') ||
+                           name.includes('george') ||
+                           name.includes('fred');
+                });
             }
 
-            selectedVoice = matchingVoices[0];
-            return matchingVoices[0];
+            // If no gender-specific voice found, use first matching voice
+            if (!chosenVoice) {
+                chosenVoice = matchingVoices[0];
+            }
+
+            selectedVoice = chosenVoice;
+            console.log(`✅ TTS: Selected voice: ${chosenVoice.name} (${chosenVoice.lang})`);
+            return chosenVoice;
         }
 
-        // Initialize voice loading
-        loadVoices().then(() => {
-            selectConsistentVoice();
-        });
+        // Initialize voice loading with retry mechanism
+        loadVoices()
+            .then(() => {
+                selectConsistentVoice();
+                console.log('✅ TTS: Voice system initialized successfully');
+            })
+            .catch(error => {
+                console.error('❌ TTS: Voice loading failed:', error);
+                console.log('💡 TTS: Consider upgrading to ResponsiveVoice or Google Cloud TTS for better reliability');
+            });
 
+        /**
+         * Enhanced speak() function with better error handling and consistency
+         * Respects language selection and gender voice preference
+         */
         function speak(text) {
             // Check if TTS is enabled
             if (!gameState || !gameState.settings || !gameState.settings.ttsEnabled) {
+                console.log('🔇 TTS: Disabled in settings');
                 return; // TTS is disabled
+            }
+
+            // Validate text
+            if (!text || text.trim().length === 0) {
+                console.warn('⚠️ TTS: No text provided');
+                return;
             }
 
             // Check if Web Speech API is available
             if (!('speechSynthesis' in window)) {
-                console.warn('Text-to-Speech not supported in this browser');
+                console.error('❌ TTS: Web Speech API not supported in this browser');
+                console.log('💡 TTS: Recommend upgrading to ResponsiveVoice for wider browser support');
                 return;
             }
 
-            // Cancel any ongoing speech
+            console.log(`🔊 TTS: Speaking: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"`);
+
+            // Cancel any ongoing speech to prevent overlap
             window.speechSynthesis.cancel();
 
-            // Create utterance
-            const utterance = new SpeechSynthesisUtterance(text);
+            // Small delay to ensure cancel completes
+            setTimeout(() => {
+                // Create utterance
+                const utterance = new SpeechSynthesisUtterance(text);
 
-            // Helper function to configure and speak
-            const configureAndSpeak = () => {
-                // Ensure voice is selected
-                if (!selectedVoice) {
-                    selectConsistentVoice();
-                }
+                // Helper function to configure and speak
+                const configureAndSpeak = () => {
+                    // Ensure voice is selected
+                    if (!selectedVoice && cachedVoices.length > 0) {
+                        selectConsistentVoice();
+                    }
 
-                // Set voice and language
-                if (selectedVoice) {
-                    utterance.voice = selectedVoice;
-                    utterance.lang = selectedVoice.lang;
-                } else {
-                    // Fallback to default language if no voice selected
-                    const lang = gameState.student?.language || 'en';
-                    const langMap = {
-                        'en': 'en-US',
-                        'es': 'es-ES',
-                        'fr': 'fr-FR',
-                        'zh': 'zh-CN',
-                        'de': 'de-DE'
+                    // Set voice and language
+                    if (selectedVoice) {
+                        utterance.voice = selectedVoice;
+                        utterance.lang = selectedVoice.lang;
+                        console.log(`🎤 TTS: Using voice: ${selectedVoice.name} (${selectedVoice.lang})`);
+                    } else {
+                        // Fallback to default language if no voice selected
+                        const lang = gameState.student?.language || 'en';
+                        const langMap = {
+                            'en': 'en-US',
+                            'es': 'es-ES',
+                            'fr': 'fr-FR',
+                            'zh': 'zh-CN',
+                            'ar': 'ar-SA',
+                            'de': 'de-DE',
+                            'it': 'it-IT',
+                            'ja': 'ja-JP',
+                            'ko': 'ko-KR',
+                            'pt': 'pt-BR',
+                            'ru': 'ru-RU',
+                            'hi': 'hi-IN'
+                        };
+                        utterance.lang = langMap[lang] || 'en-US';
+                        console.log(`⚠️ TTS: No voice selected, using default language: ${utterance.lang}`);
+                    }
+
+                    // Set speech parameters - optimized for child learners
+                    utterance.rate = 0.85;  // Slightly slower for clarity
+                    utterance.pitch = 1.0;  // Normal pitch
+                    utterance.volume = gameState.settings.volume || 0.7;  // Slightly louder default
+
+                    // Success callback
+                    utterance.onend = () => {
+                        console.log('✅ TTS: Speech completed successfully');
                     };
-                    utterance.lang = langMap[lang] || 'en-US';
-                }
 
-                // Set speech parameters
-                utterance.rate = 0.9;
-                utterance.pitch = 1.0;
-                utterance.volume = gameState.settings.volume || 0.5;
+                    // Enhanced error handling
+                    utterance.onerror = (event) => {
+                        console.error('❌ TTS Error:', event.error);
 
-                // Error handling
-                utterance.onerror = (event) => {
-                    console.error('TTS Error:', event.error);
-                    // If voice not found, try to reload voices and retry
-                    if (event.error === 'voice-not-found' || event.error === 'not-allowed') {
-                        loadVoices().then(() => {
-                            selectConsistentVoice();
-                            // Don't retry automatically to avoid infinite loops
-                        });
+                        if (event.error === 'voice-not-found') {
+                            console.log('🔄 TTS: Voice not found, attempting to reload voices...');
+                            loadVoices().then(() => {
+                                selectConsistentVoice();
+                                console.log('💡 TTS: Voices reloaded. Try speaking again.');
+                            });
+                        } else if (event.error === 'not-allowed') {
+                            console.error('❌ TTS: Speech not allowed - check browser permissions');
+                            console.log('💡 TTS: User may need to interact with page first (click/tap)');
+                        } else if (event.error === 'network') {
+                            console.error('❌ TTS: Network error - check internet connection');
+                        } else if (event.error === 'synthesis-failed') {
+                            console.error('❌ TTS: Synthesis failed - voice may be unavailable');
+                            console.log('💡 TTS: Try selecting a different voice or upgrade to ResponsiveVoice');
+                        } else {
+                            console.error(`❌ TTS: Unknown error: ${event.error}`);
+                        }
+                    };
+
+                    // Speak with error catching
+                    try {
+                        const synthesis = window.speechSynthesis;
+                        synthesis.speak(utterance);
+
+                        // Workaround for Chrome bug where speech sometimes doesn't start
+                        // Resume synthesis if paused (Chrome mobile sometimes pauses immediately)
+                        setTimeout(() => {
+                            if (synthesis.paused) {
+                                console.log('🔄 TTS: Synthesis paused, resuming...');
+                                synthesis.resume();
+                            }
+                        }, 100);
+                    } catch (error) {
+                        console.error('❌ TTS: Failed to speak:', error);
+                        console.log('💡 TTS: Consider using ResponsiveVoice for better reliability');
                     }
                 };
 
-                // Speak
-                try {
-                    window.speechSynthesis.speak(utterance);
-                } catch (error) {
-                    console.error('Failed to speak:', error);
+                // Load voices if not loaded yet, then speak
+                if (!speechVoicesLoaded || cachedVoices.length === 0) {
+                    console.log('🔄 TTS: Voices not loaded, loading now...');
+                    loadVoices().then(() => {
+                        selectConsistentVoice();
+                        configureAndSpeak();
+                    }).catch(error => {
+                        console.error('❌ TTS: Failed to load voices:', error);
+                        console.log('⚠️ TTS: Attempting to speak with default settings anyway...');
+                        // Try to speak anyway with default settings
+                        configureAndSpeak();
+                    });
+                } else {
+                    configureAndSpeak();
                 }
-            };
-
-            // Load voices if not loaded yet, then speak
-            if (!speechVoicesLoaded) {
-                loadVoices().then(() => {
-                    selectConsistentVoice();
-                    configureAndSpeak();
-                }).catch(error => {
-                    console.error('Failed to load voices:', error);
-                    // Try to speak anyway with default settings
-                    configureAndSpeak();
-                });
-            } else {
-                configureAndSpeak();
-            }
+            }, 50); // Small delay after cancel
         }
 
         // ========================================
@@ -5129,11 +5276,8 @@
                 btn.textContent = `${ex.icon} ${ex.label}`;
                 btn.onclick = () => {
                     closeDomainTips();
-                    showGatorMessage(`Starting ${ex.label} for ${data.title}!`);
-                    // Start tailored session filtered by domain
-                    setTimeout(() => {
-                        startTailoredSession(domain);
-                    }, 1000);
+                    // Start unique mini-quest activity based on exercise type
+                    startMiniQuestActivity(ex.label, domain, data.title);
                 };
                 exercisesList.appendChild(btn);
             });
@@ -5221,6 +5365,279 @@
             // Start practice session
             showScreen('practiceScreen');
             loadNextTailoredQuestion();
+        }
+
+        // ========================================
+        // MINI-QUEST ACTIVITIES (UNIQUE PRACTICE EXERCISES)
+        // ========================================
+
+        function startMiniQuestActivity(exerciseLabel, domain, domainTitle) {
+            showGatorMessage(`Starting ${exerciseLabel}! This is a special mini-quest activity.`);
+
+            // Create unique activity based on exercise type
+            switch(exerciseLabel) {
+                case 'Story Retelling':
+                    startStoryRetellingActivity(domain);
+                    break;
+                case 'Main Idea Practice':
+                    startMainIdeaActivity(domain);
+                    break;
+                case 'Inference Games':
+                    startInferenceActivity(domain);
+                    break;
+                case 'Prediction Activities':
+                    startPredictionActivity(domain);
+                    break;
+                case 'Phonics Practice':
+                    startPhonicsActivity(domain);
+                    break;
+                case 'Sight Words':
+                    startSightWordsActivity(domain);
+                    break;
+                case 'Rhyming Games':
+                    startRhymingActivity(domain);
+                    break;
+                case 'Word Families':
+                    startWordFamiliesActivity(domain);
+                    break;
+                default:
+                    // Fallback to regular tailored session
+                    setTimeout(() => startTailoredSession(domain), 1000);
+                    break;
+            }
+        }
+
+        function startStoryRetellingActivity(domain) {
+            const stories = {
+                K: [
+                    { title: "The Cat and the Hat", text: "A cat wore a big hat. The hat was red. The cat sat on a mat. The cat was happy.", question: "Tell me: What did the cat wear?", correctKeywords: ["hat", "red hat", "big hat"] },
+                    { title: "My Dog", text: "I have a dog. My dog is big. My dog likes to run. We play in the park.", question: "Tell me about the dog.", correctKeywords: ["big", "run", "play", "park"] }
+                ],
+                1: [
+                    { title: "The Lost Ball", text: "Sam had a red ball. One day, Sam kicked the ball too hard. The ball went over the fence. Sam was sad. Then Sam's friend helped find the ball. Sam was happy again.", question: "What happened to Sam's ball, and how did Sam feel?", correctKeywords: ["red ball", "kicked", "fence", "sad", "friend", "found", "happy"] },
+                    { title: "The Rainy Day", text: "It was raining outside. Emma could not play in the yard. She felt bored. Then Mom brought out paints. Emma painted a rainbow. Now she felt happy.", question: "Tell the story about Emma's rainy day.", correctKeywords: ["rain", "bored", "paint", "rainbow", "happy"] }
+                ],
+                2: [
+                    { title: "The New Friend", text: "Maria moved to a new school. On her first day, she felt nervous. At lunch, a girl named Jenny smiled at her. Jenny asked Maria to sit together. They talked about their favorite books. Maria felt much better. Now they are best friends.", question: "Retell the story of how Maria made a friend.", correctKeywords: ["new school", "nervous", "Jenny", "lunch", "books", "friends"] }
+                ]
+            };
+
+            const gradeKey = getGradeKey(gameState.student.gradeCurrent);
+            const storyPool = stories[gradeKey] || stories['K'];
+            const story = storyPool[Math.floor(Math.random() * storyPool.length)];
+
+            // Show story with TTS support
+            document.getElementById('questionText').innerHTML = `
+                <div style="text-align: left; padding: 20px; background: rgba(0, 240, 255, 0.1); border-radius: 15px; margin-bottom: 20px;">
+                    <h3 style="color: var(--neon-blue); margin-bottom: 15px;">📖 ${story.title}</h3>
+                    <p style="font-size: 1.1em; line-height: 1.8; margin-bottom: 20px;">${story.text}</p>
+                    <button class="btn btn-secondary" onclick="speak('${story.text.replace(/'/g, "\\'")}')"><span>🔊 Read Story Aloud</span></button>
+                </div>
+                <div style="background: rgba(139, 92, 246, 0.1); padding: 15px; border-radius: 10px; border: 2px solid var(--neon-purple);">
+                    <p style="font-size: 1em; color: var(--neon-purple); font-weight: 600;">📝 ${story.question}</p>
+                </div>
+            `;
+
+            // Create text input for retelling
+            const answersContainer = document.getElementById('answersContainer');
+            answersContainer.innerHTML = `
+                <textarea id="retellingInput"
+                    placeholder="Type your answer here... Tell the story in your own words!"
+                    style="width: 100%; min-height: 120px; padding: 15px; border-radius: 10px; background: rgba(15, 23, 42, 0.6); border: 2px solid rgba(0, 240, 255, 0.3); color: var(--text-light); font-size: 1em; font-family: 'Rajdhani', sans-serif; resize: vertical;"
+                    rows="5"></textarea>
+                <div style="margin-top: 15px; text-align: center;">
+                    <button class="btn btn-primary" onclick="checkStoryRetelling(${JSON.stringify(story.correctKeywords).replace(/"/g, '&quot;')})"><span>Submit Your Story</span></button>
+                </div>
+            `;
+
+            updateGatorMessage("Read the story carefully, then tell it back to me in your own words!", 'gatorPracticeMessage');
+            showScreen('practiceScreen');
+        }
+
+        function checkStoryRetelling(correctKeywords) {
+            const userInput = document.getElementById('retellingInput').value.toLowerCase();
+
+            if (userInput.trim().length < 10) {
+                updateGatorMessage("Try to write a bit more! Tell me what happened in the story.", 'gatorPracticeMessage');
+                speak("Try to write a bit more about the story!");
+                return;
+            }
+
+            // Check how many keywords were mentioned
+            const matchedKeywords = correctKeywords.filter(keyword =>
+                userInput.includes(keyword.toLowerCase())
+            );
+
+            const score = matchedKeywords.length / correctKeywords.length;
+
+            if (score >= 0.6) {
+                updateGatorMessage("Wonderful retelling! You captured the important parts of the story! 🌟", 'gatorPracticeMessage');
+                speak("Wonderful retelling! You really understood the story!");
+                setTimeout(() => showScreen('dashboardScreen'), 3000);
+            } else if (score >= 0.3) {
+                updateGatorMessage("Good start! You got some parts. Try to include more details about what happened!", 'gatorPracticeMessage');
+                speak("Good start! Can you tell me more about what happened?");
+            } else {
+                updateGatorMessage("Let's try again! Read the story one more time, then tell me what happened.", 'gatorPracticeMessage');
+                speak("Let's try reading the story again!");
+            }
+        }
+
+        function startMainIdeaActivity(domain) {
+            const passages = {
+                1: [
+                    { text: "Dogs are good pets. They can run and play. Dogs like to go for walks. Dogs can be your friend.", question: "What is this passage mainly about?", answers: ["Dogs as pets", "Running fast", "Going to school", "Eating food"], correct: 0 },
+                    { text: "In summer, the sun is hot. People go to the beach. They swim in the water. Summer is fun!", question: "What is the main idea?", answers: ["Summer activities", "Winter snow", "School days", "Bedtime"], correct: 0 }
+                ],
+                2: [
+                    { text: "Bees are important insects. They fly from flower to flower. Bees help flowers make seeds. They also make honey. Without bees, we would have fewer flowers and fruits.", question: "What is this passage mostly about?", answers: ["Why bees are important", "How to catch bees", "Flowers are pretty", "Making lemonade"], correct: 0 },
+                    { text: "Recycling helps the Earth. When we recycle paper, we save trees. When we recycle plastic, we make less trash. Everyone can help by recycling.", question: "What is the main idea of this passage?", answers: ["How recycling helps Earth", "How to make paper", "What trash smells like", "Buying new toys"], correct: 0 }
+                ]
+            };
+
+            const gradeKey = getGradeKey(gameState.student.gradeCurrent);
+            const passagePool = passages[gradeKey] || passages[1];
+            const passage = passagePool[Math.floor(Math.random() * passagePool.length)];
+
+            gameState.session.currentQuestion = passage;
+
+            document.getElementById('questionText').innerHTML = `
+                <div style="background: rgba(0, 240, 255, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                    <p style="font-size: 1.1em; line-height: 1.8; margin-bottom: 15px;">${passage.text}</p>
+                    <button class="btn btn-secondary" onclick="speak('${passage.text.replace(/'/g, "\\'")}')"><span>🔊 Read Passage</span></button>
+                </div>
+                <p style="font-size: 1.1em; color: var(--neon-purple); font-weight: 600; margin-bottom: 15px;">🎯 ${passage.question}</p>
+            `;
+
+            const answersContainer = document.getElementById('answersContainer');
+            answersContainer.innerHTML = '';
+            passage.answers.forEach((answer, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = answer;
+                btn.onclick = () => checkMainIdeaAnswer(index, passage.correct);
+                answersContainer.appendChild(btn);
+            });
+
+            updateGatorMessage("Read carefully and find the MAIN IDEA - what is this passage mostly about?", 'gatorPracticeMessage');
+            showScreen('practiceScreen');
+        }
+
+        function checkMainIdeaAnswer(selected, correct) {
+            if (selected === correct) {
+                updateGatorMessage("Yes! You found the main idea! That's what the whole passage was about! 🎯", 'gatorPracticeMessage');
+                speak("Perfect! You found the main idea!");
+                setTimeout(() => showScreen('dashboardScreen'), 3000);
+            } else {
+                updateGatorMessage("Not quite! The main idea is what the WHOLE passage is about, not just one small part. Try again!", 'gatorPracticeMessage');
+                speak("Try again! Think about what the whole passage is about.");
+            }
+        }
+
+        function startInferenceActivity(domain) {
+            const scenarios = [
+                { text: "Sarah put on her raincoat and grabbed an umbrella before going outside.", question: "What can you infer about the weather?", answers: ["It's raining or about to rain", "It's very sunny", "It's snowing", "It's very hot"], correct: 0 },
+                { text: "Tom was smiling as he opened the wrapped box with a bow on top.", question: "What can you infer?", answers: ["Tom is getting a present", "Tom is going to school", "Tom is sad", "Tom is sleeping"], correct: 0 },
+                { text: "The library was very quiet. Everyone was reading. Ms. Johnson put her finger to her lips when someone talked.", question: "What can you infer about the library rule?", answers: ["You must be quiet in the library", "You can run in the library", "You must eat in the library", "You can yell in the library"], correct: 0 }
+            ];
+
+            const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+            gameState.session.currentQuestion = scenario;
+
+            document.getElementById('questionText').innerHTML = `
+                <div style="background: rgba(139, 92, 246, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                    <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 15px;">🔍 ${scenario.text}</p>
+                    <button class="btn btn-secondary" onclick="speak('${scenario.text.replace(/'/g, "\\'")}')"><span>🔊 Hear the Clues</span></button>
+                </div>
+                <p style="font-size: 1.1em; color: var(--neon-pink); font-weight: 600; margin-bottom: 15px;">🤔 ${scenario.question}</p>
+            `;
+
+            const answersContainer = document.getElementById('answersContainer');
+            answersContainer.innerHTML = '';
+            scenario.answers.forEach((answer, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = answer;
+                btn.onclick = () => checkInferenceAnswer(index, scenario.correct);
+                answersContainer.appendChild(btn);
+            });
+
+            updateGatorMessage("Use the clues to figure out what's happening! This is like being a detective! 🔍", 'gatorPracticeMessage');
+            showScreen('practiceScreen');
+        }
+
+        function checkInferenceAnswer(selected, correct) {
+            if (selected === correct) {
+                updateGatorMessage("Excellent detective work! You used the clues to make a smart inference! 🔍✨", 'gatorPracticeMessage');
+                speak("Great job! You figured it out using the clues!");
+                setTimeout(() => showScreen('dashboardScreen'), 3000);
+            } else {
+                updateGatorMessage("Let's look at the clues again. What do they tell us?", 'gatorPracticeMessage');
+                speak("Look at the clues more carefully. What do they tell you?");
+            }
+        }
+
+        function startPredictionActivity(domain) {
+            const stories = [
+                { text: "Emma saw dark clouds in the sky. She heard thunder rumbling. Her mom said, 'We should go inside now.'", question: "What do you think will happen next?", answers: ["It will start raining", "It will get sunny", "They will go swimming", "They will have a picnic"], correct: 0 },
+                { text: "Jake studied really hard for his spelling test all week. He practiced every night. This morning, he felt ready.", question: "What do you predict will happen on the test?", answers: ["Jake will do well on the test", "Jake will forget everything", "Jake won't take the test", "Jake will fall asleep"], correct: 0 },
+                { text: "The puppy saw a ball rolling across the yard. The puppy's tail started wagging fast. The puppy got into a running position.", question: "What will the puppy probably do?", answers: ["Chase the ball", "Go to sleep", "Eat food", "Sit still"], correct: 0 }
+            ];
+
+            const story = stories[Math.floor(Math.random() * stories.length)];
+            gameState.session.currentQuestion = story;
+
+            document.getElementById('questionText').innerHTML = `
+                <div style="background: rgba(255, 0, 110, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                    <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 15px;">🔮 ${story.text}</p>
+                    <button class="btn btn-secondary" onclick="speak('${story.text.replace(/'/g, "\\'")}')"><span>🔊 Hear the Story</span></button>
+                </div>
+                <p style="font-size: 1.1em; color: var(--neon-pink); font-weight: 600; margin-bottom: 15px;">🔮 ${story.question}</p>
+            `;
+
+            const answersContainer = document.getElementById('answersContainer');
+            answersContainer.innerHTML = '';
+            story.answers.forEach((answer, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = answer;
+                btn.onclick = () => checkPredictionAnswer(index, story.correct);
+                answersContainer.appendChild(btn);
+            });
+
+            updateGatorMessage("Think about what you just read. What do you think will happen next? 🔮", 'gatorPracticeMessage');
+            showScreen('practiceScreen');
+        }
+
+        function checkPredictionAnswer(selected, correct) {
+            if (selected === correct) {
+                updateGatorMessage("Great prediction! You thought ahead and made a smart guess based on the story! 🔮✨", 'gatorPracticeMessage');
+                speak("Wonderful prediction! You're thinking ahead!");
+                setTimeout(() => showScreen('dashboardScreen'), 3000);
+            } else {
+                updateGatorMessage("Think about what usually happens in situations like this. What makes the most sense?", 'gatorPracticeMessage');
+                speak("Think about what makes sense to happen next!");
+            }
+        }
+
+        function startPhonicsActivity(domain) {
+            updateGatorMessage("Phonics Practice mini-quest coming soon! For now, let's practice reading.", 'gatorPracticeMessage');
+            setTimeout(() => startTailoredSession(domain), 1000);
+        }
+
+        function startSightWordsActivity(domain) {
+            updateGatorMessage("Sight Words mini-quest coming soon! For now, let's practice reading.", 'gatorPracticeMessage');
+            setTimeout(() => startTailoredSession(domain), 1000);
+        }
+
+        function startRhymingActivity(domain) {
+            updateGatorMessage("Rhyming Games mini-quest coming soon! For now, let's practice!", 'gatorPracticeMessage');
+            setTimeout(() => startTailoredSession(domain), 1000);
+        }
+
+        function startWordFamiliesActivity(domain) {
+            updateGatorMessage("Word Families mini-quest coming soon! For now, let's practice!", 'gatorPracticeMessage');
+            setTimeout(() => startTailoredSession(domain), 1000);
         }
 
         function loadNextTailoredQuestion() {
