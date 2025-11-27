@@ -1921,18 +1921,24 @@
                 </div>
 
                 <!-- 2. Spectrum Status (Three Grades) -->
-                <div id="headerGrades" class="hidden header-grades">
-                    <div class="header-grade-box grade-enrolled">
-                        <div class="grade-label">ENROLLED</div>
-                        <div id="headerEnrolled" class="grade-value">2</div>
+                <div id="headerGrades" class="hidden header-grades" style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; gap: 8px;">
+                        <div class="header-grade-box grade-enrolled">
+                            <div class="grade-label">ENROLLED</div>
+                            <div id="headerEnrolled" class="grade-value">2</div>
+                        </div>
+                        <div class="header-grade-box grade-current">
+                            <div class="grade-label">CURRENT</div>
+                            <div id="headerCurrent" class="grade-value">1.4</div>
+                        </div>
+                        <div class="header-grade-box grade-target">
+                            <div class="grade-label">TARGET</div>
+                            <div id="headerTarget" class="grade-value">2.5</div>
+                        </div>
                     </div>
-                    <div class="header-grade-box grade-current">
-                        <div class="grade-label">CURRENT</div>
-                        <div id="headerCurrent" class="grade-value">1.4</div>
-                    </div>
-                    <div class="header-grade-box grade-target">
-                        <div class="grade-label">TARGET</div>
-                        <div id="headerTarget" class="grade-value">2.5</div>
+                    <!-- Progress Bar in Header -->
+                    <div class="progress-bar" style="margin: 0;">
+                        <div class="progress-fill" id="headerProgressFill" style="width: 0%;">0%</div>
                     </div>
                 </div>
 
@@ -2135,31 +2141,7 @@
 
             <!-- Dashboard Grid Layout -->
             <div class="dashboard-grid">
-                <!-- Three-Grade System -->
-                <div class="card">
-                    <h2>📡 Spectrum Status</h2>
-                    <div class="three-grade">
-                        <div class="grade-box">
-                            <div class="grade-label">Enrolled</div>
-                            <div class="grade-value" id="enrolledGrade">2</div>
-                        </div>
-                        <div class="grade-box current">
-                            <div class="grade-label">Current</div>
-                            <div class="grade-value" id="currentGrade">1.2</div>
-                        </div>
-                        <div class="grade-box">
-                            <div class="grade-label">Target</div>
-                            <div class="grade-value" id="targetGrade">2.5</div>
-                        </div>
-                    </div>
-
-                    <!-- Progress Bar -->
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill" style="width: 0%;">0%</div>
-                    </div>
-                </div>
-
-                <!-- Note: Stats and Spectrum Map now consolidated in header -->
+                <!-- Note: Spectrum Status (Three-Grade System) and Progress Bar now consolidated in header -->
             </div>
 
             <!-- Actions -->
@@ -3534,41 +3516,84 @@
         });
 
         function speak(text) {
-            if (!gameState.settings || !gameState.settings.ttsEnabled) {
+            // Check if TTS is enabled
+            if (!gameState || !gameState.settings || !gameState.settings.ttsEnabled) {
                 return; // TTS is disabled
             }
 
             // Check if Web Speech API is available
-            if ('speechSynthesis' in window) {
-                // Cancel any ongoing speech
-                window.speechSynthesis.cancel();
-
-                const utterance = new SpeechSynthesisUtterance(text);
-
-                // Use cached, consistent voice
-                if (!speechVoicesLoaded) {
-                    loadVoices().then(() => {
-                        selectConsistentVoice();
-                        utterance.voice = selectedVoice;
-                        utterance.lang = selectedVoice ? selectedVoice.lang : 'en-US';
-                        utterance.rate = 0.9;
-                        utterance.pitch = 1.0;
-                        utterance.volume = gameState.settings.volume || 0.5;
-                        window.speechSynthesis.speak(utterance);
-                    });
-                } else {
-                    if (!selectedVoice) {
-                        selectConsistentVoice();
-                    }
-                    utterance.voice = selectedVoice;
-                    utterance.lang = selectedVoice ? selectedVoice.lang : 'en-US';
-                    utterance.rate = 0.9;
-                    utterance.pitch = 1.0;
-                    utterance.volume = gameState.settings.volume || 0.5;
-                    window.speechSynthesis.speak(utterance);
-                }
-            } else {
+            if (!('speechSynthesis' in window)) {
                 console.warn('Text-to-Speech not supported in this browser');
+                return;
+            }
+
+            // Cancel any ongoing speech
+            window.speechSynthesis.cancel();
+
+            // Create utterance
+            const utterance = new SpeechSynthesisUtterance(text);
+
+            // Helper function to configure and speak
+            const configureAndSpeak = () => {
+                // Ensure voice is selected
+                if (!selectedVoice) {
+                    selectConsistentVoice();
+                }
+
+                // Set voice and language
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                    utterance.lang = selectedVoice.lang;
+                } else {
+                    // Fallback to default language if no voice selected
+                    const lang = gameState.student?.language || 'en';
+                    const langMap = {
+                        'en': 'en-US',
+                        'es': 'es-ES',
+                        'fr': 'fr-FR',
+                        'zh': 'zh-CN',
+                        'de': 'de-DE'
+                    };
+                    utterance.lang = langMap[lang] || 'en-US';
+                }
+
+                // Set speech parameters
+                utterance.rate = 0.9;
+                utterance.pitch = 1.0;
+                utterance.volume = gameState.settings.volume || 0.5;
+
+                // Error handling
+                utterance.onerror = (event) => {
+                    console.error('TTS Error:', event.error);
+                    // If voice not found, try to reload voices and retry
+                    if (event.error === 'voice-not-found' || event.error === 'not-allowed') {
+                        loadVoices().then(() => {
+                            selectConsistentVoice();
+                            // Don't retry automatically to avoid infinite loops
+                        });
+                    }
+                };
+
+                // Speak
+                try {
+                    window.speechSynthesis.speak(utterance);
+                } catch (error) {
+                    console.error('Failed to speak:', error);
+                }
+            };
+
+            // Load voices if not loaded yet, then speak
+            if (!speechVoicesLoaded) {
+                loadVoices().then(() => {
+                    selectConsistentVoice();
+                    configureAndSpeak();
+                }).catch(error => {
+                    console.error('Failed to load voices:', error);
+                    // Try to speak anyway with default settings
+                    configureAndSpeak();
+                });
+            } else {
+                configureAndSpeak();
             }
         }
 
@@ -3942,17 +3967,16 @@
         function updateDashboard() {
             const { student, session } = gameState;
 
-            document.getElementById('enrolledGrade').textContent = student.gradeEnrolled === 0 ? 'K' : student.gradeEnrolled;
-            document.getElementById('currentGrade').textContent = student.gradeCurrent.toFixed(1);
-            document.getElementById('targetGrade').textContent = student.gradeTarget.toFixed(1);
-
+            // Update header progress bar (now the only progress bar)
             const progress = ((student.gradeCurrent - student.gradeEnrolled) /
                              (student.gradeTarget - student.gradeEnrolled)) * 100;
             const progressPercent = Math.max(0, Math.min(100, progress || 0)).toFixed(0);
 
-            const progressFill = document.getElementById('progressFill');
-            progressFill.style.width = progressPercent + '%';
-            progressFill.textContent = progressPercent + '%';
+            const headerProgressFill = document.getElementById('headerProgressFill');
+            if (headerProgressFill) {
+                headerProgressFill.style.width = progressPercent + '%';
+                headerProgressFill.textContent = progressPercent + '%';
+            }
 
             document.getElementById('questionsAnswered').textContent = session.questionsAnswered;
             document.getElementById('correctAnswers').textContent = session.correctAnswers;
@@ -4183,27 +4207,8 @@
         // ADHD-FRIENDLY FEATURES
         // ========================================
 
-        // Read question aloud using Web Speech API
-        function readQuestionAloud(text) {
-            if ('speechSynthesis' in window) {
-                // Cancel any ongoing speech
-                window.speechSynthesis.cancel();
-
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.rate = 0.9; // Slightly slower for clarity
-                utterance.pitch = 1.0;
-                utterance.volume = 1.0;
-
-                // Use a friendly voice if available
-                const voices = window.speechSynthesis.getVoices();
-                const preferredVoice = voices.find(v => v.name.includes('Google') || v.name.includes('Female'));
-                if (preferredVoice) {
-                    utterance.voice = preferredVoice;
-                }
-
-                window.speechSynthesis.speak(utterance);
-            }
-        }
+        // Note: readQuestionAloud has been removed - all TTS now uses the consistent speak() function
+        // which properly handles voice selection, language, and settings
 
         // Show abacus visual hint for math
         function showAbacus(number) {
@@ -4411,7 +4416,7 @@
             audioBtn.className = 'btn-secondary';
             audioBtn.innerHTML = '<span>🔊 Read Question</span>';
             audioBtn.style.cssText = 'padding: 10px 20px; font-size: 0.9em;';
-            audioBtn.onclick = () => readQuestionAloud(question.q);
+            audioBtn.onclick = () => speak(question.q);
 
             const hintBtn = document.createElement('button');
             hintBtn.className = 'btn-secondary';
@@ -5125,7 +5130,10 @@
                 btn.onclick = () => {
                     closeDomainTips();
                     showGatorMessage(`Starting ${ex.label} for ${data.title}!`);
-                    // In real implementation, would filter questions by domain
+                    // Start tailored session filtered by domain
+                    setTimeout(() => {
+                        startTailoredSession(domain);
+                    }, 1000);
                 };
                 exercisesList.appendChild(btn);
             });
