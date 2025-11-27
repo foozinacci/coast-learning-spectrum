@@ -1077,6 +1077,477 @@
             box-shadow: 0 0 10px var(--neon-blue);
         }
 
+        /* Companion Selection */
+        .companion-option {
+            padding: 15px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(148, 163, 184, 0.3);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .companion-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(0, 240, 255, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .companion-option:hover {
+            transform: translateY(-4px);
+            border-color: var(--neon-purple);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .companion-option:hover::before {
+            opacity: 1;
+        }
+
+        .companion-option.selected {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(0, 240, 255, 0.2));
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .companion-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .companion-icon {
+            font-size: 3em;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            position: relative;
+            z-index: 1;
+        }
+
+        .companion-name {
+            font-weight: 600;
+            font-size: 0.9em;
+            color: var(--text-light);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Companion Display in App */
+        .companion-display {
+            position: relative;
+            display: inline-block;
+            font-size: 3em;
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
+            animation: companionFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes companionFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .companion-display.mood-calm {
+            filter: drop-shadow(0 6px 12px rgba(100, 200, 255, 0.6));
+        }
+
+        .companion-display.mood-curious {
+            filter: drop-shadow(0 6px 12px rgba(255, 238, 0, 0.6));
+            animation: companionBounce 1s ease-in-out infinite;
+        }
+
+        @keyframes companionBounce {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-15px) scale(1.05); }
+        }
+
+        .companion-display.mood-encouraging {
+            filter: drop-shadow(0 6px 12px rgba(0, 255, 136, 0.6));
+            animation: companionGlow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes companionGlow {
+            0%, 100% { filter: drop-shadow(0 6px 12px rgba(0, 255, 136, 0.4)); }
+            50% { filter: drop-shadow(0 8px 20px rgba(0, 255, 136, 0.8)); }
+        }
+
+        .companion-display.mood-celebrating {
+            filter: drop-shadow(0 6px 12px rgba(255, 0, 110, 0.6));
+            animation: companionCelebrate 0.6s ease-in-out infinite;
+        }
+
+        @keyframes companionCelebrate {
+            0%, 100% { transform: rotate(-5deg) scale(1); }
+            25% { transform: rotate(5deg) scale(1.1); }
+            75% { transform: rotate(-5deg) scale(1.1); }
+        }
+
+        .companion-display.mood-resting {
+            filter: drop-shadow(0 6px 12px rgba(148, 163, 184, 0.4));
+            opacity: 0.7;
+            animation: companionRest 4s ease-in-out infinite;
+        }
+
+        @keyframes companionRest {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ===================================
+           CREATIVE REWARD STUDIO
+           =================================== */
+
+        .reward-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .reward-option {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1));
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .reward-option:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-violet);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2));
+        }
+
+        .reward-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 4px 8px rgba(139, 92, 246, 0.3));
+        }
+
+        .reward-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--neon-violet);
+            margin-bottom: 5px;
+        }
+
+        .reward-desc {
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+
+        .btn-small {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 8px;
+            padding: 8px 16px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9em;
+            margin: 0 5px;
+        }
+
+        .btn-small:hover {
+            background: rgba(139, 92, 246, 0.4);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Slime Simulator */
+        .slime-blob {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.9), rgba(16, 185, 129, 0.6));
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            filter: blur(8px) drop-shadow(0 8px 20px rgba(16, 185, 129, 0.6));
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            cursor: grab;
+        }
+
+        .slime-blob:active {
+            cursor: grabbing;
+            filter: blur(12px) drop-shadow(0 12px 30px rgba(16, 185, 129, 0.8));
+        }
+
+        /* Piano Keys */
+        .piano-key {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 10px;
+            cursor: pointer;
+            user-select: none;
+            font-weight: 600;
+            transition: all 0.1s ease;
+        }
+
+        .white-key {
+            width: 60px;
+            height: 200px;
+            background: linear-gradient(180deg, #ffffff, #f0f0f0);
+            border: 2px solid #333;
+            border-radius: 0 0 8px 8px;
+            color: #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .white-key:hover {
+            background: linear-gradient(180deg, #f0f0f0, #e0e0e0);
+            transform: translateY(2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .white-key:active {
+            background: linear-gradient(180deg, #e0e0e0, #d0d0d0);
+            transform: translateY(4px);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Drum Pads */
+        .drum-pad {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(249, 115, 22, 0.2));
+            border: 2px solid rgba(239, 68, 68, 0.4);
+            border-radius: 15px;
+            padding: 25px 20px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1em;
+            transition: all 0.1s ease;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .drum-pad:hover {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(249, 115, 22, 0.3));
+            border-color: var(--neon-red);
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.5);
+        }
+
+        .drum-pad:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+        }
+
+        /* ===================================
+           RESET & CALM ROOM
+           =================================== */
+
+        .calm-room-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .comfort-object {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 15px;
+            padding: 25px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .comfort-object:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--neon-blue);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+        }
+
+        .comfort-icon {
+            font-size: 3.5em;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3));
+        }
+
+        .comfort-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--neon-blue);
+            margin-bottom: 8px;
+        }
+
+        .comfort-desc {
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+
+        /* Breathing Animation */
+        @keyframes breatheIn {
+            0% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.3); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.6; }
+        }
+
+        .breathing-circle {
+            width: 200px;
+            height: 200px;
+            margin: 30px auto;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.6), rgba(139, 92, 246, 0.4));
+            animation: breatheIn 6s ease-in-out infinite;
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
+        }
+
+        .breathing-text {
+            font-size: 1.5em;
+            color: var(--neon-blue);
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
+        /* Soft Lights Effect */
+        .soft-lights-container {
+            width: 100%;
+            height: 300px;
+            border-radius: 20px;
+            background: linear-gradient(135deg,
+                rgba(59, 130, 246, 0.3),
+                rgba(139, 92, 246, 0.3),
+                rgba(236, 72, 153, 0.3));
+            animation: lightsGlow 8s ease-in-out infinite;
+            box-shadow: 0 0 60px rgba(59, 130, 246, 0.4);
+        }
+
+        @keyframes lightsGlow {
+            0%, 100% { opacity: 0.6; filter: brightness(0.8); }
+            50% { opacity: 1; filter: brightness(1.2); }
+        }
+
+        /* ===================================
+           MOVEMENT BREAK PROMPTS
+           =================================== */
+
+        .movement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .movement-activity {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(250, 204, 21, 0.1));
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 15px;
+            padding: 25px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .movement-activity:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--neon-green);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(250, 204, 21, 0.2));
+        }
+
+        .movement-icon {
+            font-size: 3.5em;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 4px 8px rgba(16, 185, 129, 0.3));
+            display: inline-block;
+        }
+
+        .movement-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--neon-green);
+            margin-bottom: 8px;
+        }
+
+        .movement-desc {
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+
+        /* Movement Animations */
+        .movement-icon.bounce {
+            animation: iconBounce 1s ease-in-out infinite;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .movement-icon.slide {
+            animation: iconSlide 2s ease-in-out infinite;
+        }
+
+        @keyframes iconSlide {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(15px); }
+        }
+
+        .movement-icon.run {
+            animation: iconRun 0.6s ease-in-out infinite;
+        }
+
+        @keyframes iconRun {
+            0%, 100% { transform: translateX(0) scale(1); }
+            25% { transform: translateX(-5px) scale(1.05); }
+            75% { transform: translateX(5px) scale(0.95); }
+        }
+
+        .movement-icon.spin {
+            animation: iconSpin 3s linear infinite;
+        }
+
+        @keyframes iconSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Movement Timer Display */
+        .movement-timer-circle {
+            width: 250px;
+            height: 250px;
+            margin: 30px auto;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.6), rgba(250, 204, 21, 0.4));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            animation: pulseMovement 1.5s ease-in-out infinite;
+            box-shadow: 0 0 50px rgba(16, 185, 129, 0.5);
+        }
+
+        @keyframes pulseMovement {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
         /* Hidden */
         .hidden {
             display: none !important;
@@ -1936,8 +2407,8 @@
                             <div id="headerTarget" class="grade-value">2.5</div>
                         </div>
                     </div>
-                    <!-- Progress Bar in Header -->
-                    <div class="progress-bar" style="margin: 0;">
+                    <!-- Progress Bar directly under Spectrum Status -->
+                    <div class="progress-bar" style="margin: 8px 0 0 0; width: 100%;">
                         <div class="progress-fill" id="headerProgressFill" style="width: 0%;">0%</div>
                     </div>
                 </div>
@@ -2096,6 +2567,42 @@
             </div>
 
             <div class="form-group">
+                <label style="display: block; margin-bottom: 12px; font-weight: 600; color: var(--neon-purple);">
+                    🐾 Choose Your Learning Companion:
+                </label>
+                <p style="color: var(--text-muted); font-size: 0.9em; margin-bottom: 15px;">
+                    Your companion will support you throughout your learning journey. They're here to encourage you, celebrate with you, and help you stay calm.
+                </p>
+                <div id="companionSelector" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 15px;">
+                    <div class="companion-option" data-companion="dog" onclick="selectCompanion('dog')">
+                        <div class="companion-icon">🐕</div>
+                        <div class="companion-name">Friendly Dog</div>
+                    </div>
+                    <div class="companion-option" data-companion="bear" onclick="selectCompanion('bear')">
+                        <div class="companion-icon">🐻</div>
+                        <div class="companion-name">Calm Bear</div>
+                    </div>
+                    <div class="companion-option" data-companion="mouse" onclick="selectCompanion('mouse')">
+                        <div class="companion-icon">🐭</div>
+                        <div class="companion-name">Quick Mouse</div>
+                    </div>
+                    <div class="companion-option" data-companion="fox" onclick="selectCompanion('fox')">
+                        <div class="companion-icon">🦊</div>
+                        <div class="companion-name">Clever Fox</div>
+                    </div>
+                    <div class="companion-option" data-companion="cat" onclick="selectCompanion('cat')">
+                        <div class="companion-icon">🐱</div>
+                        <div class="companion-name">Curious Cat</div>
+                    </div>
+                    <div class="companion-option" data-companion="bunny" onclick="selectCompanion('bunny')">
+                        <div class="companion-icon">🐰</div>
+                        <div class="companion-name">Happy Bunny</div>
+                    </div>
+                </div>
+                <input type="hidden" id="selectedCompanion" value="dog">
+            </div>
+
+            <div class="form-group">
                 <label for="ttsVoiceSelect">🔊 Voice:</label>
                 <select id="ttsVoiceSelect">
                     <option value="female">Female Voice</option>
@@ -2149,6 +2656,7 @@
                 <h2>⚡ Control Panel</h2>
                 <button class="btn btn-primary" onclick="startSession()"><span>▶️ Start Session</span></button>
                 <button class="btn btn-primary" onclick="resumeSession()"><span>⏯️ Resume</span></button>
+                <button class="btn btn-secondary" onclick="showCalmRoom()"><span>🌙 Calm Room</span></button>
                 <button class="btn btn-secondary" onclick="exportProfile()"><span>💾 Export</span></button>
                 <button class="btn btn-secondary" onclick="importProfile()"><span>📥 Import</span></button>
                 <button class="btn btn-secondary" onclick="resetApp()"><span>🔄 Reset</span></button>
@@ -2194,6 +2702,155 @@
                 </div>
             </div>
 
+            <!-- Student ID & Diagnostics Profile -->
+            <details class="card diagnostics-collapse">
+                <summary>
+                    <h2>🎓 Student ID & Diagnostics Profile</h2>
+                </summary>
+                <p style="color:var(--text-muted); margin-bottom:15px; font-size:0.9em;">
+                    Upload student ID and generate comprehensive diagnostics reports showing strengths, weaknesses, and progress across all learning domains.
+                </p>
+
+                <div style="margin-bottom: 25px;">
+                    <h3 style="font-size: 1.1em; margin-bottom: 12px; color: var(--neon-blue);">📸 Student ID Upload</h3>
+                    <div style="background: rgba(15, 23, 42, 0.6); padding: 20px; border-radius: 10px; border: 2px dashed rgba(0, 240, 255, 0.3); text-align: center;">
+                        <div id="studentIdPreview" style="margin-bottom: 15px; min-height: 100px; display: flex; align-items: center; justify-content: center;">
+                            <div style="color: var(--text-muted);">
+                                <div style="font-size: 3em; margin-bottom: 10px;">👤</div>
+                                <div>No student ID uploaded yet</div>
+                            </div>
+                        </div>
+                        <input type="file" id="studentIdUpload" accept="image/*" style="display: none;" onchange="handleStudentIdUpload(event)">
+                        <button class="btn btn-primary" onclick="document.getElementById('studentIdUpload').click()">
+                            <span>📤 Upload Student ID</span>
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearStudentId()" style="margin-left: 10px;">
+                            <span>🗑️ Clear</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <h3 style="font-size: 1.1em; margin-bottom: 12px; color: var(--neon-purple);">📊 Generate Reports</h3>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="generateDiagnosticsMap()">
+                            <span>🗺️ Diagnostics Map</span>
+                        </button>
+                        <button class="btn btn-primary" onclick="generateProConReports()">
+                            <span>📋 Pro/Con Reports</span>
+                        </button>
+                        <button class="btn btn-secondary" onclick="exportStudentProfile()">
+                            <span>💾 Export Full Profile</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="studentReportsContainer"></div>
+            </details>
+
+            <!-- Question Bank Stress Testing -->
+            <details class="card diagnostics-collapse">
+                <summary>
+                    <h2>🧪 Question Bank Stress Testing</h2>
+                </summary>
+                <p style="color:var(--text-muted); margin-bottom:15px; font-size:0.9em;">
+                    Test question uniqueness and variety by generating questions 500-1000 times.
+                    This helps ensure students don't see repetitive content.
+                </p>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">Number of Generations:</label>
+                    <select id="stressTestIterations" style="padding: 8px; border-radius: 8px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(0, 240, 255, 0.3); color: var(--text-light); font-family: 'Rajdhani', sans-serif; font-size: 1em; margin-bottom: 15px;">
+                        <option value="100">100 (Quick Test)</option>
+                        <option value="500" selected>500 (Standard)</option>
+                        <option value="1000">1000 (Thorough)</option>
+                        <option value="2000">2000 (Extensive)</option>
+                    </select>
+
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">Grade Level to Test:</label>
+                    <select id="stressTestGrade" style="padding: 8px; border-radius: 8px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(0, 240, 255, 0.3); color: var(--text-light); font-family: 'Rajdhani', sans-serif; font-size: 1em; margin-bottom: 15px;">
+                        <option value="K">Kindergarten</option>
+                        <option value="1">Grade 1</option>
+                        <option value="2" selected>Grade 2</option>
+                        <option value="3">Grade 3</option>
+                        <option value="4">Grade 4</option>
+                        <option value="5">Grade 5</option>
+                        <option value="all">All Grades</option>
+                    </select>
+
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">Subject to Test:</label>
+                    <select id="stressTestSubject" style="padding: 8px; border-radius: 8px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(0, 240, 255, 0.3); color: var(--text-light); font-family: 'Rajdhani', sans-serif; font-size: 1em; margin-bottom: 20px;">
+                        <option value="reading">Reading</option>
+                        <option value="math">Math</option>
+                        <option value="all">All Subjects</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary" onclick="runQuestionBankStressTest()">
+                    <span>🧪 Run Stress Test</span>
+                </button>
+                <button class="btn btn-secondary" onclick="stopStressTest()">
+                    <span>⏹️ Stop Test</span>
+                </button>
+
+                <div id="stressTestProgress" style="margin-top: 20px; display: none;">
+                    <div style="background: rgba(0, 240, 255, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(0, 240, 255, 0.3);">
+                        <div style="margin-bottom: 10px;">
+                            <strong>Progress:</strong> <span id="stressTestCurrentIteration">0</span> / <span id="stressTestTotalIterations">0</span>
+                        </div>
+                        <div class="progress-bar" style="height: 20px;">
+                            <div class="progress-fill" id="stressTestProgressBar" style="width: 0%;">0%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="stressTestResults" style="margin-top: 20px;"></div>
+            </details>
+
+            <!-- Support Circle System -->
+            <details class="card diagnostics-collapse">
+                <summary>
+                    <h2>❤️ Support Circle</h2>
+                </summary>
+                <p style="color:var(--text-muted); margin-bottom:20px; font-size:0.9em;">
+                    Add people who encourage you! Their supportive messages will appear during your learning journey.
+                </p>
+
+                <div style="margin-bottom: 25px;">
+                    <h3 style="font-size: 1.1em; margin-bottom: 15px; color: var(--neon-pink);">👥 Your Support Circle</h3>
+                    <div id="supportCircleList" style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+                        <!-- Support circle members will appear here -->
+                    </div>
+
+                    <div style="background: rgba(15, 23, 42, 0.6); padding: 20px; border-radius: 10px; border: 2px solid rgba(236, 72, 153, 0.3);">
+                        <h4 style="color: var(--neon-pink); margin-bottom: 12px;">Add Someone to Your Circle</h4>
+                        <div style="display: grid; gap: 12px;">
+                            <input type="text" id="supportCircleName" placeholder="Their name (e.g., Mom, Mr. Smith, Alex)" style="padding: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(236, 72, 153, 0.4); border-radius: 8px; color: white; font-size: 1em;">
+
+                            <select id="supportCircleRole" style="padding: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(236, 72, 153, 0.4); border-radius: 8px; color: white; font-size: 1em;">
+                                <option value="parent">Parent/Guardian</option>
+                                <option value="teacher">Teacher</option>
+                                <option value="sibling">Brother/Sister</option>
+                                <option value="friend">Friend</option>
+                                <option value="other">Other Family</option>
+                            </select>
+
+                            <button class="btn btn-primary" onclick="addToSupportCircle()" style="width: 100%;">
+                                <span>➕ Add to Circle</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(59, 130, 246, 0.1); padding: 15px; border-radius: 8px; border-left: 4px solid var(--neon-blue);">
+                    <h4 style="color: var(--neon-blue); margin-bottom: 8px;">💡 How it works</h4>
+                    <p style="color: var(--text-muted); font-size: 0.9em; margin: 0;">
+                        During practice, you'll occasionally see encouraging messages from people in your support circle.
+                        Their words will remind you that you're not alone in this learning journey!
+                    </p>
+                </div>
+            </details>
+
             <!-- Diagnostics -->
             <details class="card diagnostics-collapse">
                 <summary>
@@ -2233,6 +2890,230 @@
                 <div style="text-align: center; margin-top: 25px;">
                     <button class="btn btn-secondary" onclick="takeBreak()"><span>⏸️ Break</span></button>
                     <button class="btn btn-secondary" onclick="endSession()"><span>⏹️ End</span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Creative Reward Studio Screen -->
+        <div id="rewardStudioScreen" class="hidden">
+            <div class="card">
+                <h2>🎨 Creative Reward Studio</h2>
+                <p style="color: var(--text-muted); margin-bottom: 25px; text-align: center;">
+                    Great job on your session! Choose a creative activity to enjoy for 2-3 minutes.
+                </p>
+
+                <!-- Activity Selection -->
+                <div id="rewardSelection" class="reward-options">
+                    <div class="reward-option" onclick="startDrawingCanvas()">
+                        <div class="reward-icon">🎨</div>
+                        <div class="reward-name">Drawing Canvas</div>
+                        <div class="reward-desc">Create colorful artwork</div>
+                    </div>
+                    <div class="reward-option" onclick="startSlimeSimulator()">
+                        <div class="reward-icon">🫧</div>
+                        <div class="reward-name">Slime Simulator</div>
+                        <div class="reward-desc">Squish and stretch slime</div>
+                    </div>
+                    <div class="reward-option" onclick="startInstruments()">
+                        <div class="reward-icon">🎹</div>
+                        <div class="reward-name">Instruments</div>
+                        <div class="reward-desc">Play music and sounds</div>
+                    </div>
+                    <div class="reward-option" onclick="skipReward()">
+                        <div class="reward-icon">⏭️</div>
+                        <div class="reward-name">Skip</div>
+                        <div class="reward-desc">Return to dashboard</div>
+                    </div>
+                </div>
+
+                <!-- Drawing Canvas Activity -->
+                <div id="drawingActivity" class="hidden" style="text-align: center;">
+                    <h3 style="color: var(--neon-violet); margin-bottom: 15px;">🎨 Drawing Canvas</h3>
+                    <div style="margin-bottom: 15px;">
+                        <button class="btn-small" onclick="setDrawColor('#EF4444')" style="background: #EF4444;">Red</button>
+                        <button class="btn-small" onclick="setDrawColor('#F97316')" style="background: #F97316;">Orange</button>
+                        <button class="btn-small" onclick="setDrawColor('#FACC15')" style="background: #FACC15; color: #111;">Yellow</button>
+                        <button class="btn-small" onclick="setDrawColor('#10B981')" style="background: #10B981;">Green</button>
+                        <button class="btn-small" onclick="setDrawColor('#3B82F6')" style="background: #3B82F6;">Blue</button>
+                        <button class="btn-small" onclick="setDrawColor('#8B5CF6')" style="background: #8B5CF6;">Violet</button>
+                        <button class="btn-small" onclick="clearCanvas()" style="background: var(--slate-gray);">Clear</button>
+                    </div>
+                    <canvas id="drawCanvas" width="600" height="400" style="border: 2px solid var(--neon-violet); border-radius: 10px; background: white; cursor: crosshair; max-width: 100%;"></canvas>
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-secondary" onclick="finishReward()"><span>✅ Done</span></button>
+                    </div>
+                </div>
+
+                <!-- Slime Simulator Activity -->
+                <div id="slimeActivity" class="hidden" style="text-align: center;">
+                    <h3 style="color: var(--neon-green); margin-bottom: 15px;">🫧 Slime Simulator</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 15px;">Click and drag to squish and stretch the slime!</p>
+                    <div id="slimeContainer" style="position: relative; width: 100%; max-width: 400px; height: 400px; margin: 0 auto; background: rgba(15, 23, 42, 0.6); border-radius: 20px; overflow: hidden; cursor: grab;">
+                        <div id="slimeBlob" class="slime-blob"></div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <button class="btn-small" onclick="changeSlimeColor('#10B981')">Green Slime</button>
+                        <button class="btn-small" onclick="changeSlimeColor('#EC4899')">Pink Slime</button>
+                        <button class="btn-small" onclick="changeSlimeColor('#3B82F6')">Blue Slime</button>
+                        <button class="btn-small" onclick="changeSlimeColor('#8B5CF6')">Purple Slime</button>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-secondary" onclick="finishReward()"><span>✅ Done</span></button>
+                    </div>
+                </div>
+
+                <!-- Instruments Activity -->
+                <div id="instrumentsActivity" class="hidden" style="text-align: center;">
+                    <h3 style="color: var(--neon-blue); margin-bottom: 15px;">🎹 Musical Instruments</h3>
+
+                    <!-- Piano Keyboard -->
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="color: var(--text-muted); margin-bottom: 10px;">Piano</h4>
+                        <div id="pianoKeyboard" style="display: flex; justify-content: center; gap: 2px;">
+                            <div class="piano-key white-key" data-note="C" onclick="playNote('C4')">C</div>
+                            <div class="piano-key white-key" data-note="D" onclick="playNote('D4')">D</div>
+                            <div class="piano-key white-key" data-note="E" onclick="playNote('E4')">E</div>
+                            <div class="piano-key white-key" data-note="F" onclick="playNote('F4')">F</div>
+                            <div class="piano-key white-key" data-note="G" onclick="playNote('G4')">G</div>
+                            <div class="piano-key white-key" data-note="A" onclick="playNote('A4')">A</div>
+                            <div class="piano-key white-key" data-note="B" onclick="playNote('B4')">B</div>
+                            <div class="piano-key white-key" data-note="C5" onclick="playNote('C5')">C</div>
+                        </div>
+                    </div>
+
+                    <!-- Drum Pads -->
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="color: var(--text-muted); margin-bottom: 10px;">Drums</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; max-width: 500px; margin: 0 auto;">
+                            <button class="drum-pad" onclick="playDrum('kick')">🥁<br>Kick</button>
+                            <button class="drum-pad" onclick="playDrum('snare')">🥁<br>Snare</button>
+                            <button class="drum-pad" onclick="playDrum('hihat')">🎵<br>Hi-Hat</button>
+                            <button class="drum-pad" onclick="playDrum('cymbal')">🎶<br>Cymbal</button>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-secondary" onclick="finishReward()"><span>✅ Done</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reset & Calm Room Screen -->
+        <div id="calmRoomScreen" class="hidden">
+            <div class="card">
+                <h2>🌙 Reset & Calm Room</h2>
+                <p style="color: var(--text-muted); margin-bottom: 25px; text-align: center;">
+                    Take time to reset and feel calm. Choose what helps you feel better.
+                </p>
+
+                <!-- Comfort Objects Selection -->
+                <div class="calm-room-grid">
+                    <div class="comfort-object" onclick="useComfortObject('blanket')">
+                        <div class="comfort-icon">🛏️</div>
+                        <div class="comfort-name">Cozy Blanket</div>
+                        <div class="comfort-desc">Wrap yourself in warmth</div>
+                    </div>
+
+                    <div class="comfort-object" onclick="useComfortObject('chair')">
+                        <div class="comfort-icon">🪑</div>
+                        <div class="comfort-name">Comfy Chair</div>
+                        <div class="comfort-desc">Sit and relax</div>
+                    </div>
+
+                    <div class="comfort-object" onclick="useComfortObject('lights')">
+                        <div class="comfort-icon">💡</div>
+                        <div class="comfort-name">Soft Lights</div>
+                        <div class="comfort-desc">Dim, calming glow</div>
+                    </div>
+
+                    <div class="comfort-object" onclick="useComfortObject('breathing')">
+                        <div class="comfort-icon">🫁</div>
+                        <div class="comfort-name">Breathing Exercise</div>
+                        <div class="comfort-desc">Calm your body</div>
+                    </div>
+
+                    <div class="comfort-object" onclick="useComfortObject('sounds')">
+                        <div class="comfort-icon">🎵</div>
+                        <div class="comfort-name">Calming Sounds</div>
+                        <div class="comfort-desc">Peaceful background</div>
+                    </div>
+
+                    <div class="comfort-object" onclick="leaveCalmRoom()">
+                        <div class="comfort-icon">✅</div>
+                        <div class="comfort-name">I'm Ready</div>
+                        <div class="comfort-desc">Return when ready</div>
+                    </div>
+                </div>
+
+                <!-- Active Comfort Experience -->
+                <div id="activeComfortArea" class="hidden" style="margin-top: 30px; padding: 30px; background: rgba(15, 23, 42, 0.6); border-radius: 20px; text-align: center;">
+                    <div id="comfortContent">
+                        <!-- Content will be dynamically inserted -->
+                    </div>
+                    <div style="margin-top: 25px;">
+                        <button class="btn btn-secondary" onclick="returnToComfortSelection()"><span>Choose Another</span></button>
+                        <button class="btn btn-primary" onclick="leaveCalmRoom()"><span>I'm Ready</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Movement Break Screen -->
+        <div id="movementBreakScreen" class="hidden">
+            <div class="card">
+                <h2>🏃 Movement Break!</h2>
+                <p style="color: var(--text-muted); margin-bottom: 25px; text-align: center;">
+                    Time to get your body moving! Choose an activity to help you refocus.
+                </p>
+
+                <!-- Movement Activities -->
+                <div class="movement-grid">
+                    <div class="movement-activity" onclick="startMovementActivity('trampoline')">
+                        <div class="movement-icon bounce">🤸</div>
+                        <div class="movement-name">Trampoline</div>
+                        <div class="movement-desc">Jump and bounce!</div>
+                    </div>
+
+                    <div class="movement-activity" onclick="startMovementActivity('skates')">
+                        <div class="movement-icon slide">🛼</div>
+                        <div class="movement-name">Skating</div>
+                        <div class="movement-desc">Roll and glide</div>
+                    </div>
+
+                    <div class="movement-activity" onclick="startMovementActivity('run')">
+                        <div class="movement-icon run">🏃</div>
+                        <div class="movement-name">Quick Run</div>
+                        <div class="movement-desc">Sprint around!</div>
+                    </div>
+
+                    <div class="movement-activity" onclick="startMovementActivity('jumpjacks')">
+                        <div class="movement-icon">🙌</div>
+                        <div class="movement-name">Jumping Jacks</div>
+                        <div class="movement-desc">Stretch and jump</div>
+                    </div>
+
+                    <div class="movement-activity" onclick="startMovementActivity('dance')">
+                        <div class="movement-icon spin">💃</div>
+                        <div class="movement-name">Dance Break</div>
+                        <div class="movement-desc">Move to music!</div>
+                    </div>
+
+                    <div class="movement-activity" onclick="skipMovementBreak()">
+                        <div class="movement-icon">⏭️</div>
+                        <div class="movement-name">Skip</div>
+                        <div class="movement-desc">Return to learning</div>
+                    </div>
+                </div>
+
+                <!-- Active Movement Timer -->
+                <div id="movementTimer" class="hidden" style="margin-top: 30px; text-align: center;">
+                    <div id="movementTimerContent">
+                        <!-- Timer content will be dynamically inserted -->
+                    </div>
+                    <div style="margin-top: 25px;">
+                        <button class="btn btn-primary" onclick="finishMovementBreak()"><span>✅ Done Moving!</span></button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -3432,169 +4313,316 @@
         }
 
         // ========================================
-        // TTS VOICE LOADING & CACHING (FIX)
+        // ENHANCED TTS VOICE LOADING & CACHING
         // ========================================
+        /**
+         * PRODUCTION TTS UPGRADE RECOMMENDATION:
+         * For consistent, reliable TTS across all browsers and devices, consider integrating:
+         *
+         * Option 1: ResponsiveVoice (Free tier available)
+         *   - Consistent voices across all browsers
+         *   - 100+ voices, 50+ languages
+         *   - Add: <script src="https://code.responsivevoice.org/responsivevoice.js?key=YOUR_KEY"></script>
+         *   - Usage: responsiveVoice.speak(text, voiceName);
+         *
+         * Option 2: Google Cloud Text-to-Speech
+         *   - Very high quality voices
+         *   - Requires API key and billing
+         *   - Best for production apps with budget
+         *
+         * Option 3: Amazon Polly
+         *   - Neural voices available
+         *   - AWS account required
+         *   - Good for AWS-hosted apps
+         *
+         * Current implementation uses Web Speech API (free, built-in, but inconsistent)
+         */
+
         let speechVoicesLoaded = false;
         let cachedVoices = [];
         let selectedVoice = null;
+        let voiceLoadAttempts = 0;
+        const MAX_VOICE_LOAD_ATTEMPTS = 3;
 
         function loadVoices() {
-            return new Promise((resolve) => {
+            return new Promise((resolve, reject) => {
+                voiceLoadAttempts++;
+
                 let voices = window.speechSynthesis.getVoices();
+
                 if (voices.length > 0) {
                     cachedVoices = voices;
                     speechVoicesLoaded = true;
+                    console.log(`✅ TTS: Loaded ${voices.length} voices successfully`);
+                    // Log available voices for debugging
+                    console.log('Available voices:', voices.map(v => `${v.name} (${v.lang})`).join(', '));
                     resolve(voices);
                 } else {
+                    // Voices not loaded yet, wait for event
                     window.speechSynthesis.onvoiceschanged = () => {
                         voices = window.speechSynthesis.getVoices();
-                        cachedVoices = voices;
-                        speechVoicesLoaded = true;
-                        resolve(voices);
+                        if (voices.length > 0) {
+                            cachedVoices = voices;
+                            speechVoicesLoaded = true;
+                            console.log(`✅ TTS: Loaded ${voices.length} voices after event`);
+                            resolve(voices);
+                        } else if (voiceLoadAttempts >= MAX_VOICE_LOAD_ATTEMPTS) {
+                            console.warn('⚠️ TTS: Could not load voices after multiple attempts');
+                            reject(new Error('Failed to load voices'));
+                        }
                     };
+
+                    // Timeout fallback
+                    setTimeout(() => {
+                        if (!speechVoicesLoaded && voiceLoadAttempts < MAX_VOICE_LOAD_ATTEMPTS) {
+                            loadVoices().then(resolve).catch(reject);
+                        }
+                    }, 1000);
                 }
             });
         }
 
         function selectConsistentVoice() {
-            if (!gameState || !gameState.settings) return null;
+            if (!gameState || !gameState.settings) {
+                console.warn('⚠️ TTS: gameState not ready for voice selection');
+                return null;
+            }
+
+            if (cachedVoices.length === 0) {
+                console.warn('⚠️ TTS: No voices cached yet');
+                return null;
+            }
 
             const lang = gameState.student?.language || 'en';
-            const voicePref = gameState.settings.ttsVoice || 'neutral';
+            const voicePref = gameState.settings.ttsVoice || 'female';
 
+            // Enhanced language mapping with regional variants
             const langMap = {
                 'en': 'en-US',
                 'es': 'es-ES',
                 'fr': 'fr-FR',
                 'zh': 'zh-CN',
-                'ar': 'ar-SA'
+                'ar': 'ar-SA',
+                'de': 'de-DE',
+                'it': 'it-IT',
+                'ja': 'ja-JP',
+                'ko': 'ko-KR',
+                'pt': 'pt-BR',
+                'ru': 'ru-RU',
+                'hi': 'hi-IN'
             };
 
             const targetLang = langMap[lang] || 'en-US';
             const langPrefix = targetLang.split('-')[0];
 
+            console.log(`🔍 TTS: Looking for voice - Language: ${targetLang}, Preference: ${voicePref}`);
+
+            // Filter voices by language
             const matchingVoices = cachedVoices.filter(voice =>
-                voice.lang.startsWith(langPrefix)
+                voice.lang.startsWith(langPrefix) || voice.lang.startsWith(targetLang)
             );
 
+            console.log(`🔍 TTS: Found ${matchingVoices.length} matching voices for ${langPrefix}`);
+
             if (matchingVoices.length === 0) {
+                console.warn(`⚠️ TTS: No voices found for ${langPrefix}, using default`);
                 selectedVoice = cachedVoices[0];
                 return selectedVoice;
             }
 
+            // Enhanced voice selection based on gender preference
+            let chosenVoice = null;
+
             if (voicePref === 'female') {
-                const femaleVoice = matchingVoices.find(v =>
-                    v.name.toLowerCase().includes('female') ||
-                    v.name.toLowerCase().includes('woman') ||
-                    v.name.toLowerCase().includes('zira') ||
-                    v.name.toLowerCase().includes('samantha')
-                );
-                if (femaleVoice) {
-                    selectedVoice = femaleVoice;
-                    return femaleVoice;
-                }
+                // Try to find female voice - common indicators
+                chosenVoice = matchingVoices.find(v => {
+                    const name = v.name.toLowerCase();
+                    return name.includes('female') ||
+                           name.includes('woman') ||
+                           name.includes('zira') ||
+                           name.includes('samantha') ||
+                           name.includes('victoria') ||
+                           name.includes('karen') ||
+                           name.includes('susan') ||
+                           name.includes('sara') ||
+                           name.includes('fiona') ||
+                           name.includes('alice') ||
+                           name.includes('jenny') ||
+                           name.includes('emily');
+                });
             } else if (voicePref === 'male') {
-                const maleVoice = matchingVoices.find(v =>
-                    v.name.toLowerCase().includes('male') ||
-                    v.name.toLowerCase().includes('man') ||
-                    v.name.toLowerCase().includes('david') ||
-                    v.name.toLowerCase().includes('mark')
-                );
-                if (maleVoice) {
-                    selectedVoice = maleVoice;
-                    return maleVoice;
-                }
+                // Try to find male voice - common indicators
+                chosenVoice = matchingVoices.find(v => {
+                    const name = v.name.toLowerCase();
+                    return name.includes('male') ||
+                           name.includes('man') ||
+                           name.includes('david') ||
+                           name.includes('mark') ||
+                           name.includes('daniel') ||
+                           name.includes('james') ||
+                           name.includes('alex') ||
+                           name.includes('tom') ||
+                           name.includes('george') ||
+                           name.includes('fred');
+                });
             }
 
-            selectedVoice = matchingVoices[0];
-            return matchingVoices[0];
+            // If no gender-specific voice found, use first matching voice
+            if (!chosenVoice) {
+                chosenVoice = matchingVoices[0];
+            }
+
+            selectedVoice = chosenVoice;
+            console.log(`✅ TTS: Selected voice: ${chosenVoice.name} (${chosenVoice.lang})`);
+            return chosenVoice;
         }
 
-        // Initialize voice loading
-        loadVoices().then(() => {
-            selectConsistentVoice();
-        });
+        // Initialize voice loading with retry mechanism
+        loadVoices()
+            .then(() => {
+                selectConsistentVoice();
+                console.log('✅ TTS: Voice system initialized successfully');
+            })
+            .catch(error => {
+                console.error('❌ TTS: Voice loading failed:', error);
+                console.log('💡 TTS: Consider upgrading to ResponsiveVoice or Google Cloud TTS for better reliability');
+            });
 
+        /**
+         * Enhanced speak() function with better error handling and consistency
+         * Respects language selection and gender voice preference
+         */
         function speak(text) {
             // Check if TTS is enabled
             if (!gameState || !gameState.settings || !gameState.settings.ttsEnabled) {
+                console.log('🔇 TTS: Disabled in settings');
                 return; // TTS is disabled
+            }
+
+            // Validate text
+            if (!text || text.trim().length === 0) {
+                console.warn('⚠️ TTS: No text provided');
+                return;
             }
 
             // Check if Web Speech API is available
             if (!('speechSynthesis' in window)) {
-                console.warn('Text-to-Speech not supported in this browser');
+                console.error('❌ TTS: Web Speech API not supported in this browser');
+                console.log('💡 TTS: Recommend upgrading to ResponsiveVoice for wider browser support');
                 return;
             }
 
-            // Cancel any ongoing speech
+            console.log(`🔊 TTS: Speaking: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"`);
+
+            // Cancel any ongoing speech to prevent overlap
             window.speechSynthesis.cancel();
 
-            // Create utterance
-            const utterance = new SpeechSynthesisUtterance(text);
+            // Small delay to ensure cancel completes
+            setTimeout(() => {
+                // Create utterance
+                const utterance = new SpeechSynthesisUtterance(text);
 
-            // Helper function to configure and speak
-            const configureAndSpeak = () => {
-                // Ensure voice is selected
-                if (!selectedVoice) {
-                    selectConsistentVoice();
-                }
+                // Helper function to configure and speak
+                const configureAndSpeak = () => {
+                    // Ensure voice is selected
+                    if (!selectedVoice && cachedVoices.length > 0) {
+                        selectConsistentVoice();
+                    }
 
-                // Set voice and language
-                if (selectedVoice) {
-                    utterance.voice = selectedVoice;
-                    utterance.lang = selectedVoice.lang;
-                } else {
-                    // Fallback to default language if no voice selected
-                    const lang = gameState.student?.language || 'en';
-                    const langMap = {
-                        'en': 'en-US',
-                        'es': 'es-ES',
-                        'fr': 'fr-FR',
-                        'zh': 'zh-CN',
-                        'de': 'de-DE'
+                    // Set voice and language
+                    if (selectedVoice) {
+                        utterance.voice = selectedVoice;
+                        utterance.lang = selectedVoice.lang;
+                        console.log(`🎤 TTS: Using voice: ${selectedVoice.name} (${selectedVoice.lang})`);
+                    } else {
+                        // Fallback to default language if no voice selected
+                        const lang = gameState.student?.language || 'en';
+                        const langMap = {
+                            'en': 'en-US',
+                            'es': 'es-ES',
+                            'fr': 'fr-FR',
+                            'zh': 'zh-CN',
+                            'ar': 'ar-SA',
+                            'de': 'de-DE',
+                            'it': 'it-IT',
+                            'ja': 'ja-JP',
+                            'ko': 'ko-KR',
+                            'pt': 'pt-BR',
+                            'ru': 'ru-RU',
+                            'hi': 'hi-IN'
+                        };
+                        utterance.lang = langMap[lang] || 'en-US';
+                        console.log(`⚠️ TTS: No voice selected, using default language: ${utterance.lang}`);
+                    }
+
+                    // Set speech parameters - optimized for child learners
+                    utterance.rate = 0.85;  // Slightly slower for clarity
+                    utterance.pitch = 1.0;  // Normal pitch
+                    utterance.volume = gameState.settings.volume || 0.7;  // Slightly louder default
+
+                    // Success callback
+                    utterance.onend = () => {
+                        console.log('✅ TTS: Speech completed successfully');
                     };
-                    utterance.lang = langMap[lang] || 'en-US';
-                }
 
-                // Set speech parameters
-                utterance.rate = 0.9;
-                utterance.pitch = 1.0;
-                utterance.volume = gameState.settings.volume || 0.5;
+                    // Enhanced error handling
+                    utterance.onerror = (event) => {
+                        console.error('❌ TTS Error:', event.error);
 
-                // Error handling
-                utterance.onerror = (event) => {
-                    console.error('TTS Error:', event.error);
-                    // If voice not found, try to reload voices and retry
-                    if (event.error === 'voice-not-found' || event.error === 'not-allowed') {
-                        loadVoices().then(() => {
-                            selectConsistentVoice();
-                            // Don't retry automatically to avoid infinite loops
-                        });
+                        if (event.error === 'voice-not-found') {
+                            console.log('🔄 TTS: Voice not found, attempting to reload voices...');
+                            loadVoices().then(() => {
+                                selectConsistentVoice();
+                                console.log('💡 TTS: Voices reloaded. Try speaking again.');
+                            });
+                        } else if (event.error === 'not-allowed') {
+                            console.error('❌ TTS: Speech not allowed - check browser permissions');
+                            console.log('💡 TTS: User may need to interact with page first (click/tap)');
+                        } else if (event.error === 'network') {
+                            console.error('❌ TTS: Network error - check internet connection');
+                        } else if (event.error === 'synthesis-failed') {
+                            console.error('❌ TTS: Synthesis failed - voice may be unavailable');
+                            console.log('💡 TTS: Try selecting a different voice or upgrade to ResponsiveVoice');
+                        } else {
+                            console.error(`❌ TTS: Unknown error: ${event.error}`);
+                        }
+                    };
+
+                    // Speak with error catching
+                    try {
+                        const synthesis = window.speechSynthesis;
+                        synthesis.speak(utterance);
+
+                        // Workaround for Chrome bug where speech sometimes doesn't start
+                        // Resume synthesis if paused (Chrome mobile sometimes pauses immediately)
+                        setTimeout(() => {
+                            if (synthesis.paused) {
+                                console.log('🔄 TTS: Synthesis paused, resuming...');
+                                synthesis.resume();
+                            }
+                        }, 100);
+                    } catch (error) {
+                        console.error('❌ TTS: Failed to speak:', error);
+                        console.log('💡 TTS: Consider using ResponsiveVoice for better reliability');
                     }
                 };
 
-                // Speak
-                try {
-                    window.speechSynthesis.speak(utterance);
-                } catch (error) {
-                    console.error('Failed to speak:', error);
+                // Load voices if not loaded yet, then speak
+                if (!speechVoicesLoaded || cachedVoices.length === 0) {
+                    console.log('🔄 TTS: Voices not loaded, loading now...');
+                    loadVoices().then(() => {
+                        selectConsistentVoice();
+                        configureAndSpeak();
+                    }).catch(error => {
+                        console.error('❌ TTS: Failed to load voices:', error);
+                        console.log('⚠️ TTS: Attempting to speak with default settings anyway...');
+                        // Try to speak anyway with default settings
+                        configureAndSpeak();
+                    });
+                } else {
+                    configureAndSpeak();
                 }
-            };
-
-            // Load voices if not loaded yet, then speak
-            if (!speechVoicesLoaded) {
-                loadVoices().then(() => {
-                    selectConsistentVoice();
-                    configureAndSpeak();
-                }).catch(error => {
-                    console.error('Failed to load voices:', error);
-                    // Try to speak anyway with default settings
-                    configureAndSpeak();
-                });
-            } else {
-                configureAndSpeak();
-            }
+            }, 50); // Small delay after cancel
         }
 
         // ========================================
@@ -3908,6 +4936,20 @@
                 ttsVoice: gameState.settings.ttsVoice
             });
 
+            // Initialize companion system
+            const selectedCompanion = document.getElementById('selectedCompanion').value;
+            if (!gameState.companion) {
+                gameState.companion = {};
+            }
+            gameState.companion.type = selectedCompanion;
+            gameState.companion.currentMood = 'calm';
+
+            console.log('🐾 Companion initialized:', {
+                type: gameState.companion.type,
+                emoji: getCompanionEmoji(selectedCompanion),
+                mood: gameState.companion.currentMood
+            });
+
             // Initialize session
             gameState.session.questionsAnswered = 0;
             gameState.session.correctAnswers = 0;
@@ -3962,6 +5004,12 @@
 
             updateHeaderValues();
             updateTrackingInfo();
+
+            // Add companion to dashboard
+            setTimeout(() => addCompanionToDashboard(), 500);
+
+            // Initialize support circle display
+            setTimeout(() => initializeSupportCircle(), 500);
         }
 
         function updateDashboard() {
@@ -4024,8 +5072,10 @@
             }
 
             saveState();
+
+            // Show Creative Reward Studio as a reward for completing the session
             setTimeout(() => {
-                showDashboard();
+                showRewardStudio();
             }, 2000);
         }
 
@@ -4033,12 +5083,12 @@
             updateLaBuBuMood('curious');
             const ctx = gameState.student.context;
             if (ctx === 'school') {
-                updateGatorMessage('Taking a short break is smart. When you\'re ready, raise your hand and let your teacher know you\'re back.', 'gatorPracticeMessage');
+                updateGatorMessage('Taking a short break is smart. Let\'s go to your calm room.', 'gatorPracticeMessage');
             } else {
-                updateGatorMessage('Taking a break is smart! Come back when you\'re ready.', 'gatorPracticeMessage');
+                updateGatorMessage('Taking a break is smart! Let\'s go to your calm room.', 'gatorPracticeMessage');
             }
             setTimeout(() => {
-                showDashboard();
+                showCalmRoom();
             }, 2000);
         }
 
@@ -4800,6 +5850,1698 @@
         }
 
         // ========================================
+        // QUESTION BANK STRESS TESTING SYSTEM
+        // ========================================
+
+        let stressTestRunning = false;
+        let stressTestShouldStop = false;
+
+        /**
+         * Runs a stress test on the question bank to measure uniqueness and variety
+         * Generates questions N times and tracks how many unique questions appear
+         */
+        async function runQuestionBankStressTest() {
+            if (stressTestRunning) {
+                alert('Stress test is already running!');
+                return;
+            }
+
+            // Get test parameters
+            const iterations = parseInt(document.getElementById('stressTestIterations').value);
+            const gradeFilter = document.getElementById('stressTestGrade').value;
+            const subjectFilter = document.getElementById('stressTestSubject').value;
+
+            console.log(`🧪 Starting stress test: ${iterations} iterations, Grade: ${gradeFilter}, Subject: ${subjectFilter}`);
+
+            // Show progress UI
+            document.getElementById('stressTestProgress').style.display = 'block';
+            document.getElementById('stressTestTotalIterations').textContent = iterations;
+            document.getElementById('stressTestResults').innerHTML = '';
+
+            stressTestRunning = true;
+            stressTestShouldStop = false;
+
+            // Track unique questions
+            const questionTracker = new Map(); // Key: question text, Value: count
+            const questionDetails = []; // Store all generated questions
+            let totalGenerated = 0;
+
+            // Simulate question generation
+            for (let i = 0; i < iterations; i++) {
+                if (stressTestShouldStop) {
+                    console.log('🛑 Stress test stopped by user');
+                    break;
+                }
+
+                // Update progress
+                document.getElementById('stressTestCurrentIteration').textContent = i + 1;
+                const progressPercent = ((i + 1) / iterations * 100).toFixed(1);
+                const progressBar = document.getElementById('stressTestProgressBar');
+                progressBar.style.width = `${progressPercent}%`;
+                progressBar.textContent = `${progressPercent}%`;
+
+                // Generate a question using the existing question selection logic
+                const question = generateRandomQuestionForTest(gradeFilter, subjectFilter);
+
+                if (question) {
+                    totalGenerated++;
+                    const questionKey = `${question.q}|${JSON.stringify(question.answers || [])}`;
+
+                    if (questionTracker.has(questionKey)) {
+                        questionTracker.set(questionKey, questionTracker.get(questionKey) + 1);
+                    } else {
+                        questionTracker.set(questionKey, 1);
+                        questionDetails.push(question);
+                    }
+                }
+
+                // Yield to browser every 50 iterations to prevent freezing
+                if (i % 50 === 0) {
+                    await new Promise(resolve => setTimeout(resolve, 10));
+                }
+            }
+
+            stressTestRunning = false;
+
+            // Calculate statistics
+            const uniqueQuestions = questionTracker.size;
+            const uniquenessPercent = (uniqueQuestions / totalGenerated * 100).toFixed(2);
+            const repetitionRate = ((totalGenerated - uniqueQuestions) / totalGenerated * 100).toFixed(2);
+
+            // Find most repeated questions
+            const questionFrequency = Array.from(questionTracker.entries())
+                .map(([key, count]) => ({ question: key.split('|')[0], count }))
+                .sort((a, b) => b.count - a.count);
+
+            const mostRepeated = questionFrequency.slice(0, 10);
+            const avgAppearances = (totalGenerated / uniqueQuestions).toFixed(2);
+
+            // Display results
+            displayStressTestResults({
+                iterations: totalGenerated,
+                uniqueQuestions,
+                uniquenessPercent,
+                repetitionRate,
+                mostRepeated,
+                avgAppearances,
+                gradeFilter,
+                subjectFilter
+            });
+
+            console.log('✅ Stress test complete!', {
+                totalGenerated,
+                uniqueQuestions,
+                uniquenessPercent: `${uniquenessPercent}%`,
+                repetitionRate: `${repetitionRate}%`
+            });
+        }
+
+        function generateRandomQuestionForTest(gradeFilter, subjectFilter) {
+            // Determine which grades to pull from
+            const gradesToTest = gradeFilter === 'all'
+                ? ['K', '1', '2', '3', '4', '5']
+                : [gradeFilter];
+
+            // Determine which subjects to pull from
+            const subjectsToTest = subjectFilter === 'all'
+                ? ['reading', 'math']
+                : [subjectFilter];
+
+            // Build question pool
+            let pool = [];
+
+            gradesToTest.forEach(grade => {
+                subjectsToTest.forEach(subject) => {
+                    if (questions[subject] && questions[subject][grade]) {
+                        pool = pool.concat(questions[subject][grade]);
+                    }
+                });
+            });
+
+            if (pool.length === 0) {
+                console.warn('⚠️ No questions found for the specified criteria');
+                return null;
+            }
+
+            // Randomly select a question
+            const randomIndex = Math.floor(Math.random() * pool.length);
+            return pool[randomIndex];
+        }
+
+        function displayStressTestResults(results) {
+            const resultsDiv = document.getElementById('stressTestResults');
+
+            let statusColor, statusMessage;
+            if (results.uniquenessPercent >= 80) {
+                statusColor = 'var(--neon-green)';
+                statusMessage = '✅ Excellent - High question variety!';
+            } else if (results.uniquenessPercent >= 60) {
+                statusColor = 'var(--neon-yellow)';
+                statusMessage = '⚠️ Good - Some repetition detected';
+            } else if (results.uniquenessPercent >= 40) {
+                statusColor = 'var(--neon-orange)';
+                statusMessage = '⚠️ Fair - Noticeable repetition';
+            } else {
+                statusColor = 'var(--neon-pink)';
+                statusMessage = '❌ Poor - High repetition rate';
+            }
+
+            const html = `
+                <div style="background: rgba(15, 23, 42, 0.8); padding: 20px; border-radius: 15px; border: 2px solid rgba(0, 240, 255, 0.3); margin-top: 20px;">
+                    <h3 style="color: var(--neon-blue); margin-bottom: 15px;">📊 Stress Test Results</h3>
+
+                    <div style="background: rgba(0, 240, 255, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid ${statusColor};">
+                        <div style="font-size: 1.2em; font-weight: 700; color: ${statusColor}; margin-bottom: 5px;">
+                            ${statusMessage}
+                        </div>
+                        <div style="font-size: 0.9em; color: var(--text-muted);">
+                            Grade: ${results.gradeFilter === 'all' ? 'All Grades' : 'Grade ' + results.gradeFilter} |
+                            Subject: ${results.subjectFilter === 'all' ? 'All Subjects' : results.subjectFilter}
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                        <div style="background: rgba(0, 240, 255, 0.1); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="font-size: 2em; font-weight: 700; color: var(--neon-blue);">${results.iterations}</div>
+                            <div style="font-size: 0.9em; color: var(--text-muted);">Total Generations</div>
+                        </div>
+                        <div style="background: rgba(0, 255, 136, 0.1); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="font-size: 2em; font-weight: 700; color: var(--neon-green);">${results.uniqueQuestions}</div>
+                            <div style="font-size: 0.9em; color: var(--text-muted);">Unique Questions</div>
+                        </div>
+                        <div style="background: rgba(139, 92, 246, 0.1); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="font-size: 2em; font-weight: 700; color: var(--neon-purple);">${results.uniquenessPercent}%</div>
+                            <div style="font-size: 0.9em; color: var(--text-muted);">Uniqueness Rate</div>
+                        </div>
+                        <div style="background: rgba(255, 0, 110, 0.1); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="font-size: 2em; font-weight: 700; color: var(--neon-pink);">${results.avgAppearances}x</div>
+                            <div style="font-size: 0.9em; color: var(--text-muted);">Avg Appearances</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <h4 style="color: var(--neon-yellow); margin-bottom: 10px;">🔁 Most Repeated Questions (Top 10)</h4>
+                        <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 10px; max-height: 300px; overflow-y: auto;">
+                            ${results.mostRepeated.map((item, index) => `
+                                <div style="padding: 8px; margin-bottom: 8px; background: rgba(255, 255, 255, 0.05); border-radius: 5px; border-left: 3px solid ${item.count > 5 ? 'var(--neon-pink)' : 'var(--neon-blue)'};">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div style="flex: 1; font-size: 0.9em;">
+                                            <strong>#${index + 1}:</strong> ${item.question.substring(0, 80)}${item.question.length > 80 ? '...' : ''}
+                                        </div>
+                                        <div style="font-weight: 700; color: ${item.count > 5 ? 'var(--neon-pink)' : 'var(--neon-blue)'}; margin-left: 15px;">
+                                            ${item.count}x
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(139, 92, 246, 0.1); border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.3);">
+                        <h4 style="color: var(--neon-purple); margin-bottom: 10px;">💡 Recommendations</h4>
+                        <ul style="margin-left: 20px; color: var(--text-light); line-height: 1.8;">
+                            ${results.uniquenessPercent < 60 ? `
+                                <li>⚠️ <strong>Expand Question Bank:</strong> Add more questions for Grade ${results.gradeFilter} ${results.subjectFilter}</li>
+                                <li>🎯 <strong>Target:</strong> Aim for at least 80% uniqueness rate for good variety</li>
+                            ` : ''}
+                            ${results.uniquenessPercent >= 60 && results.uniquenessPercent < 80 ? `
+                                <li>✅ Question variety is good, but could be improved</li>
+                                <li>💡 Consider adding more advanced or edge-case questions</li>
+                            ` : ''}
+                            ${results.uniquenessPercent >= 80 ? `
+                                <li>🎉 <strong>Excellent variety!</strong> Students will experience diverse content</li>
+                                <li>✅ Current question bank is healthy for this grade/subject combination</li>
+                            ` : ''}
+                            <li>📊 <strong>Repetition Rate:</strong> ${results.repetitionRate}% of questions are repeats</li>
+                            <li>🔄 Questions appear an average of ${results.avgAppearances} times in ${results.iterations} generations</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            resultsDiv.innerHTML = html;
+
+            // Hide progress after showing results
+            setTimeout(() => {
+                document.getElementById('stressTestProgress').style.display = 'none';
+            }, 2000);
+        }
+
+        function stopStressTest() {
+            if (!stressTestRunning) {
+                alert('No stress test is currently running.');
+                return;
+            }
+
+            stressTestShouldStop = true;
+            console.log('🛑 Stopping stress test...');
+        }
+
+        // ========================================
+        // STUDENT ID & DIAGNOSTICS PROFILE SYSTEM
+        // ========================================
+
+        let studentIdImage = null;
+
+        function handleStudentIdUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                alert('Please upload an image file (JPG, PNG, etc.)');
+                return;
+            }
+
+            // Validate file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Image file is too large. Please upload an image smaller than 5MB.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                studentIdImage = e.target.result;
+
+                // Display preview
+                const previewDiv = document.getElementById('studentIdPreview');
+                previewDiv.innerHTML = `
+                    <img src="${studentIdImage}" alt="Student ID" style="max-width: 100%; max-height: 300px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);">
+                `;
+
+                // Save to gameState
+                if (!gameState.student.studentIdImage) {
+                    gameState.student.studentIdImage = studentIdImage;
+                }
+
+                console.log('✅ Student ID uploaded successfully');
+                showGatorMessage(`Student ID uploaded for ${gameState.student.name || 'student'}!`);
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function clearStudentId() {
+            studentIdImage = null;
+            if (gameState && gameState.student) {
+                delete gameState.student.studentIdImage;
+            }
+
+            const previewDiv = document.getElementById('studentIdPreview');
+            previewDiv.innerHTML = `
+                <div style="color: var(--text-muted);">
+                    <div style="font-size: 3em; margin-bottom: 10px;">👤</div>
+                    <div>No student ID uploaded yet</div>
+                </div>
+            `;
+
+            // Reset file input
+            document.getElementById('studentIdUpload').value = '';
+
+            console.log('🗑️ Student ID cleared');
+        }
+
+        function generateDiagnosticsMap() {
+            console.log('🗺️ Generating diagnostics map...');
+
+            const student = gameState.student;
+            const domains = gameState.domains;
+            const session = gameState.session;
+
+            // Calculate domain-level insights
+            const domainInsights = Object.entries(domains).map(([key, val]) => {
+                const score = val.score ?? 0.5;
+                const history = val.history || [];
+
+                // Calculate trend (improving, stable, declining)
+                let trend = 'stable';
+                if (history.length >= 3) {
+                    const recent = history.slice(-3);
+                    const avgRecent = recent.reduce((a, b) => a + b, 0) / recent.length;
+                    const older = history.slice(0, Math.max(1, history.length - 3));
+                    const avgOlder = older.reduce((a, b) => a + b, 0) / older.length;
+
+                    if (avgRecent > avgOlder + 0.1) trend = 'improving';
+                    else if (avgRecent < avgOlder - 0.1) trend = 'declining';
+                }
+
+                // Calculate effective grade level
+                const gradeVariance = (score - 0.5) * 1.0;
+                const effectiveGrade = student.gradeCurrent + gradeVariance;
+
+                // Determine status
+                let status, statusColor;
+                if (score >= 0.7) {
+                    status = 'Strong';
+                    statusColor = 'var(--neon-green)';
+                } else if (score >= 0.5) {
+                    status = 'Developing';
+                    statusColor = 'var(--neon-yellow)';
+                } else if (score >= 0.3) {
+                    status = 'Needs Support';
+                    statusColor = 'var(--neon-orange)';
+                } else {
+                    status = 'Significant Support Needed';
+                    statusColor = 'var(--neon-pink)';
+                }
+
+                return {
+                    domain: key,
+                    displayName: getDomainDisplayName(key),
+                    score: (score * 100).toFixed(1),
+                    effectiveGrade: effectiveGrade.toFixed(2),
+                    trend,
+                    status,
+                    statusColor,
+                    dataPoints: history.length
+                };
+            });
+
+            // Sort by score (lowest first - areas needing most attention)
+            domainInsights.sort((a, b) => parseFloat(a.score) - parseFloat(b.score));
+
+            // Generate HTML
+            const html = `
+                <div style="background: rgba(15, 23, 42, 0.8); padding: 25px; border-radius: 15px; border: 2px solid rgba(139, 92, 246, 0.4); margin-top: 20px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                        <h3 style="color: var(--neon-purple); margin: 0;">🗺️ Learning Diagnostics Map</h3>
+                        <div style="font-size: 0.85em; color: var(--text-muted);">${new Date().toLocaleDateString()}</div>
+                    </div>
+
+                    <div style="background: rgba(0, 240, 255, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                            <div>
+                                <div style="font-size: 0.85em; color: var(--text-muted);">Student</div>
+                                <div style="font-weight: 700; color: var(--neon-blue);">${student.name || 'Not Set'}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 0.85em; color: var(--text-muted);">Enrolled Grade</div>
+                                <div style="font-weight: 700; color: var(--neon-blue);">Grade ${student.gradeEnrolled}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 0.85em; color: var(--text-muted);">Current Level</div>
+                                <div style="font-weight: 700; color: var(--neon-green);">Grade ${student.gradeCurrent}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 0.85em; color: var(--text-muted);">Target Level</div>
+                                <div style="font-weight: 700; color: var(--neon-purple);">Grade ${student.gradeTarget}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 0.85em; color: var(--text-muted);">Sessions</div>
+                                <div style="font-weight: 700; color: var(--neon-yellow);">${session.questionsAnswered || 0} questions</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: var(--neon-blue); margin-bottom: 15px;">📊 Domain Performance Overview</h4>
+                        ${domainInsights.map(domain => `
+                            <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid ${domain.statusColor};">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <div>
+                                        <div style="font-weight: 700; font-size: 1.05em;">${domain.displayName}</div>
+                                        <div style="font-size: 0.85em; color: var(--text-muted); margin-top: 3px;">
+                                            Effective Grade Level: ${domain.effectiveGrade}
+                                            ${domain.trend === 'improving' ? '📈 Improving' : domain.trend === 'declining' ? '📉 Declining' : '➡️ Stable'}
+                                        </div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 1.8em; font-weight: 700; color: ${domain.statusColor};">${domain.score}%</div>
+                                        <div style="font-size: 0.8em; color: ${domain.statusColor};">${domain.status}</div>
+                                    </div>
+                                </div>
+                                <div style="background: rgba(0, 0, 0, 0.4); height: 10px; border-radius: 5px; overflow: hidden;">
+                                    <div style="background: linear-gradient(90deg, ${domain.statusColor}, rgba(255,255,255,0.3)); height: 100%; width: ${domain.score}%; transition: width 0.6s ease;"></div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div style="background: rgba(139, 92, 246, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.3);">
+                        <h4 style="color: var(--neon-purple); margin-bottom: 10px;">💡 Recommended Focus Areas</h4>
+                        <ul style="margin-left: 20px; color: var(--text-light); line-height: 1.8;">
+                            ${domainInsights.slice(0, 3).map(domain => `
+                                <li><strong>${domain.displayName}</strong> - Current: ${domain.score}%, Target: 70%+</li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('studentReportsContainer').innerHTML = html;
+            console.log('✅ Diagnostics map generated');
+        }
+
+        function generateProConReports() {
+            console.log('📋 Generating Pro/Con reports...');
+
+            const student = gameState.student;
+            const domains = gameState.domains;
+
+            // Categorize domains into strengths and areas for growth
+            const domainData = Object.entries(domains).map(([key, val]) => ({
+                domain: key,
+                displayName: getDomainDisplayName(key),
+                score: val.score ?? 0.5,
+                history: val.history || []
+            }));
+
+            const strengths = domainData.filter(d => d.score >= 0.6).sort((a, b) => b.score - a.score);
+            const areasForGrowth = domainData.filter(d => d.score < 0.6).sort((a, b) => a.score - b.score);
+
+            const html = `
+                <div style="background: rgba(15, 23, 42, 0.8); padding: 25px; border-radius: 15px; border: 2px solid rgba(0, 240, 255, 0.4); margin-top: 20px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                        <h3 style="color: var(--neon-blue); margin: 0;">📋 Strengths & Growth Areas Report</h3>
+                        <div style="font-size: 0.85em; color: var(--text-muted);">${new Date().toLocaleDateString()}</div>
+                    </div>
+
+                    <div style="background: rgba(0, 240, 255, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                        <div style="font-weight: 700; margin-bottom: 5px;">Student: ${student.name || 'Not Set'}</div>
+                        <div style="font-size: 0.9em; color: var(--text-muted);">
+                            Grade ${student.gradeEnrolled} | Current Level: ${student.gradeCurrent} | Target: ${student.gradeTarget}
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <!-- PRO COLUMN -->
+                        <div>
+                            <h4 style="color: var(--neon-green); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                                ✅ Strengths (Pro)
+                                <span style="background: rgba(0, 255, 136, 0.2); padding: 3px 10px; border-radius: 15px; font-size: 0.8em;">${strengths.length}</span>
+                            </h4>
+                            ${strengths.length > 0 ? `
+                                ${strengths.map(domain => `
+                                    <div style="background: rgba(0, 255, 136, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--neon-green);">
+                                        <div style="font-weight: 700; margin-bottom: 5px;">${domain.displayName}</div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div style="font-size: 0.85em; color: var(--text-muted);">
+                                                Performance: ${(domain.score * 100).toFixed(1)}%
+                                            </div>
+                                            <div style="font-size: 0.85em; color: var(--neon-green); font-weight: 600;">
+                                                ${domain.score >= 0.8 ? 'Mastery' : domain.score >= 0.7 ? 'Proficient' : 'Developing'}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            ` : `
+                                <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; text-align: center; color: var(--text-muted);">
+                                    Continue practicing to build strengths!
+                                </div>
+                            `}
+                        </div>
+
+                        <!-- CON COLUMN -->
+                        <div>
+                            <h4 style="color: var(--neon-orange); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                                📈 Areas for Growth (Focus)
+                                <span style="background: rgba(255, 69, 0, 0.2); padding: 3px 10px; border-radius: 15px; font-size: 0.8em;">${areasForGrowth.length}</span>
+                            </h4>
+                            ${areasForGrowth.length > 0 ? `
+                                ${areasForGrowth.map(domain => `
+                                    <div style="background: rgba(255, 69, 0, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--neon-orange);">
+                                        <div style="font-weight: 700; margin-bottom: 5px;">${domain.displayName}</div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div style="font-size: 0.85em; color: var(--text-muted);">
+                                                Performance: ${(domain.score * 100).toFixed(1)}%
+                                            </div>
+                                            <div style="font-size: 0.85em; color: var(--neon-orange); font-weight: 600;">
+                                                Needs Support
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            ` : `
+                                <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; text-align: center; color: var(--text-muted);">
+                                    Great job! All areas are strengths!
+                                </div>
+                            `}
+                        </div>
+                    </div>
+
+                    <div style="background: rgba(139, 92, 246, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.3);">
+                        <h4 style="color: var(--neon-purple); margin-bottom: 10px;">💡 Action Plan</h4>
+                        <ul style="margin-left: 20px; color: var(--text-light); line-height: 1.8;">
+                            ${strengths.length > 0 ? `<li><strong>Leverage Strengths:</strong> Build confidence with ${strengths[0].displayName} activities</li>` : ''}
+                            ${areasForGrowth.length > 0 ? `<li><strong>Focus Growth:</strong> Prioritize ${areasForGrowth[0].displayName} with targeted practice</li>` : ''}
+                            <li><strong>Balanced Practice:</strong> Mix strong areas with growth areas for sustained engagement</li>
+                            <li><strong>Regular Check-ins:</strong> Re-run this report weekly to track progress</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('studentReportsContainer').innerHTML = html;
+            console.log('✅ Pro/Con reports generated');
+        }
+
+        function getDomainDisplayName(domainKey) {
+            const displayNames = {
+                decoding: '📖 Reading/Decoding',
+                comprehension: '📚 Comprehension',
+                fluency: '⚡ Fluency',
+                math: '🔢 Math',
+                executive: '🧠 Executive Skills',
+                emotions: '❤️ Emotional Regulation'
+            };
+            return displayNames[domainKey] || domainKey;
+        }
+
+        function exportStudentProfile() {
+            console.log('💾 Exporting student profile...');
+
+            const student = gameState.student;
+            const domains = gameState.domains;
+            const session = gameState.session;
+            const history = gameState.history;
+
+            const exportData = {
+                metadata: {
+                    exportDate: new Date().toISOString(),
+                    version: '2.0.0',
+                    applicationName: 'Learning Spectrum'
+                },
+                student: {
+                    name: student.name,
+                    gradeEnrolled: student.gradeEnrolled,
+                    gradeCurrent: student.gradeCurrent,
+                    gradeTarget: student.gradeTarget,
+                    subject: student.subject,
+                    context: student.context,
+                    language: student.language,
+                    studentIdImage: student.studentIdImage || null
+                },
+                domains: domains,
+                session: {
+                    questionsAnswered: session.questionsAnswered,
+                    correctAnswers: session.correctAnswers,
+                    accuracy: session.questionsAnswered > 0
+                        ? (session.correctAnswers / session.questionsAnswered * 100).toFixed(2) + '%'
+                        : 'N/A',
+                    currentStreak: session.currentStreak,
+                    maxStreak: session.maxStreak,
+                    mood: session.mood
+                },
+                history: history
+            };
+
+            // Create downloadable JSON file
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `learning-spectrum-${student.name || 'student'}-${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+
+            console.log('✅ Student profile exported');
+            showGatorMessage(`Profile exported for ${student.name || 'student'}! Check your downloads folder.`);
+        }
+
+        // ========================================
+        // COMPANION & REGULATION BUDDY SYSTEM
+        // ========================================
+
+        const companionEmojis = {
+            dog: '🐕',
+            bear: '🐻',
+            mouse: '🐭',
+            fox: '🦊',
+            cat: '🐱',
+            bunny: '🐰'
+        };
+
+        function selectCompanion(companionType) {
+            // Remove selected class from all options
+            document.querySelectorAll('.companion-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+
+            // Add selected class to clicked option
+            const selectedOption = document.querySelector(`[data-companion="${companionType}"]`);
+            if (selectedOption) {
+                selectedOption.classList.add('selected');
+            }
+
+            // Update hidden input
+            document.getElementById('selectedCompanion').value = companionType;
+
+            console.log(`🐾 Companion selected: ${companionType}`);
+        }
+
+        function initializeCompanion() {
+            // Set default selection
+            const defaultCompanion = document.getElementById('selectedCompanion').value;
+            const defaultOption = document.querySelector(`[data-companion="${defaultCompanion}"]`);
+            if (defaultOption) {
+                defaultOption.classList.add('selected');
+            }
+        }
+
+        function getCompanionEmoji(companionType) {
+            return companionEmojis[companionType] || companionEmojis.dog;
+        }
+
+        function updateCompanionMood(mood) {
+            // Update companion display throughout the app
+            const companionDisplays = document.querySelectorAll('.companion-display');
+
+            companionDisplays.forEach(display => {
+                // Remove all mood classes
+                display.classList.remove('mood-calm', 'mood-curious', 'mood-encouraging', 'mood-celebrating', 'mood-resting');
+
+                // Add current mood class
+                if (mood) {
+                    display.classList.add(`mood-${mood}`);
+                }
+            });
+
+            // Store current mood in gameState
+            if (gameState && gameState.companion) {
+                gameState.companion.currentMood = mood;
+            }
+
+            console.log(`🐾 Companion mood updated to: ${mood}`);
+        }
+
+        function createCompanionDisplay(mood = 'calm') {
+            const companionType = gameState?.companion?.type || 'dog';
+            const emoji = getCompanionEmoji(companionType);
+
+            return `<div class="companion-display mood-${mood}" title="Your companion is feeling ${mood}">${emoji}</div>`;
+        }
+
+        function determineCompanionMood() {
+            const session = gameState.session;
+            const streak = session.currentStreak || 0;
+            const questionsAnswered = session.questionsAnswered || 0;
+            const accuracy = questionsAnswered > 0 ? session.correctAnswers / questionsAnswered : 0;
+
+            // Determine mood based on session conditions (NOT right/wrong answers)
+            let mood = 'calm'; // default
+
+            // Celebrating: High streak or just finished a session successfully
+            if (streak >= 5) {
+                mood = 'celebrating';
+            }
+            // Encouraging: Making progress, keep going!
+            else if (streak >= 2 && accuracy >= 0.5) {
+                mood = 'encouraging';
+            }
+            // Curious: Just started or exploring
+            else if (questionsAnswered < 3) {
+                mood = 'curious';
+            }
+            // Resting: Taking a break or idle
+            else if (gameState.session.onBreak) {
+                mood = 'resting';
+            }
+            // Calm: Default steady state
+            else {
+                mood = 'calm';
+            }
+
+            return mood;
+        }
+
+        function addCompanionToDashboard() {
+            // Find a good place on the dashboard to add the companion
+            const dashboardScreen = document.getElementById('dashboardScreen');
+            if (!dashboardScreen || dashboardScreen.classList.contains('hidden')) return;
+
+            // Check if companion container already exists
+            let companionContainer = document.getElementById('dashboardCompanion');
+
+            if (!companionContainer) {
+                // Create companion container
+                companionContainer = document.createElement('div');
+                companionContainer.id = 'dashboardCompanion';
+                companionContainer.style.cssText = `
+                    position: fixed;
+                    bottom: 30px;
+                    right: 30px;
+                    z-index: 100;
+                    background: rgba(15, 23, 42, 0.8);
+                    backdrop-filter: blur(20px);
+                    padding: 20px;
+                    border-radius: 50%;
+                    border: 2px solid rgba(139, 92, 246, 0.4);
+                    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                `;
+
+                companionContainer.onclick = () => {
+                    showCompanionMessage();
+                };
+
+                // Add hover effect
+                companionContainer.onmouseenter = () => {
+                    companionContainer.style.transform = 'scale(1.1)';
+                    companionContainer.style.boxShadow = '0 12px 40px rgba(139, 92, 246, 0.5)';
+                };
+                companionContainer.onmouseleave = () => {
+                    companionContainer.style.transform = 'scale(1)';
+                    companionContainer.style.boxShadow = '0 8px 32px rgba(139, 92, 246, 0.3)';
+                };
+
+                document.body.appendChild(companionContainer);
+            }
+
+            // Update companion display
+            const mood = determineCompanionMood();
+            companionContainer.innerHTML = createCompanionDisplay(mood);
+        }
+
+        function showCompanionMessage() {
+            const messages = {
+                calm: [
+                    "I'm here with you. Let's learn together!",
+                    "You're doing great. Keep being yourself.",
+                    "Take your time. I'm right here."
+                ],
+                curious: [
+                    "What are we learning today? I'm excited!",
+                    "I wonder what we'll discover together!",
+                    "This looks interesting!"
+                ],
+                encouraging: [
+                    "You're making real progress! I'm proud of you!",
+                    "Look how far you've come! Keep going!",
+                    "You're working so hard. That's what matters!"
+                ],
+                celebrating: [
+                    "Wow! You're on fire! 🎉",
+                    "Amazing work! You should be so proud!",
+                    "Look at you go! You're incredible!"
+                ],
+                resting: [
+                    "Taking a break is important. I'll rest with you.",
+                    "Let's recharge together.",
+                    "You've earned this break."
+                ]
+            };
+
+            const mood = gameState?.companion?.currentMood || 'calm';
+            const moodMessages = messages[mood] || messages.calm;
+            const randomMessage = moodMessages[Math.floor(Math.random() * moodMessages.length)];
+
+            showGatorMessage(randomMessage);
+            speak(randomMessage);
+        }
+
+        // ========================================
+        // CREATIVE REWARD STUDIO
+        // ========================================
+
+        let currentDrawColor = '#8B5CF6';
+        let drawCanvas, drawCtx;
+        let isDrawing = false;
+        let slimeBlob, slimeContainer;
+        let slimePosition = { x: 50, y: 50 }; // Percentage based
+
+        function showRewardStudio() {
+            console.log('🎨 Showing Creative Reward Studio');
+            document.getElementById('setupScreen').classList.add('hidden');
+            document.getElementById('dashboardScreen').classList.add('hidden');
+            document.getElementById('practiceScreen').classList.add('hidden');
+            document.getElementById('rewardStudioScreen').classList.remove('hidden');
+
+            // Show selection screen
+            document.getElementById('rewardSelection').classList.remove('hidden');
+            document.getElementById('drawingActivity').classList.add('hidden');
+            document.getElementById('slimeActivity').classList.add('hidden');
+            document.getElementById('instrumentsActivity').classList.add('hidden');
+
+            showGatorMessage('Great session! Choose a creative reward to enjoy.');
+            speak('Great session! Choose a creative reward to enjoy.');
+        }
+
+        function startDrawingCanvas() {
+            console.log('🎨 Starting Drawing Canvas');
+            document.getElementById('rewardSelection').classList.add('hidden');
+            document.getElementById('drawingActivity').classList.remove('hidden');
+
+            // Initialize canvas
+            drawCanvas = document.getElementById('drawCanvas');
+            drawCtx = drawCanvas.getContext('2d');
+            drawCtx.lineWidth = 5;
+            drawCtx.lineCap = 'round';
+            drawCtx.strokeStyle = currentDrawColor;
+
+            // Clear canvas
+            drawCtx.fillStyle = 'white';
+            drawCtx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
+
+            // Mouse events
+            drawCanvas.addEventListener('mousedown', startDrawing);
+            drawCanvas.addEventListener('mousemove', draw);
+            drawCanvas.addEventListener('mouseup', stopDrawing);
+            drawCanvas.addEventListener('mouseout', stopDrawing);
+
+            // Touch events
+            drawCanvas.addEventListener('touchstart', handleTouchStart);
+            drawCanvas.addEventListener('touchmove', handleTouchMove);
+            drawCanvas.addEventListener('touchend', stopDrawing);
+
+            showGatorMessage('Draw anything you like! Use the colors to create your masterpiece.');
+            speak('Draw anything you like!');
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = drawCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            drawCtx.beginPath();
+            drawCtx.moveTo(x, y);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const rect = drawCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            drawCtx.lineTo(x, y);
+            drawCtx.stroke();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function handleTouchStart(e) {
+            e.preventDefault();
+            isDrawing = true;
+            const touch = e.touches[0];
+            const rect = drawCanvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            drawCtx.beginPath();
+            drawCtx.moveTo(x, y);
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+            if (!isDrawing) return;
+            const touch = e.touches[0];
+            const rect = drawCanvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            drawCtx.lineTo(x, y);
+            drawCtx.stroke();
+        }
+
+        function setDrawColor(color) {
+            currentDrawColor = color;
+            drawCtx.strokeStyle = color;
+            console.log('🎨 Color changed to:', color);
+        }
+
+        function clearCanvas() {
+            if (drawCtx) {
+                drawCtx.fillStyle = 'white';
+                drawCtx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
+                console.log('🎨 Canvas cleared');
+            }
+        }
+
+        function startSlimeSimulator() {
+            console.log('🫧 Starting Slime Simulator');
+            document.getElementById('rewardSelection').classList.add('hidden');
+            document.getElementById('slimeActivity').classList.remove('hidden');
+
+            slimeBlob = document.getElementById('slimeBlob');
+            slimeContainer = document.getElementById('slimeContainer');
+
+            // Reset position
+            slimePosition = { x: 50, y: 50 };
+            updateSlimePosition();
+
+            // Mouse events
+            slimeBlob.addEventListener('mousedown', startSlimeDrag);
+            document.addEventListener('mousemove', dragSlime);
+            document.addEventListener('mouseup', stopSlimeDrag);
+
+            // Touch events
+            slimeBlob.addEventListener('touchstart', startSlimeDragTouch);
+            document.addEventListener('touchmove', dragSlimeTouch);
+            document.addEventListener('touchend', stopSlimeDrag);
+
+            showGatorMessage('Squish and stretch the slime! It feels so satisfying!');
+            speak('Squish and stretch the slime!');
+        }
+
+        let isDraggingSlime = false;
+
+        function startSlimeDrag(e) {
+            isDraggingSlime = true;
+            slimeBlob.style.transition = 'none';
+        }
+
+        function startSlimeDragTouch(e) {
+            e.preventDefault();
+            isDraggingSlime = true;
+            slimeBlob.style.transition = 'none';
+        }
+
+        function dragSlime(e) {
+            if (!isDraggingSlime) return;
+            const rect = slimeContainer.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            slimePosition = {
+                x: Math.max(10, Math.min(90, x)),
+                y: Math.max(10, Math.min(90, y))
+            };
+            updateSlimePosition();
+        }
+
+        function dragSlimeTouch(e) {
+            if (!isDraggingSlime) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = slimeContainer.getBoundingClientRect();
+            const x = ((touch.clientX - rect.left) / rect.width) * 100;
+            const y = ((touch.clientY - rect.top) / rect.height) * 100;
+            slimePosition = {
+                x: Math.max(10, Math.min(90, x)),
+                y: Math.max(10, Math.min(90, y))
+            };
+            updateSlimePosition();
+        }
+
+        function stopSlimeDrag() {
+            if (isDraggingSlime) {
+                isDraggingSlime = false;
+                slimeBlob.style.transition = 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            }
+        }
+
+        function updateSlimePosition() {
+            slimeBlob.style.left = slimePosition.x + '%';
+            slimeBlob.style.top = slimePosition.y + '%';
+        }
+
+        function changeSlimeColor(color) {
+            const colorMap = {
+                '#10B981': 'rgba(16, 185, 129, 0.9), rgba(16, 185, 129, 0.6)',
+                '#EC4899': 'rgba(236, 72, 153, 0.9), rgba(236, 72, 153, 0.6)',
+                '#3B82F6': 'rgba(59, 130, 246, 0.9), rgba(59, 130, 246, 0.6)',
+                '#8B5CF6': 'rgba(139, 92, 246, 0.9), rgba(139, 92, 246, 0.6)'
+            };
+            slimeBlob.style.background = `radial-gradient(circle, ${colorMap[color]})`;
+            console.log('🫧 Slime color changed to:', color);
+        }
+
+        function startInstruments() {
+            console.log('🎹 Starting Instruments');
+            document.getElementById('rewardSelection').classList.add('hidden');
+            document.getElementById('instrumentsActivity').classList.remove('hidden');
+
+            showGatorMessage('Make some music! Play the piano keys or drum pads.');
+            speak('Make some music!');
+        }
+
+        // Note frequencies for piano
+        const noteFrequencies = {
+            'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23,
+            'G4': 392.00, 'A4': 440.00, 'B4': 493.88, 'C5': 523.25
+        };
+
+        // Audio context for playing notes
+        let audioContext;
+
+        function playNote(note) {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            const frequency = noteFrequencies[note];
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+
+            console.log('🎵 Playing note:', note, frequency + 'Hz');
+        }
+
+        function playDrum(drumType) {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+
+            oscillator.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            // Different drum sounds
+            switch(drumType) {
+                case 'kick':
+                    oscillator.frequency.setValueAtTime(150, audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    gainNode.gain.setValueAtTime(1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    oscillator.type = 'sine';
+                    break;
+                case 'snare':
+                    oscillator.frequency.value = 100;
+                    gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                    oscillator.type = 'triangle';
+                    break;
+                case 'hihat':
+                    oscillator.frequency.value = 250;
+                    filter.type = 'highpass';
+                    filter.frequency.value = 7000;
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                    oscillator.type = 'square';
+                    break;
+                case 'cymbal':
+                    oscillator.frequency.value = 300;
+                    filter.type = 'highpass';
+                    filter.frequency.value = 5000;
+                    gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
+                    oscillator.type = 'sawtooth';
+                    break;
+            }
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 1);
+
+            console.log('🥁 Playing drum:', drumType);
+        }
+
+        function finishReward() {
+            showGatorMessage('Hope you enjoyed that! Back to your dashboard.');
+            speak('Hope you enjoyed that!');
+            setTimeout(() => showDashboard(), 1500);
+        }
+
+        function skipReward() {
+            showGatorMessage('No problem! Returning to your dashboard.');
+            speak('Returning to your dashboard.');
+            setTimeout(() => showDashboard(), 1000);
+        }
+
+        // ========================================
+        // RESET & CALM ROOM
+        // ========================================
+
+        let calmSoundInterval;
+        let breathingInterval;
+
+        function showCalmRoom() {
+            console.log('🌙 Showing Calm Room');
+            document.getElementById('setupScreen').classList.add('hidden');
+            document.getElementById('dashboardScreen').classList.add('hidden');
+            document.getElementById('practiceScreen').classList.add('hidden');
+            document.getElementById('rewardStudioScreen').classList.add('hidden');
+            document.getElementById('calmRoomScreen').classList.remove('hidden');
+
+            // Show selection, hide active experience
+            document.querySelector('.calm-room-grid').classList.remove('hidden');
+            document.getElementById('activeComfortArea').classList.add('hidden');
+
+            // Update companion mood
+            if (gameState.companion) {
+                gameState.companion.currentMood = 'resting';
+            }
+
+            showGatorMessage('This is your calm room. Choose what helps you feel better. Take all the time you need.');
+            speak('This is your calm room. Take all the time you need.');
+        }
+
+        function useComfortObject(type) {
+            console.log('🌙 Using comfort object:', type);
+
+            // Hide selection, show active experience
+            document.querySelector('.calm-room-grid').classList.add('hidden');
+            document.getElementById('activeComfortArea').classList.remove('hidden');
+
+            const comfortContent = document.getElementById('comfortContent');
+
+            switch(type) {
+                case 'blanket':
+                    comfortContent.innerHTML = `
+                        <div style="font-size: 6em; margin-bottom: 20px;">🛏️</div>
+                        <h3 style="color: var(--neon-blue); margin-bottom: 15px;">Cozy Blanket</h3>
+                        <p style="font-size: 1.1em; color: var(--text-muted); margin-bottom: 20px;">
+                            Imagine wrapping yourself in the softest, warmest blanket.
+                        </p>
+                        <p style="font-size: 1em; color: var(--text-muted);">
+                            Feel the warmth spreading from your shoulders down to your toes.<br>
+                            You are safe. You are comfortable. You are okay.
+                        </p>
+                    `;
+                    showGatorMessage('Wrap yourself up and feel warm and safe.');
+                    speak('Wrap yourself up and feel warm and safe.');
+                    break;
+
+                case 'chair':
+                    comfortContent.innerHTML = `
+                        <div style="font-size: 6em; margin-bottom: 20px;">🪑</div>
+                        <h3 style="color: var(--neon-blue); margin-bottom: 15px;">Comfy Chair</h3>
+                        <p style="font-size: 1.1em; color: var(--text-muted); margin-bottom: 20px;">
+                            Sink into the most comfortable chair.
+                        </p>
+                        <p style="font-size: 1em; color: var(--text-muted);">
+                            Feel it supporting your back, your legs, your arms.<br>
+                            Let your body relax completely. You're held up. You're safe.
+                        </p>
+                    `;
+                    showGatorMessage('Sit back and let yourself relax completely.');
+                    speak('Sit back and let yourself relax.');
+                    break;
+
+                case 'lights':
+                    comfortContent.innerHTML = `
+                        <div class="soft-lights-container"></div>
+                        <h3 style="color: var(--neon-blue); margin-bottom: 15px; margin-top: 20px;">Soft Lights</h3>
+                        <p style="font-size: 1em; color: var(--text-muted);">
+                            Watch the gentle glow. Let your eyes rest.<br>
+                            The light is calm. You are calm.
+                        </p>
+                    `;
+                    showGatorMessage('Watch the soft lights and let your mind rest.');
+                    speak('Watch the soft lights and let your mind rest.');
+                    break;
+
+                case 'breathing':
+                    comfortContent.innerHTML = `
+                        <div class="breathing-circle"></div>
+                        <div class="breathing-text" id="breathingGuide">Breathe in...</div>
+                        <p style="font-size: 1em; color: var(--text-muted); margin-top: 20px;">
+                            Follow the circle. Breathe with me.
+                        </p>
+                    `;
+                    startBreathingExercise();
+                    showGatorMessage('Breathe with me. In... and out...');
+                    speak('Breathe with me.');
+                    break;
+
+                case 'sounds':
+                    comfortContent.innerHTML = `
+                        <div style="font-size: 6em; margin-bottom: 20px;">🎵</div>
+                        <h3 style="color: var(--neon-blue); margin-bottom: 15px;">Calming Sounds</h3>
+                        <p style="font-size: 1em; color: var(--text-muted); margin-bottom: 25px;">
+                            Listen to peaceful, gentle sounds.
+                        </p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;">
+                            <button class="btn-small" onclick="playCalmSound('rain')">🌧️ Rain</button>
+                            <button class="btn-small" onclick="playCalmSound('ocean')">🌊 Ocean</button>
+                            <button class="btn-small" onclick="playCalmSound('wind')">💨 Wind</button>
+                            <button class="btn-small" onclick="stopCalmSounds()">⏸️ Stop</button>
+                        </div>
+                    `;
+                    showGatorMessage('Listen to calming sounds. Let them wash over you.');
+                    speak('Listen to calming sounds.');
+                    break;
+            }
+        }
+
+        function startBreathingExercise() {
+            const breathingGuide = document.getElementById('breathingGuide');
+            if (!breathingGuide) return;
+
+            let phase = 0; // 0 = breathe in, 1 = hold, 2 = breathe out, 3 = hold
+
+            breathingInterval = setInterval(() => {
+                switch(phase) {
+                    case 0:
+                        breathingGuide.textContent = 'Breathe in...';
+                        breathingGuide.style.color = 'var(--neon-blue)';
+                        break;
+                    case 1:
+                        breathingGuide.textContent = 'Hold...';
+                        breathingGuide.style.color = 'var(--neon-violet)';
+                        break;
+                    case 2:
+                        breathingGuide.textContent = 'Breathe out...';
+                        breathingGuide.style.color = 'var(--neon-green)';
+                        break;
+                    case 3:
+                        breathingGuide.textContent = 'Hold...';
+                        breathingGuide.style.color = 'var(--neon-violet)';
+                        break;
+                }
+                phase = (phase + 1) % 4;
+            }, 3000); // Change phase every 3 seconds (4 phases = 12 second cycle)
+        }
+
+        function stopBreathingExercise() {
+            if (breathingInterval) {
+                clearInterval(breathingInterval);
+                breathingInterval = null;
+            }
+        }
+
+        function playCalmSound(soundType) {
+            console.log('🎵 Playing calm sound:', soundType);
+
+            // Stop any existing sound
+            stopCalmSounds();
+
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            // Create continuous ambient sound using oscillators
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+
+            oscillator.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            switch(soundType) {
+                case 'rain':
+                    // White noise filtered for rain sound
+                    oscillator.type = 'sawtooth';
+                    oscillator.frequency.value = 80;
+                    filter.type = 'lowpass';
+                    filter.frequency.value = 1000;
+                    gainNode.gain.value = 0.15;
+                    break;
+                case 'ocean':
+                    // Low frequency wave sounds
+                    oscillator.type = 'sine';
+                    oscillator.frequency.value = 50;
+                    filter.type = 'lowpass';
+                    filter.frequency.value = 400;
+                    gainNode.gain.value = 0.2;
+                    // Modulate for wave effect
+                    setInterval(() => {
+                        if (oscillator.frequency) {
+                            oscillator.frequency.setValueAtTime(
+                                50 + Math.random() * 30,
+                                audioContext.currentTime
+                            );
+                        }
+                    }, 2000);
+                    break;
+                case 'wind':
+                    // Gentle wind chimes
+                    oscillator.type = 'triangle';
+                    oscillator.frequency.value = 220;
+                    filter.type = 'highpass';
+                    filter.frequency.value = 500;
+                    gainNode.gain.value = 0.1;
+                    break;
+            }
+
+            oscillator.start();
+            calmSoundInterval = { oscillator, gainNode };
+        }
+
+        function stopCalmSounds() {
+            if (calmSoundInterval) {
+                calmSoundInterval.oscillator.stop();
+                calmSoundInterval = null;
+                console.log('🎵 Calm sounds stopped');
+            }
+        }
+
+        function returnToComfortSelection() {
+            stopBreathingExercise();
+            stopCalmSounds();
+
+            document.querySelector('.calm-room-grid').classList.remove('hidden');
+            document.getElementById('activeComfortArea').classList.add('hidden');
+
+            showGatorMessage('Choose another comfort activity, or leave when you\'re ready.');
+            speak('Choose another activity, or leave when you are ready.');
+        }
+
+        function leaveCalmRoom() {
+            console.log('✅ Leaving Calm Room');
+
+            stopBreathingExercise();
+            stopCalmSounds();
+
+            // Update companion mood
+            if (gameState.companion) {
+                gameState.companion.currentMood = 'calm';
+            }
+
+            showGatorMessage('Glad you took time for yourself. Ready to continue?');
+            speak('Glad you took time for yourself.');
+
+            setTimeout(() => showDashboard(), 1500);
+        }
+
+        // ========================================
+        // MOVEMENT BREAK PROMPTS
+        // ========================================
+
+        let movementTimer;
+        let movementTimeRemaining;
+
+        function showMovementBreak() {
+            console.log('🏃 Showing Movement Break');
+            document.getElementById('setupScreen').classList.add('hidden');
+            document.getElementById('dashboardScreen').classList.add('hidden');
+            document.getElementById('practiceScreen').classList.add('hidden');
+            document.getElementById('rewardStudioScreen').classList.add('hidden');
+            document.getElementById('calmRoomScreen').classList.add('hidden');
+            document.getElementById('movementBreakScreen').classList.remove('hidden');
+
+            // Show selection, hide timer
+            document.querySelector('.movement-grid').classList.remove('hidden');
+            document.getElementById('movementTimer').classList.add('hidden');
+
+            // Update companion mood
+            if (gameState.companion) {
+                gameState.companion.currentMood = 'curious';
+            }
+
+            showGatorMessage('Time to move your body! This helps you focus better. Pick an activity!');
+            speak('Time to move your body! Pick an activity!');
+        }
+
+        function startMovementActivity(type) {
+            console.log('🏃 Starting movement activity:', type);
+
+            // Hide selection, show timer
+            document.querySelector('.movement-grid').classList.add('hidden');
+            document.getElementById('movementTimer').classList.remove('hidden');
+
+            const timerContent = document.getElementById('movementTimerContent');
+            const duration = 60; // 60 seconds
+            movementTimeRemaining = duration;
+
+            const activities = {
+                trampoline: {
+                    icon: '🤸',
+                    name: 'Trampoline Time!',
+                    instruction: 'Jump as high as you can! Feel the energy!'
+                },
+                skates: {
+                    icon: '🛼',
+                    name: 'Skating Around!',
+                    instruction: 'Glide smoothly! Feel the movement!'
+                },
+                run: {
+                    icon: '🏃',
+                    name: 'Quick Run!',
+                    instruction: 'Run in place or around the room! Get your heart pumping!'
+                },
+                jumpjacks: {
+                    icon: '🙌',
+                    name: 'Jumping Jacks!',
+                    instruction: 'Arms up, legs out! Count to 20!'
+                },
+                dance: {
+                    icon: '💃',
+                    name: 'Dance Party!',
+                    instruction: 'Move however feels good! Let your body flow!'
+                }
+            };
+
+            const activity = activities[type];
+
+            timerContent.innerHTML = `
+                <div class="movement-timer-circle">${activity.icon}</div>
+                <h3 style="color: var(--neon-green); margin-bottom: 15px; font-size: 1.8em;">${activity.name}</h3>
+                <p style="font-size: 1.2em; color: var(--text-muted); margin-bottom: 20px;">
+                    ${activity.instruction}
+                </p>
+                <div id="movementCountdown" style="font-size: 3em; font-weight: 700; color: var(--neon-yellow); margin-top: 20px;">
+                    ${movementTimeRemaining}s
+                </div>
+            `;
+
+            showGatorMessage(activity.instruction);
+            speak(activity.name + '! ' + activity.instruction);
+
+            // Start countdown
+            movementTimer = setInterval(() => {
+                movementTimeRemaining--;
+                const countdownEl = document.getElementById('movementCountdown');
+                if (countdownEl) {
+                    countdownEl.textContent = movementTimeRemaining + 's';
+
+                    // Change color as time runs out
+                    if (movementTimeRemaining <= 10) {
+                        countdownEl.style.color = 'var(--neon-orange)';
+                    }
+                    if (movementTimeRemaining <= 5) {
+                        countdownEl.style.color = 'var(--neon-red)';
+                    }
+                }
+
+                if (movementTimeRemaining <= 0) {
+                    clearInterval(movementTimer);
+                    showGatorMessage('Great job moving! Feel more focused now?');
+                    speak('Great job moving!');
+                }
+            }, 1000);
+        }
+
+        function finishMovementBreak() {
+            console.log('✅ Finishing Movement Break');
+
+            if (movementTimer) {
+                clearInterval(movementTimer);
+                movementTimer = null;
+            }
+
+            // Update companion mood
+            if (gameState.companion) {
+                gameState.companion.currentMood = 'encouraging';
+            }
+
+            showGatorMessage('Awesome! You moved your body. Ready to learn again?');
+            speak('Awesome! Ready to learn again?');
+
+            // Return to practice
+            setTimeout(() => {
+                document.getElementById('movementBreakScreen').classList.add('hidden');
+                document.getElementById('practiceScreen').classList.remove('hidden');
+            }, 1500);
+        }
+
+        function skipMovementBreak() {
+            console.log('⏭️ Skipping Movement Break');
+
+            showGatorMessage('No problem! Let\'s get back to learning.');
+            speak('No problem! Let\'s get back to learning.');
+
+            // Return to practice
+            setTimeout(() => {
+                document.getElementById('movementBreakScreen').classList.add('hidden');
+                document.getElementById('practiceScreen').classList.remove('hidden');
+            }, 1000);
+        }
+
+        // ========================================
+        // SUPPORT CIRCLE SYSTEM
+        // ========================================
+
+        function initializeSupportCircle() {
+            if (!gameState.supportCircle) {
+                gameState.supportCircle = [];
+            }
+            displaySupportCircle();
+        }
+
+        function addToSupportCircle() {
+            const nameInput = document.getElementById('supportCircleName');
+            const roleSelect = document.getElementById('supportCircleRole');
+
+            const name = nameInput.value.trim();
+            const role = roleSelect.value;
+
+            if (!name) {
+                alert('Please enter a name for this person');
+                return;
+            }
+
+            if (!gameState.supportCircle) {
+                gameState.supportCircle = [];
+            }
+
+            // Add to support circle
+            gameState.supportCircle.push({
+                name: name,
+                role: role,
+                addedDate: new Date().toISOString()
+            });
+
+            saveState();
+
+            // Clear inputs
+            nameInput.value = '';
+            roleSelect.value = 'parent';
+
+            // Update display
+            displaySupportCircle();
+
+            showGatorMessage(`${name} has been added to your support circle! They'll cheer you on during practice.`);
+            speak(`${name} has been added to your support circle!`);
+
+            console.log('❤️ Added to support circle:', {name, role});
+        }
+
+        function removeFromSupportCircle(index) {
+            if (confirm('Remove this person from your support circle?')) {
+                const person = gameState.supportCircle[index];
+                gameState.supportCircle.splice(index, 1);
+                saveState();
+                displaySupportCircle();
+
+                showGatorMessage(`${person.name} has been removed from your support circle.`);
+                console.log('❤️ Removed from support circle:', person);
+            }
+        }
+
+        function displaySupportCircle() {
+            const container = document.getElementById('supportCircleList');
+            if (!container) return;
+
+            if (!gameState.supportCircle || gameState.supportCircle.length === 0) {
+                container.innerHTML = `
+                    <div style="color: var(--text-muted); font-style: italic; padding: 20px; text-align: center; width: 100%;">
+                        Your support circle is empty. Add someone who encourages you!
+                    </div>
+                `;
+                return;
+            }
+
+            const roleIcons = {
+                parent: '👨‍👩‍👧',
+                teacher: '👨‍🏫',
+                sibling: '👫',
+                friend: '🤝',
+                other: '❤️'
+            };
+
+            container.innerHTML = gameState.supportCircle.map((person, index) => `
+                <div style="
+                    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(139, 92, 246, 0.1));
+                    border: 2px solid rgba(236, 72, 153, 0.3);
+                    border-radius: 12px;
+                    padding: 15px 20px;
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    min-width: 200px;
+                ">
+                    <div style="font-size: 2em;">${roleIcons[person.role]}</div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: var(--neon-pink); font-size: 1.1em;">${person.name}</div>
+                        <div style="font-size: 0.85em; color: var(--text-muted); text-transform: capitalize;">${person.role}</div>
+                    </div>
+                    <button
+                        onclick="removeFromSupportCircle(${index})"
+                        style="
+                            background: rgba(239, 68, 68, 0.2);
+                            border: 1px solid rgba(239, 68, 68, 0.4);
+                            border-radius: 50%;
+                            width: 32px;
+                            height: 32px;
+                            color: var(--neon-red);
+                            cursor: pointer;
+                            font-size: 1.2em;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            transition: all 0.2s ease;
+                        "
+                        onmouseover="this.style.background='rgba(239, 68, 68, 0.4)'"
+                        onmouseout="this.style.background='rgba(239, 68, 68, 0.2)'"
+                        title="Remove from circle"
+                    >×</button>
+                </div>
+            `).join('');
+        }
+
+        function showSupportCircleMessage() {
+            if (!gameState.supportCircle || gameState.supportCircle.length === 0) {
+                return; // No support circle, no message
+            }
+
+            // Random person from support circle
+            const person = gameState.supportCircle[Math.floor(Math.random() * gameState.supportCircle.length)];
+
+            // Messages by role
+            const messagesByRole = {
+                parent: [
+                    "I'm so proud of you!",
+                    "You're doing amazing!",
+                    "Keep going, you've got this!",
+                    "I believe in you!",
+                    "You're working so hard!",
+                    "I love seeing you learn and grow!",
+                    "You're making great progress!"
+                ],
+                teacher: [
+                    "Excellent effort!",
+                    "You're making real progress!",
+                    "I can see how hard you're working!",
+                    "Keep up the great work!",
+                    "You're learning so much!",
+                    "I'm proud of your persistence!",
+                    "You're becoming a stronger learner every day!"
+                ],
+                sibling: [
+                    "You're doing great!",
+                    "Way to go!",
+                    "You can do it!",
+                    "I'm cheering for you!",
+                    "You're awesome!",
+                    "Keep it up!",
+                    "You've got this!"
+                ],
+                friend: [
+                    "You're amazing!",
+                    "I believe in you!",
+                    "You can do anything!",
+                    "You're so smart!",
+                    "Keep going, friend!",
+                    "You've got this!",
+                    "I'm proud of you!"
+                ],
+                other: [
+                    "I'm so proud of you!",
+                    "You're doing wonderful!",
+                    "Keep up the great work!",
+                    "I believe in you!",
+                    "You're working so hard!",
+                    "You're making me proud!"
+                ]
+            };
+
+            const messages = messagesByRole[person.role] || messagesByRole.other;
+            const message = messages[Math.floor(Math.random() * messages.length)];
+
+            // Show as Gator message with attribution
+            const fullMessage = `${person.name} wants you to know: "${message}"`;
+
+            updateGatorMessage(fullMessage, 'gatorPracticeMessage');
+            speak(`${person.name} says: ${message}`);
+
+            console.log('❤️ Support Circle message from', person.name, ':', message);
+        }
+
+        // ========================================
         // DOMAIN TIPS & INTERACTIVE SPECTRUM
         // ========================================
 
@@ -5129,11 +7871,8 @@
                 btn.textContent = `${ex.icon} ${ex.label}`;
                 btn.onclick = () => {
                     closeDomainTips();
-                    showGatorMessage(`Starting ${ex.label} for ${data.title}!`);
-                    // Start tailored session filtered by domain
-                    setTimeout(() => {
-                        startTailoredSession(domain);
-                    }, 1000);
+                    // Start unique mini-quest activity based on exercise type
+                    startMiniQuestActivity(ex.label, domain, data.title);
                 };
                 exercisesList.appendChild(btn);
             });
@@ -5221,6 +7960,279 @@
             // Start practice session
             showScreen('practiceScreen');
             loadNextTailoredQuestion();
+        }
+
+        // ========================================
+        // MINI-QUEST ACTIVITIES (UNIQUE PRACTICE EXERCISES)
+        // ========================================
+
+        function startMiniQuestActivity(exerciseLabel, domain, domainTitle) {
+            showGatorMessage(`Starting ${exerciseLabel}! This is a special mini-quest activity.`);
+
+            // Create unique activity based on exercise type
+            switch(exerciseLabel) {
+                case 'Story Retelling':
+                    startStoryRetellingActivity(domain);
+                    break;
+                case 'Main Idea Practice':
+                    startMainIdeaActivity(domain);
+                    break;
+                case 'Inference Games':
+                    startInferenceActivity(domain);
+                    break;
+                case 'Prediction Activities':
+                    startPredictionActivity(domain);
+                    break;
+                case 'Phonics Practice':
+                    startPhonicsActivity(domain);
+                    break;
+                case 'Sight Words':
+                    startSightWordsActivity(domain);
+                    break;
+                case 'Rhyming Games':
+                    startRhymingActivity(domain);
+                    break;
+                case 'Word Families':
+                    startWordFamiliesActivity(domain);
+                    break;
+                default:
+                    // Fallback to regular tailored session
+                    setTimeout(() => startTailoredSession(domain), 1000);
+                    break;
+            }
+        }
+
+        function startStoryRetellingActivity(domain) {
+            const stories = {
+                K: [
+                    { title: "The Cat and the Hat", text: "A cat wore a big hat. The hat was red. The cat sat on a mat. The cat was happy.", question: "Tell me: What did the cat wear?", correctKeywords: ["hat", "red hat", "big hat"] },
+                    { title: "My Dog", text: "I have a dog. My dog is big. My dog likes to run. We play in the park.", question: "Tell me about the dog.", correctKeywords: ["big", "run", "play", "park"] }
+                ],
+                1: [
+                    { title: "The Lost Ball", text: "Sam had a red ball. One day, Sam kicked the ball too hard. The ball went over the fence. Sam was sad. Then Sam's friend helped find the ball. Sam was happy again.", question: "What happened to Sam's ball, and how did Sam feel?", correctKeywords: ["red ball", "kicked", "fence", "sad", "friend", "found", "happy"] },
+                    { title: "The Rainy Day", text: "It was raining outside. Emma could not play in the yard. She felt bored. Then Mom brought out paints. Emma painted a rainbow. Now she felt happy.", question: "Tell the story about Emma's rainy day.", correctKeywords: ["rain", "bored", "paint", "rainbow", "happy"] }
+                ],
+                2: [
+                    { title: "The New Friend", text: "Maria moved to a new school. On her first day, she felt nervous. At lunch, a girl named Jenny smiled at her. Jenny asked Maria to sit together. They talked about their favorite books. Maria felt much better. Now they are best friends.", question: "Retell the story of how Maria made a friend.", correctKeywords: ["new school", "nervous", "Jenny", "lunch", "books", "friends"] }
+                ]
+            };
+
+            const gradeKey = getGradeKey(gameState.student.gradeCurrent);
+            const storyPool = stories[gradeKey] || stories['K'];
+            const story = storyPool[Math.floor(Math.random() * storyPool.length)];
+
+            // Show story with TTS support
+            document.getElementById('questionText').innerHTML = `
+                <div style="text-align: left; padding: 20px; background: rgba(0, 240, 255, 0.1); border-radius: 15px; margin-bottom: 20px;">
+                    <h3 style="color: var(--neon-blue); margin-bottom: 15px;">📖 ${story.title}</h3>
+                    <p style="font-size: 1.1em; line-height: 1.8; margin-bottom: 20px;">${story.text}</p>
+                    <button class="btn btn-secondary" onclick="speak('${story.text.replace(/'/g, "\\'")}')"><span>🔊 Read Story Aloud</span></button>
+                </div>
+                <div style="background: rgba(139, 92, 246, 0.1); padding: 15px; border-radius: 10px; border: 2px solid var(--neon-purple);">
+                    <p style="font-size: 1em; color: var(--neon-purple); font-weight: 600;">📝 ${story.question}</p>
+                </div>
+            `;
+
+            // Create text input for retelling
+            const answersContainer = document.getElementById('answersContainer');
+            answersContainer.innerHTML = `
+                <textarea id="retellingInput"
+                    placeholder="Type your answer here... Tell the story in your own words!"
+                    style="width: 100%; min-height: 120px; padding: 15px; border-radius: 10px; background: rgba(15, 23, 42, 0.6); border: 2px solid rgba(0, 240, 255, 0.3); color: var(--text-light); font-size: 1em; font-family: 'Rajdhani', sans-serif; resize: vertical;"
+                    rows="5"></textarea>
+                <div style="margin-top: 15px; text-align: center;">
+                    <button class="btn btn-primary" onclick="checkStoryRetelling(${JSON.stringify(story.correctKeywords).replace(/"/g, '&quot;')})"><span>Submit Your Story</span></button>
+                </div>
+            `;
+
+            updateGatorMessage("Read the story carefully, then tell it back to me in your own words!", 'gatorPracticeMessage');
+            showScreen('practiceScreen');
+        }
+
+        function checkStoryRetelling(correctKeywords) {
+            const userInput = document.getElementById('retellingInput').value.toLowerCase();
+
+            if (userInput.trim().length < 10) {
+                updateGatorMessage("Try to write a bit more! Tell me what happened in the story.", 'gatorPracticeMessage');
+                speak("Try to write a bit more about the story!");
+                return;
+            }
+
+            // Check how many keywords were mentioned
+            const matchedKeywords = correctKeywords.filter(keyword =>
+                userInput.includes(keyword.toLowerCase())
+            );
+
+            const score = matchedKeywords.length / correctKeywords.length;
+
+            if (score >= 0.6) {
+                updateGatorMessage("Wonderful retelling! You captured the important parts of the story! 🌟", 'gatorPracticeMessage');
+                speak("Wonderful retelling! You really understood the story!");
+                setTimeout(() => showScreen('dashboardScreen'), 3000);
+            } else if (score >= 0.3) {
+                updateGatorMessage("Good start! You got some parts. Try to include more details about what happened!", 'gatorPracticeMessage');
+                speak("Good start! Can you tell me more about what happened?");
+            } else {
+                updateGatorMessage("Let's try again! Read the story one more time, then tell me what happened.", 'gatorPracticeMessage');
+                speak("Let's try reading the story again!");
+            }
+        }
+
+        function startMainIdeaActivity(domain) {
+            const passages = {
+                1: [
+                    { text: "Dogs are good pets. They can run and play. Dogs like to go for walks. Dogs can be your friend.", question: "What is this passage mainly about?", answers: ["Dogs as pets", "Running fast", "Going to school", "Eating food"], correct: 0 },
+                    { text: "In summer, the sun is hot. People go to the beach. They swim in the water. Summer is fun!", question: "What is the main idea?", answers: ["Summer activities", "Winter snow", "School days", "Bedtime"], correct: 0 }
+                ],
+                2: [
+                    { text: "Bees are important insects. They fly from flower to flower. Bees help flowers make seeds. They also make honey. Without bees, we would have fewer flowers and fruits.", question: "What is this passage mostly about?", answers: ["Why bees are important", "How to catch bees", "Flowers are pretty", "Making lemonade"], correct: 0 },
+                    { text: "Recycling helps the Earth. When we recycle paper, we save trees. When we recycle plastic, we make less trash. Everyone can help by recycling.", question: "What is the main idea of this passage?", answers: ["How recycling helps Earth", "How to make paper", "What trash smells like", "Buying new toys"], correct: 0 }
+                ]
+            };
+
+            const gradeKey = getGradeKey(gameState.student.gradeCurrent);
+            const passagePool = passages[gradeKey] || passages[1];
+            const passage = passagePool[Math.floor(Math.random() * passagePool.length)];
+
+            gameState.session.currentQuestion = passage;
+
+            document.getElementById('questionText').innerHTML = `
+                <div style="background: rgba(0, 240, 255, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                    <p style="font-size: 1.1em; line-height: 1.8; margin-bottom: 15px;">${passage.text}</p>
+                    <button class="btn btn-secondary" onclick="speak('${passage.text.replace(/'/g, "\\'")}')"><span>🔊 Read Passage</span></button>
+                </div>
+                <p style="font-size: 1.1em; color: var(--neon-purple); font-weight: 600; margin-bottom: 15px;">🎯 ${passage.question}</p>
+            `;
+
+            const answersContainer = document.getElementById('answersContainer');
+            answersContainer.innerHTML = '';
+            passage.answers.forEach((answer, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = answer;
+                btn.onclick = () => checkMainIdeaAnswer(index, passage.correct);
+                answersContainer.appendChild(btn);
+            });
+
+            updateGatorMessage("Read carefully and find the MAIN IDEA - what is this passage mostly about?", 'gatorPracticeMessage');
+            showScreen('practiceScreen');
+        }
+
+        function checkMainIdeaAnswer(selected, correct) {
+            if (selected === correct) {
+                updateGatorMessage("Yes! You found the main idea! That's what the whole passage was about! 🎯", 'gatorPracticeMessage');
+                speak("Perfect! You found the main idea!");
+                setTimeout(() => showScreen('dashboardScreen'), 3000);
+            } else {
+                updateGatorMessage("Not quite! The main idea is what the WHOLE passage is about, not just one small part. Try again!", 'gatorPracticeMessage');
+                speak("Try again! Think about what the whole passage is about.");
+            }
+        }
+
+        function startInferenceActivity(domain) {
+            const scenarios = [
+                { text: "Sarah put on her raincoat and grabbed an umbrella before going outside.", question: "What can you infer about the weather?", answers: ["It's raining or about to rain", "It's very sunny", "It's snowing", "It's very hot"], correct: 0 },
+                { text: "Tom was smiling as he opened the wrapped box with a bow on top.", question: "What can you infer?", answers: ["Tom is getting a present", "Tom is going to school", "Tom is sad", "Tom is sleeping"], correct: 0 },
+                { text: "The library was very quiet. Everyone was reading. Ms. Johnson put her finger to her lips when someone talked.", question: "What can you infer about the library rule?", answers: ["You must be quiet in the library", "You can run in the library", "You must eat in the library", "You can yell in the library"], correct: 0 }
+            ];
+
+            const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+            gameState.session.currentQuestion = scenario;
+
+            document.getElementById('questionText').innerHTML = `
+                <div style="background: rgba(139, 92, 246, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                    <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 15px;">🔍 ${scenario.text}</p>
+                    <button class="btn btn-secondary" onclick="speak('${scenario.text.replace(/'/g, "\\'")}')"><span>🔊 Hear the Clues</span></button>
+                </div>
+                <p style="font-size: 1.1em; color: var(--neon-pink); font-weight: 600; margin-bottom: 15px;">🤔 ${scenario.question}</p>
+            `;
+
+            const answersContainer = document.getElementById('answersContainer');
+            answersContainer.innerHTML = '';
+            scenario.answers.forEach((answer, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = answer;
+                btn.onclick = () => checkInferenceAnswer(index, scenario.correct);
+                answersContainer.appendChild(btn);
+            });
+
+            updateGatorMessage("Use the clues to figure out what's happening! This is like being a detective! 🔍", 'gatorPracticeMessage');
+            showScreen('practiceScreen');
+        }
+
+        function checkInferenceAnswer(selected, correct) {
+            if (selected === correct) {
+                updateGatorMessage("Excellent detective work! You used the clues to make a smart inference! 🔍✨", 'gatorPracticeMessage');
+                speak("Great job! You figured it out using the clues!");
+                setTimeout(() => showScreen('dashboardScreen'), 3000);
+            } else {
+                updateGatorMessage("Let's look at the clues again. What do they tell us?", 'gatorPracticeMessage');
+                speak("Look at the clues more carefully. What do they tell you?");
+            }
+        }
+
+        function startPredictionActivity(domain) {
+            const stories = [
+                { text: "Emma saw dark clouds in the sky. She heard thunder rumbling. Her mom said, 'We should go inside now.'", question: "What do you think will happen next?", answers: ["It will start raining", "It will get sunny", "They will go swimming", "They will have a picnic"], correct: 0 },
+                { text: "Jake studied really hard for his spelling test all week. He practiced every night. This morning, he felt ready.", question: "What do you predict will happen on the test?", answers: ["Jake will do well on the test", "Jake will forget everything", "Jake won't take the test", "Jake will fall asleep"], correct: 0 },
+                { text: "The puppy saw a ball rolling across the yard. The puppy's tail started wagging fast. The puppy got into a running position.", question: "What will the puppy probably do?", answers: ["Chase the ball", "Go to sleep", "Eat food", "Sit still"], correct: 0 }
+            ];
+
+            const story = stories[Math.floor(Math.random() * stories.length)];
+            gameState.session.currentQuestion = story;
+
+            document.getElementById('questionText').innerHTML = `
+                <div style="background: rgba(255, 0, 110, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                    <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 15px;">🔮 ${story.text}</p>
+                    <button class="btn btn-secondary" onclick="speak('${story.text.replace(/'/g, "\\'")}')"><span>🔊 Hear the Story</span></button>
+                </div>
+                <p style="font-size: 1.1em; color: var(--neon-pink); font-weight: 600; margin-bottom: 15px;">🔮 ${story.question}</p>
+            `;
+
+            const answersContainer = document.getElementById('answersContainer');
+            answersContainer.innerHTML = '';
+            story.answers.forEach((answer, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = answer;
+                btn.onclick = () => checkPredictionAnswer(index, story.correct);
+                answersContainer.appendChild(btn);
+            });
+
+            updateGatorMessage("Think about what you just read. What do you think will happen next? 🔮", 'gatorPracticeMessage');
+            showScreen('practiceScreen');
+        }
+
+        function checkPredictionAnswer(selected, correct) {
+            if (selected === correct) {
+                updateGatorMessage("Great prediction! You thought ahead and made a smart guess based on the story! 🔮✨", 'gatorPracticeMessage');
+                speak("Wonderful prediction! You're thinking ahead!");
+                setTimeout(() => showScreen('dashboardScreen'), 3000);
+            } else {
+                updateGatorMessage("Think about what usually happens in situations like this. What makes the most sense?", 'gatorPracticeMessage');
+                speak("Think about what makes sense to happen next!");
+            }
+        }
+
+        function startPhonicsActivity(domain) {
+            updateGatorMessage("Phonics Practice mini-quest coming soon! For now, let's practice reading.", 'gatorPracticeMessage');
+            setTimeout(() => startTailoredSession(domain), 1000);
+        }
+
+        function startSightWordsActivity(domain) {
+            updateGatorMessage("Sight Words mini-quest coming soon! For now, let's practice reading.", 'gatorPracticeMessage');
+            setTimeout(() => startTailoredSession(domain), 1000);
+        }
+
+        function startRhymingActivity(domain) {
+            updateGatorMessage("Rhyming Games mini-quest coming soon! For now, let's practice!", 'gatorPracticeMessage');
+            setTimeout(() => startTailoredSession(domain), 1000);
+        }
+
+        function startWordFamiliesActivity(domain) {
+            updateGatorMessage("Word Families mini-quest coming soon! For now, let's practice!", 'gatorPracticeMessage');
+            setTimeout(() => startTailoredSession(domain), 1000);
         }
 
         function loadNextTailoredQuestion() {
