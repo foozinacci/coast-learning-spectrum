@@ -5832,8 +5832,54 @@
         let stressTestShouldStop = false;
 
         /**
+         * Shuffled Question Pool Manager
+         * Uses Fisher-Yates shuffle to guarantee NO repeats until pool exhaustion
+         */
+        class ShuffledQuestionPool {
+            constructor(questions) {
+                this.originalPool = questions;
+                this.shuffledPool = [];
+                this.currentIndex = 0;
+                this.reshuffle();
+                console.log(`🎲 [PoolManager] Initialized with ${this.originalPool.length} questions`);
+            }
+
+            /**
+             * Fisher-Yates shuffle algorithm
+             */
+            reshuffle() {
+                this.shuffledPool = [...this.originalPool];
+                for (let i = this.shuffledPool.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [this.shuffledPool[i], this.shuffledPool[j]] = [this.shuffledPool[j], this.shuffledPool[i]];
+                }
+                this.currentIndex = 0;
+                console.log(`🔄 [PoolManager] Pool reshuffled (${this.shuffledPool.length} questions)`);
+            }
+
+            /**
+             * Get next question without replacement until pool exhausted
+             */
+            getNext() {
+                if (this.currentIndex >= this.shuffledPool.length) {
+                    console.log(`♻️ [PoolManager] Pool exhausted, reshuffling...`);
+                    this.reshuffle();
+                }
+                return this.shuffledPool[this.currentIndex++];
+            }
+
+            getPoolSize() {
+                return this.originalPool.length;
+            }
+
+            getRemainingInCycle() {
+                return this.shuffledPool.length - this.currentIndex;
+            }
+        }
+
+        /**
          * Runs a stress test on the question bank to measure uniqueness and variety
-         * Generates questions N times and tracks how many unique questions appear
+         * NOW USES SHUFFLED POOL FOR ZERO REPEATS UNTIL EXHAUSTION
          */
         async function runQuestionBankStressTest() {
             if (stressTestRunning) {
@@ -5864,12 +5910,25 @@
             stressTestRunning = true;
             stressTestShouldStop = false;
 
+            // Build question pool ONCE at the start
+            const poolQuestions = buildQuestionPool(gradeFilter, subjectFilter);
+
+            if (poolQuestions.length === 0) {
+                alert('No questions found for the selected criteria!');
+                stressTestRunning = false;
+                return;
+            }
+
+            // Initialize shuffled pool manager
+            const questionPool = new ShuffledQuestionPool(poolQuestions);
+            console.log(`✅ [StressTest] Pool built: ${questionPool.getPoolSize()} total questions available`);
+
             // Track unique questions
             const questionTracker = new Map(); // Key: question text, Value: count
             const questionDetails = []; // Store all generated questions
             let totalGenerated = 0;
 
-            // Simulate question generation
+            // Simulate question generation using SHUFFLED POOL
             for (let i = 0; i < iterations; i++) {
                 if (stressTestShouldStop) {
                     console.log('🛑 Stress test stopped by user');
@@ -5883,12 +5942,14 @@
                 progressBar.style.width = `${progressPercent}%`;
                 progressBar.textContent = `${progressPercent}%`;
 
-                // Generate a question using the existing question selection logic
-                const question = generateRandomQuestionForTest(gradeFilter, subjectFilter);
+                // Get next question from shuffled pool (NO PURE RANDOM!)
+                const question = questionPool.getNext();
 
                 if (question) {
                     totalGenerated++;
-                    const questionKey = `${question.q}|${JSON.stringify(question.answers || [])}`;
+                    // Use prompt or q for question text
+                    const questionText = question.prompt || question.ttsPrompt || question.q || 'undefined';
+                    const questionKey = `${questionText}|${JSON.stringify(question.answers || [])}`;
 
                     if (questionTracker.has(questionKey)) {
                         questionTracker.set(questionKey, questionTracker.get(questionKey) + 1);
@@ -5939,7 +6000,11 @@
             });
         }
 
-        function generateRandomQuestionForTest(gradeFilter, subjectFilter) {
+        /**
+         * Build complete question pool for stress testing
+         * Returns ALL questions matching criteria (no random selection here)
+         */
+        function buildQuestionPool(gradeFilter, subjectFilter) {
             // Determine which grades to pull from
             const gradesToTest = gradeFilter === 'all'
                 ? ['K', '1', '2', '3', '4', '5']
@@ -5957,7 +6022,7 @@
 
             // Try using ComprehensiveQuestionRegistry if available
             if (typeof window.ComprehensiveQuestionRegistry !== 'undefined') {
-                console.log(`🔍 [StressTest] Using ComprehensiveQuestionRegistry for ${gradesToTest.join(', ')} grades, ${subjectsToTest.join(', ')} subjects`);
+                console.log(`🔍 [PoolBuilder] Using ComprehensiveQuestionRegistry for ${gradesToTest.join(', ')} grades, ${subjectsToTest.join(', ')} subjects`);
 
                 gradesToTest.forEach(grade => {
                     subjectsToTest.forEach((subject) => {
@@ -5974,14 +6039,14 @@
                     });
                 });
 
-                console.log(`📊 [StressTest] Total pool size: ${pool.length} questions`);
+                console.log(`📊 [PoolBuilder] Total pool size: ${pool.length} questions`);
             } else {
-                console.warn('⚠️ [StressTest] ComprehensiveQuestionRegistry not available, falling back to hardcoded questions');
+                console.warn('⚠️ [PoolBuilder] ComprehensiveQuestionRegistry not available, falling back to hardcoded questions');
             }
 
             // Fall back to hardcoded questions if comprehensive banks not loaded or empty
             if (pool.length === 0) {
-                console.warn('⚠️ [StressTest] Using fallback hardcoded questions');
+                console.warn('⚠️ [PoolBuilder] Using fallback hardcoded questions');
                 gradesToTest.forEach(grade => {
                     // Only use reading/math for hardcoded fallback since that's all we have
                     const fallbackSubjects = subjectFilter === 'all' ? ['reading', 'math'] :
@@ -5998,12 +6063,9 @@
 
             if (pool.length === 0) {
                 console.error('❌ No questions found for the specified criteria');
-                return null;
             }
 
-            // Randomly select a question
-            const randomIndex = Math.floor(Math.random() * pool.length);
-            return pool[randomIndex];
+            return pool;
         }
 
         function displayStressTestResults(results) {

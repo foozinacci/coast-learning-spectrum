@@ -45733,6 +45733,11 @@ const grade1Comprehensive = {
   ]
 };
 
+// Export to browser window object
+if (typeof window !== 'undefined') {
+  window.grade1Comprehensive = grade1Comprehensive;
+}
+
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = grade1Comprehensive;
 }

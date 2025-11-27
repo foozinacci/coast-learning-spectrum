@@ -45733,6 +45733,11 @@ const gradeKComprehensive = {
   ]
 };
 
+// Export to browser window object
+if (typeof window !== 'undefined') {
+  window.gradeKComprehensive = gradeKComprehensive;
+}
+
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = gradeKComprehensive;
 }
