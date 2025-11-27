@@ -1443,6 +1443,111 @@
             50% { opacity: 1; filter: brightness(1.2); }
         }
 
+        /* ===================================
+           MOVEMENT BREAK PROMPTS
+           =================================== */
+
+        .movement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .movement-activity {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(250, 204, 21, 0.1));
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 15px;
+            padding: 25px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .movement-activity:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--neon-green);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(250, 204, 21, 0.2));
+        }
+
+        .movement-icon {
+            font-size: 3.5em;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 4px 8px rgba(16, 185, 129, 0.3));
+            display: inline-block;
+        }
+
+        .movement-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--neon-green);
+            margin-bottom: 8px;
+        }
+
+        .movement-desc {
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+
+        /* Movement Animations */
+        .movement-icon.bounce {
+            animation: iconBounce 1s ease-in-out infinite;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .movement-icon.slide {
+            animation: iconSlide 2s ease-in-out infinite;
+        }
+
+        @keyframes iconSlide {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(15px); }
+        }
+
+        .movement-icon.run {
+            animation: iconRun 0.6s ease-in-out infinite;
+        }
+
+        @keyframes iconRun {
+            0%, 100% { transform: translateX(0) scale(1); }
+            25% { transform: translateX(-5px) scale(1.05); }
+            75% { transform: translateX(5px) scale(0.95); }
+        }
+
+        .movement-icon.spin {
+            animation: iconSpin 3s linear infinite;
+        }
+
+        @keyframes iconSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Movement Timer Display */
+        .movement-timer-circle {
+            width: 250px;
+            height: 250px;
+            margin: 30px auto;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.6), rgba(250, 204, 21, 0.4));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            animation: pulseMovement 1.5s ease-in-out infinite;
+            box-shadow: 0 0 50px rgba(16, 185, 129, 0.5);
+        }
+
+        @keyframes pulseMovement {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
         /* Hidden */
         .hidden {
             display: none !important;
@@ -2905,6 +3010,65 @@
                     <div style="margin-top: 25px;">
                         <button class="btn btn-secondary" onclick="returnToComfortSelection()"><span>Choose Another</span></button>
                         <button class="btn btn-primary" onclick="leaveCalmRoom()"><span>I'm Ready</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Movement Break Screen -->
+        <div id="movementBreakScreen" class="hidden">
+            <div class="card">
+                <h2>🏃 Movement Break!</h2>
+                <p style="color: var(--text-muted); margin-bottom: 25px; text-align: center;">
+                    Time to get your body moving! Choose an activity to help you refocus.
+                </p>
+
+                <!-- Movement Activities -->
+                <div class="movement-grid">
+                    <div class="movement-activity" onclick="startMovementActivity('trampoline')">
+                        <div class="movement-icon bounce">🤸</div>
+                        <div class="movement-name">Trampoline</div>
+                        <div class="movement-desc">Jump and bounce!</div>
+                    </div>
+
+                    <div class="movement-activity" onclick="startMovementActivity('skates')">
+                        <div class="movement-icon slide">🛼</div>
+                        <div class="movement-name">Skating</div>
+                        <div class="movement-desc">Roll and glide</div>
+                    </div>
+
+                    <div class="movement-activity" onclick="startMovementActivity('run')">
+                        <div class="movement-icon run">🏃</div>
+                        <div class="movement-name">Quick Run</div>
+                        <div class="movement-desc">Sprint around!</div>
+                    </div>
+
+                    <div class="movement-activity" onclick="startMovementActivity('jumpjacks')">
+                        <div class="movement-icon">🙌</div>
+                        <div class="movement-name">Jumping Jacks</div>
+                        <div class="movement-desc">Stretch and jump</div>
+                    </div>
+
+                    <div class="movement-activity" onclick="startMovementActivity('dance')">
+                        <div class="movement-icon spin">💃</div>
+                        <div class="movement-name">Dance Break</div>
+                        <div class="movement-desc">Move to music!</div>
+                    </div>
+
+                    <div class="movement-activity" onclick="skipMovementBreak()">
+                        <div class="movement-icon">⏭️</div>
+                        <div class="movement-name">Skip</div>
+                        <div class="movement-desc">Return to learning</div>
+                    </div>
+                </div>
+
+                <!-- Active Movement Timer -->
+                <div id="movementTimer" class="hidden" style="margin-top: 30px; text-align: center;">
+                    <div id="movementTimerContent">
+                        <!-- Timer content will be dynamically inserted -->
+                    </div>
+                    <div style="margin-top: 25px;">
+                        <button class="btn btn-primary" onclick="finishMovementBreak()"><span>✅ Done Moving!</span></button>
                     </div>
                 </div>
             </div>
@@ -6994,6 +7158,150 @@
             speak('Glad you took time for yourself.');
 
             setTimeout(() => showDashboard(), 1500);
+        }
+
+        // ========================================
+        // MOVEMENT BREAK PROMPTS
+        // ========================================
+
+        let movementTimer;
+        let movementTimeRemaining;
+
+        function showMovementBreak() {
+            console.log('🏃 Showing Movement Break');
+            document.getElementById('setupScreen').classList.add('hidden');
+            document.getElementById('dashboardScreen').classList.add('hidden');
+            document.getElementById('practiceScreen').classList.add('hidden');
+            document.getElementById('rewardStudioScreen').classList.add('hidden');
+            document.getElementById('calmRoomScreen').classList.add('hidden');
+            document.getElementById('movementBreakScreen').classList.remove('hidden');
+
+            // Show selection, hide timer
+            document.querySelector('.movement-grid').classList.remove('hidden');
+            document.getElementById('movementTimer').classList.add('hidden');
+
+            // Update companion mood
+            if (gameState.companion) {
+                gameState.companion.currentMood = 'curious';
+            }
+
+            showGatorMessage('Time to move your body! This helps you focus better. Pick an activity!');
+            speak('Time to move your body! Pick an activity!');
+        }
+
+        function startMovementActivity(type) {
+            console.log('🏃 Starting movement activity:', type);
+
+            // Hide selection, show timer
+            document.querySelector('.movement-grid').classList.add('hidden');
+            document.getElementById('movementTimer').classList.remove('hidden');
+
+            const timerContent = document.getElementById('movementTimerContent');
+            const duration = 60; // 60 seconds
+            movementTimeRemaining = duration;
+
+            const activities = {
+                trampoline: {
+                    icon: '🤸',
+                    name: 'Trampoline Time!',
+                    instruction: 'Jump as high as you can! Feel the energy!'
+                },
+                skates: {
+                    icon: '🛼',
+                    name: 'Skating Around!',
+                    instruction: 'Glide smoothly! Feel the movement!'
+                },
+                run: {
+                    icon: '🏃',
+                    name: 'Quick Run!',
+                    instruction: 'Run in place or around the room! Get your heart pumping!'
+                },
+                jumpjacks: {
+                    icon: '🙌',
+                    name: 'Jumping Jacks!',
+                    instruction: 'Arms up, legs out! Count to 20!'
+                },
+                dance: {
+                    icon: '💃',
+                    name: 'Dance Party!',
+                    instruction: 'Move however feels good! Let your body flow!'
+                }
+            };
+
+            const activity = activities[type];
+
+            timerContent.innerHTML = `
+                <div class="movement-timer-circle">${activity.icon}</div>
+                <h3 style="color: var(--neon-green); margin-bottom: 15px; font-size: 1.8em;">${activity.name}</h3>
+                <p style="font-size: 1.2em; color: var(--text-muted); margin-bottom: 20px;">
+                    ${activity.instruction}
+                </p>
+                <div id="movementCountdown" style="font-size: 3em; font-weight: 700; color: var(--neon-yellow); margin-top: 20px;">
+                    ${movementTimeRemaining}s
+                </div>
+            `;
+
+            showGatorMessage(activity.instruction);
+            speak(activity.name + '! ' + activity.instruction);
+
+            // Start countdown
+            movementTimer = setInterval(() => {
+                movementTimeRemaining--;
+                const countdownEl = document.getElementById('movementCountdown');
+                if (countdownEl) {
+                    countdownEl.textContent = movementTimeRemaining + 's';
+
+                    // Change color as time runs out
+                    if (movementTimeRemaining <= 10) {
+                        countdownEl.style.color = 'var(--neon-orange)';
+                    }
+                    if (movementTimeRemaining <= 5) {
+                        countdownEl.style.color = 'var(--neon-red)';
+                    }
+                }
+
+                if (movementTimeRemaining <= 0) {
+                    clearInterval(movementTimer);
+                    showGatorMessage('Great job moving! Feel more focused now?');
+                    speak('Great job moving!');
+                }
+            }, 1000);
+        }
+
+        function finishMovementBreak() {
+            console.log('✅ Finishing Movement Break');
+
+            if (movementTimer) {
+                clearInterval(movementTimer);
+                movementTimer = null;
+            }
+
+            // Update companion mood
+            if (gameState.companion) {
+                gameState.companion.currentMood = 'encouraging';
+            }
+
+            showGatorMessage('Awesome! You moved your body. Ready to learn again?');
+            speak('Awesome! Ready to learn again?');
+
+            // Return to practice
+            setTimeout(() => {
+                document.getElementById('movementBreakScreen').classList.add('hidden');
+                document.getElementById('practiceScreen').classList.remove('hidden');
+            }, 1500);
+        }
+
+        function skipMovementBreak() {
+            console.log('⏭️ Skipping Movement Break');
+
+            showGatorMessage('No problem! Let\'s get back to learning.');
+            speak('No problem! Let\'s get back to learning.');
+
+            // Return to practice
+            setTimeout(() => {
+                document.getElementById('movementBreakScreen').classList.add('hidden');
+                document.getElementById('practiceScreen').classList.remove('hidden');
+            }, 1000);
         }
 
         // ========================================
