@@ -5971,7 +5971,7 @@
             let pool = [];
 
             gradesToTest.forEach(grade => {
-                subjectsToTest.forEach(subject) => {
+                subjectsToTest.forEach((subject) => {
                     if (questions[subject] && questions[subject][grade]) {
                         pool = pool.concat(questions[subject][grade]);
                     }
@@ -6870,80 +6870,80 @@
         };
 
         // Audio context for playing notes
-        let audioContext;
+        let webAudioCtx;
 
         function playNote(note) {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            if (!webAudioCtx) {
+                webAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
 
             const frequency = noteFrequencies[note];
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
+            const oscillator = webAudioCtx.createOscillator();
+            const gainNode = webAudioCtx.createGain();
 
             oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
+            gainNode.connect(webAudioCtx.destination);
 
             oscillator.frequency.value = frequency;
             oscillator.type = 'sine';
 
-            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            gainNode.gain.setValueAtTime(0.3, webAudioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, webAudioCtx.currentTime + 0.5);
 
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.5);
+            oscillator.start(webAudioCtx.currentTime);
+            oscillator.stop(webAudioCtx.currentTime + 0.5);
 
             console.log('🎵 Playing note:', note, frequency + 'Hz');
         }
 
         function playDrum(drumType) {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            if (!webAudioCtx) {
+                webAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
 
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            const filter = audioContext.createBiquadFilter();
+            const oscillator = webAudioCtx.createOscillator();
+            const gainNode = webAudioCtx.createGain();
+            const filter = webAudioCtx.createBiquadFilter();
 
             oscillator.connect(filter);
             filter.connect(gainNode);
-            gainNode.connect(audioContext.destination);
+            gainNode.connect(webAudioCtx.destination);
 
             // Different drum sounds
             switch(drumType) {
                 case 'kick':
-                    oscillator.frequency.setValueAtTime(150, audioContext.currentTime);
-                    oscillator.frequency.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-                    gainNode.gain.setValueAtTime(1, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    oscillator.frequency.setValueAtTime(150, webAudioCtx.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(0.01, webAudioCtx.currentTime + 0.5);
+                    gainNode.gain.setValueAtTime(1, webAudioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, webAudioCtx.currentTime + 0.5);
                     oscillator.type = 'sine';
                     break;
                 case 'snare':
                     oscillator.frequency.value = 100;
-                    gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                    gainNode.gain.setValueAtTime(0.5, webAudioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, webAudioCtx.currentTime + 0.2);
                     oscillator.type = 'triangle';
                     break;
                 case 'hihat':
                     oscillator.frequency.value = 250;
                     filter.type = 'highpass';
                     filter.frequency.value = 7000;
-                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                    gainNode.gain.setValueAtTime(0.3, webAudioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, webAudioCtx.currentTime + 0.1);
                     oscillator.type = 'square';
                     break;
                 case 'cymbal':
                     oscillator.frequency.value = 300;
                     filter.type = 'highpass';
                     filter.frequency.value = 5000;
-                    gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
+                    gainNode.gain.setValueAtTime(0.4, webAudioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, webAudioCtx.currentTime + 0.8);
                     oscillator.type = 'sawtooth';
                     break;
             }
 
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 1);
+            oscillator.start(webAudioCtx.currentTime);
+            oscillator.stop(webAudioCtx.currentTime + 1);
 
             console.log('🥁 Playing drum:', drumType);
         }
@@ -7118,18 +7118,18 @@
             // Stop any existing sound
             stopCalmSounds();
 
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            if (!webAudioCtx) {
+                webAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
 
             // Create continuous ambient sound using oscillators
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            const filter = audioContext.createBiquadFilter();
+            const oscillator = webAudioCtx.createOscillator();
+            const gainNode = webAudioCtx.createGain();
+            const filter = webAudioCtx.createBiquadFilter();
 
             oscillator.connect(filter);
             filter.connect(gainNode);
-            gainNode.connect(audioContext.destination);
+            gainNode.connect(webAudioCtx.destination);
 
             switch(soundType) {
                 case 'rain':
@@ -7152,7 +7152,7 @@
                         if (oscillator.frequency) {
                             oscillator.frequency.setValueAtTime(
                                 50 + Math.random() * 30,
-                                audioContext.currentTime
+                                webAudioCtx.currentTime
                             );
                         }
                     }, 2000);
