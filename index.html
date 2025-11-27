@@ -2807,6 +2807,50 @@
                 <div id="stressTestResults" style="margin-top: 20px;"></div>
             </details>
 
+            <!-- Support Circle System -->
+            <details class="card diagnostics-collapse">
+                <summary>
+                    <h2>❤️ Support Circle</h2>
+                </summary>
+                <p style="color:var(--text-muted); margin-bottom:20px; font-size:0.9em;">
+                    Add people who encourage you! Their supportive messages will appear during your learning journey.
+                </p>
+
+                <div style="margin-bottom: 25px;">
+                    <h3 style="font-size: 1.1em; margin-bottom: 15px; color: var(--neon-pink);">👥 Your Support Circle</h3>
+                    <div id="supportCircleList" style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+                        <!-- Support circle members will appear here -->
+                    </div>
+
+                    <div style="background: rgba(15, 23, 42, 0.6); padding: 20px; border-radius: 10px; border: 2px solid rgba(236, 72, 153, 0.3);">
+                        <h4 style="color: var(--neon-pink); margin-bottom: 12px;">Add Someone to Your Circle</h4>
+                        <div style="display: grid; gap: 12px;">
+                            <input type="text" id="supportCircleName" placeholder="Their name (e.g., Mom, Mr. Smith, Alex)" style="padding: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(236, 72, 153, 0.4); border-radius: 8px; color: white; font-size: 1em;">
+
+                            <select id="supportCircleRole" style="padding: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(236, 72, 153, 0.4); border-radius: 8px; color: white; font-size: 1em;">
+                                <option value="parent">Parent/Guardian</option>
+                                <option value="teacher">Teacher</option>
+                                <option value="sibling">Brother/Sister</option>
+                                <option value="friend">Friend</option>
+                                <option value="other">Other Family</option>
+                            </select>
+
+                            <button class="btn btn-primary" onclick="addToSupportCircle()" style="width: 100%;">
+                                <span>➕ Add to Circle</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(59, 130, 246, 0.1); padding: 15px; border-radius: 8px; border-left: 4px solid var(--neon-blue);">
+                    <h4 style="color: var(--neon-blue); margin-bottom: 8px;">💡 How it works</h4>
+                    <p style="color: var(--text-muted); font-size: 0.9em; margin: 0;">
+                        During practice, you'll occasionally see encouraging messages from people in your support circle.
+                        Their words will remind you that you're not alone in this learning journey!
+                    </p>
+                </div>
+            </details>
+
             <!-- Diagnostics -->
             <details class="card diagnostics-collapse">
                 <summary>
@@ -4963,6 +5007,9 @@
 
             // Add companion to dashboard
             setTimeout(() => addCompanionToDashboard(), 500);
+
+            // Initialize support circle display
+            setTimeout(() => initializeSupportCircle(), 500);
         }
 
         function updateDashboard() {
@@ -7302,6 +7349,196 @@
                 document.getElementById('movementBreakScreen').classList.add('hidden');
                 document.getElementById('practiceScreen').classList.remove('hidden');
             }, 1000);
+        }
+
+        // ========================================
+        // SUPPORT CIRCLE SYSTEM
+        // ========================================
+
+        function initializeSupportCircle() {
+            if (!gameState.supportCircle) {
+                gameState.supportCircle = [];
+            }
+            displaySupportCircle();
+        }
+
+        function addToSupportCircle() {
+            const nameInput = document.getElementById('supportCircleName');
+            const roleSelect = document.getElementById('supportCircleRole');
+
+            const name = nameInput.value.trim();
+            const role = roleSelect.value;
+
+            if (!name) {
+                alert('Please enter a name for this person');
+                return;
+            }
+
+            if (!gameState.supportCircle) {
+                gameState.supportCircle = [];
+            }
+
+            // Add to support circle
+            gameState.supportCircle.push({
+                name: name,
+                role: role,
+                addedDate: new Date().toISOString()
+            });
+
+            saveState();
+
+            // Clear inputs
+            nameInput.value = '';
+            roleSelect.value = 'parent';
+
+            // Update display
+            displaySupportCircle();
+
+            showGatorMessage(`${name} has been added to your support circle! They'll cheer you on during practice.`);
+            speak(`${name} has been added to your support circle!`);
+
+            console.log('❤️ Added to support circle:', {name, role});
+        }
+
+        function removeFromSupportCircle(index) {
+            if (confirm('Remove this person from your support circle?')) {
+                const person = gameState.supportCircle[index];
+                gameState.supportCircle.splice(index, 1);
+                saveState();
+                displaySupportCircle();
+
+                showGatorMessage(`${person.name} has been removed from your support circle.`);
+                console.log('❤️ Removed from support circle:', person);
+            }
+        }
+
+        function displaySupportCircle() {
+            const container = document.getElementById('supportCircleList');
+            if (!container) return;
+
+            if (!gameState.supportCircle || gameState.supportCircle.length === 0) {
+                container.innerHTML = `
+                    <div style="color: var(--text-muted); font-style: italic; padding: 20px; text-align: center; width: 100%;">
+                        Your support circle is empty. Add someone who encourages you!
+                    </div>
+                `;
+                return;
+            }
+
+            const roleIcons = {
+                parent: '👨‍👩‍👧',
+                teacher: '👨‍🏫',
+                sibling: '👫',
+                friend: '🤝',
+                other: '❤️'
+            };
+
+            container.innerHTML = gameState.supportCircle.map((person, index) => `
+                <div style="
+                    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(139, 92, 246, 0.1));
+                    border: 2px solid rgba(236, 72, 153, 0.3);
+                    border-radius: 12px;
+                    padding: 15px 20px;
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    min-width: 200px;
+                ">
+                    <div style="font-size: 2em;">${roleIcons[person.role]}</div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: var(--neon-pink); font-size: 1.1em;">${person.name}</div>
+                        <div style="font-size: 0.85em; color: var(--text-muted); text-transform: capitalize;">${person.role}</div>
+                    </div>
+                    <button
+                        onclick="removeFromSupportCircle(${index})"
+                        style="
+                            background: rgba(239, 68, 68, 0.2);
+                            border: 1px solid rgba(239, 68, 68, 0.4);
+                            border-radius: 50%;
+                            width: 32px;
+                            height: 32px;
+                            color: var(--neon-red);
+                            cursor: pointer;
+                            font-size: 1.2em;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            transition: all 0.2s ease;
+                        "
+                        onmouseover="this.style.background='rgba(239, 68, 68, 0.4)'"
+                        onmouseout="this.style.background='rgba(239, 68, 68, 0.2)'"
+                        title="Remove from circle"
+                    >×</button>
+                </div>
+            `).join('');
+        }
+
+        function showSupportCircleMessage() {
+            if (!gameState.supportCircle || gameState.supportCircle.length === 0) {
+                return; // No support circle, no message
+            }
+
+            // Random person from support circle
+            const person = gameState.supportCircle[Math.floor(Math.random() * gameState.supportCircle.length)];
+
+            // Messages by role
+            const messagesByRole = {
+                parent: [
+                    "I'm so proud of you!",
+                    "You're doing amazing!",
+                    "Keep going, you've got this!",
+                    "I believe in you!",
+                    "You're working so hard!",
+                    "I love seeing you learn and grow!",
+                    "You're making great progress!"
+                ],
+                teacher: [
+                    "Excellent effort!",
+                    "You're making real progress!",
+                    "I can see how hard you're working!",
+                    "Keep up the great work!",
+                    "You're learning so much!",
+                    "I'm proud of your persistence!",
+                    "You're becoming a stronger learner every day!"
+                ],
+                sibling: [
+                    "You're doing great!",
+                    "Way to go!",
+                    "You can do it!",
+                    "I'm cheering for you!",
+                    "You're awesome!",
+                    "Keep it up!",
+                    "You've got this!"
+                ],
+                friend: [
+                    "You're amazing!",
+                    "I believe in you!",
+                    "You can do anything!",
+                    "You're so smart!",
+                    "Keep going, friend!",
+                    "You've got this!",
+                    "I'm proud of you!"
+                ],
+                other: [
+                    "I'm so proud of you!",
+                    "You're doing wonderful!",
+                    "Keep up the great work!",
+                    "I believe in you!",
+                    "You're working so hard!",
+                    "You're making me proud!"
+                ]
+            };
+
+            const messages = messagesByRole[person.role] || messagesByRole.other;
+            const message = messages[Math.floor(Math.random() * messages.length)];
+
+            // Show as Gator message with attribution
+            const fullMessage = `${person.name} wants you to know: "${message}"`;
+
+            updateGatorMessage(fullMessage, 'gatorPracticeMessage');
+            speak(`${person.name} says: ${message}`);
+
+            console.log('❤️ Support Circle message from', person.name, ':', message);
         }
 
         // ========================================
