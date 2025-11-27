@@ -31,6 +31,12 @@
             --accent-teal: #14B8A6;
             --text-light: #e2e8f0;
             --text-muted: #94a3b8;
+
+            /* MOOD-BASED THEMING (E1-E2) - Dynamic mood colors for borders and accents */
+            --mood-border: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            --mood-glow: rgba(0, 240, 255, 0.5);
+            --mood-color-1: var(--neon-blue);
+            --mood-color-2: var(--neon-purple);
         }
 
         * {
@@ -105,9 +111,9 @@
             pointer-events: none;
         }
 
-        /* Container */
+        /* Container (F - Layout improvements for 100% zoom usability) */
         .container {
-            max-width: 1400px;
+            max-width: 1200px;  /* Reduced from 1400px for better usability at 100% zoom */
             margin: 0 auto;
             padding: 10px;
             position: relative;
@@ -514,6 +520,198 @@
             background: rgba(0, 255, 136, 0.2);
             transform: translateY(-3px);
             box-shadow: 0 0 25px rgba(0, 255, 136, 0.5);
+        }
+
+        /* E2 - Mood-themed buttons with dynamic borders */
+        .btn-mood-themed {
+            border: 2px solid transparent;
+            background-image: var(--mood-border);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            animation: moodPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes moodPulse {
+            0%, 100% {
+                box-shadow: 0 0 20px var(--mood-glow);
+                filter: brightness(1);
+            }
+            50% {
+                box-shadow: 0 0 30px var(--mood-glow);
+                filter: brightness(1.1);
+            }
+        }
+
+        /* B - BADGE TRACKER STYLES */
+        .badge-tracker {
+            background: rgba(15, 23, 42, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 240, 255, 0.3);
+            margin-top: 20px;
+        }
+
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .badge-item {
+            background: rgba(0, 240, 255, 0.1);
+            border: 2px solid rgba(0, 240, 255, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .badge-item:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+            border-color: rgba(0, 240, 255, 0.8);
+        }
+
+        .badge-icon {
+            font-size: 3em;
+            margin-bottom: 8px;
+        }
+
+        .badge-name {
+            font-weight: 700;
+            color: var(--neon-blue);
+            margin-bottom: 5px;
+            font-size: 0.95em;
+        }
+
+        .badge-description {
+            font-size: 0.75em;
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        .badge-date {
+            font-size: 0.7em;
+            color: var(--neon-green);
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        /* C - STUDENT CARD STYLES */
+        .student-card {
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(139, 92, 246, 0.15));
+            border: 2px solid rgba(0, 240, 255, 0.4);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 20px;
+            align-items: center;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 240, 255, 0.3);
+        }
+
+        .student-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+        }
+
+        .student-photo-placeholder {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(0, 240, 255, 0.1);
+            border: 3px dashed rgba(0, 240, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            color: var(--text-muted);
+        }
+
+        .student-info {
+            display: grid;
+            gap: 8px;
+        }
+
+        .student-name-display {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .student-detail {
+            font-size: 0.95em;
+            color: var(--text-light);
+        }
+
+        .student-detail strong {
+            color: var(--neon-purple);
+        }
+
+        /* D - EXPORT REPORT VIEW STYLES */
+        .export-report-view {
+            position: fixed;
+            top: -10000px;
+            left: -10000px;
+            width: 1200px;
+            background: linear-gradient(135deg, #0a0e27, #1a1e3f);
+            padding: 40px;
+            border-radius: 20px;
+            border: 3px solid var(--neon-blue);
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.5);
+        }
+
+        .export-report-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--neon-blue);
+            padding-bottom: 20px;
+        }
+
+        .export-report-title {
+            font-size: 2.5em;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .export-diagnostic-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .export-axis-explanation {
+            background: rgba(0, 240, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid var(--neon-blue);
+            margin-bottom: 15px;
+        }
+
+        .export-axis-title {
+            font-weight: 700;
+            color: var(--neon-blue);
+            margin-bottom: 5px;
+        }
+
+        .export-axis-description {
+            font-size: 0.9em;
+            color: var(--text-light);
+            line-height: 1.5;
         }
 
         /* Three-Grade System */
@@ -1787,6 +1985,31 @@
             opacity: 0.8;
         }
 
+        /* F - Scrollable diagnostics sections to prevent excessive page height */
+        .diagnostics-collapse[open] {
+            max-height: 800px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .diagnostics-collapse::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .diagnostics-collapse::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .diagnostics-collapse::-webkit-scrollbar-thumb {
+            background: var(--neon-blue);
+            border-radius: 10px;
+        }
+
+        .diagnostics-collapse::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-purple);
+        }
+
         /* Grade Dials */
         .grade-dials-container {
             display: grid;
@@ -2712,12 +2935,63 @@
                     Upload student ID and generate comprehensive diagnostics reports showing strengths, weaknesses, and progress across all learning domains.
                 </p>
 
+                <!-- C - STUDENT CARD -->
                 <div style="margin-bottom: 25px;">
-                    <h3 style="font-size: 1.1em; margin-bottom: 12px; color: var(--neon-blue);">📸 Student ID Upload</h3>
+                    <h3 style="font-size: 1.1em; margin-bottom: 12px; color: var(--neon-blue);">👤 Student Profile Card</h3>
+                    <div id="studentCardContainer" class="student-card">
+                        <div id="studentPhotoContainer">
+                            <div class="student-photo-placeholder">👤</div>
+                        </div>
+                        <div class="student-info">
+                            <div class="student-name-display" id="studentNameDisplay">Not Set</div>
+                            <div class="student-detail">
+                                <strong>Birthday:</strong> <span id="studentBirthdayDisplay">Not Set</span>
+                            </div>
+                            <div class="student-detail">
+                                <strong>Today:</strong> <span id="currentDateDisplay">-</span>
+                            </div>
+                            <div class="student-detail">
+                                <strong>Enrolled Grade:</strong> <span id="enrolledGradeDisplay">-</span>
+                            </div>
+                            <div class="student-detail">
+                                <strong>Current Level:</strong> <span id="currentLevelDisplay">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <input type="file" id="profilePhotoUpload" accept="image/*" style="display: none;" onchange="handleProfilePhotoUpload(event)">
+                        <button class="btn btn-primary" onclick="document.getElementById('profilePhotoUpload').click()">
+                            <span>📸 Upload Photo</span>
+                        </button>
+                        <input type="date" id="birthdayInput" style="padding: 10px; border-radius: 8px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(0, 240, 255, 0.3); color: var(--text-light); font-family: 'Rajdhani', sans-serif;">
+                        <button class="btn btn-secondary" onclick="saveBirthday()">
+                            <span>💾 Save Birthday</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- B - BADGE TRACKER -->
+                <div style="margin-bottom: 25px;">
+                    <h3 style="font-size: 1.1em; margin-bottom: 12px; color: var(--neon-yellow);">🏆 Badge Collection</h3>
+                    <div class="badge-tracker">
+                        <div id="badgeTrackerEmpty" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                            <div style="font-size: 3em; margin-bottom: 10px;">🏅</div>
+                            <div>No badges earned yet. Keep learning to unlock badges!</div>
+                        </div>
+                        <div id="badgeGrid" class="badge-grid" style="display: none;"></div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="showBadgeTracker()" style="margin-top: 10px;">
+                        <span>🔍 View All Badges</span>
+                    </button>
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <h3 style="font-size: 1.1em; margin-bottom: 12px; color: var(--neon-blue);">📸 Student ID Upload (Optional)</h3>
                     <div style="background: rgba(15, 23, 42, 0.6); padding: 20px; border-radius: 10px; border: 2px dashed rgba(0, 240, 255, 0.3); text-align: center;">
                         <div id="studentIdPreview" style="margin-bottom: 15px; min-height: 100px; display: flex; align-items: center; justify-content: center;">
                             <div style="color: var(--text-muted);">
-                                <div style="font-size: 3em; margin-bottom: 10px;">👤</div>
+                                <div style="font-size: 3em; margin-bottom: 10px;">🆔</div>
                                 <div>No student ID uploaded yet</div>
                             </div>
                         </div>
@@ -2732,7 +3006,7 @@
                 </div>
 
                 <div style="margin-bottom: 25px;">
-                    <h3 style="font-size: 1.1em; margin-bottom: 12px; color: var(--neon-purple);">📊 Generate Reports</h3>
+                    <h3 style="font-size: 1.1em; margin-bottom: 12px; color: var(--neon-purple);">📊 Generate Reports & Export</h3>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                         <button class="btn btn-primary" onclick="generateDiagnosticsMap()">
                             <span>🗺️ Diagnostics Map</span>
@@ -2740,8 +3014,11 @@
                         <button class="btn btn-primary" onclick="generateProConReports()">
                             <span>📋 Pro/Con Reports</span>
                         </button>
-                        <button class="btn btn-secondary" onclick="exportStudentProfile()">
-                            <span>💾 Export Full Profile</span>
+                        <button class="btn btn-secondary" onclick="exportStudentProfileJSON()">
+                            <span>💾 Export JSON/Code</span>
+                        </button>
+                        <button class="btn btn-primary" onclick="exportProfileAsImage()">
+                            <span>📷 Export as Image</span>
                         </button>
                     </div>
                 </div>
@@ -3209,7 +3486,10 @@
                     preferredFeedback: null,
                     preferredHelp: null,
                     copingStrategies: []
-                }
+                },
+                // C - Student Card enhancements
+                profilePhoto: null,  // Base64 encoded image
+                birthday: null       // ISO date string
             },
             domains: {
                 decoding:      { score: 0.4, history: [] },
@@ -3240,7 +3520,8 @@
             },
             // Mastery tracking for 48 microSkills
             microSkillMastery: {},
-            badges: [],
+            // B - Enhanced badge tracking with full badge objects
+            badges: [],  // Array of {name, icon, description, dateEarned}
             session: {
                 questionsAnswered: 0,
                 correctAnswers: 0,
@@ -3700,6 +3981,9 @@
             buttons.forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.mood === mood);
             });
+
+            // E - Apply mood-based theme
+            applyMoodTheme(mood);
 
             saveState();
         }
@@ -4279,6 +4563,11 @@
             ensureSettings();
             ensureTracking();
             ensurePreferences();
+
+            // Initialize new features (B, C, E)
+            updateStudentCard();      // C - Initialize student card display
+            updateBadgeTracker();     // B - Initialize badge tracker
+            updateMoodTheme();        // E - Apply initial mood theme
 
             if (hasSavedState && gameState.student.name) {
                 // Show Resume/New Session modal
@@ -5332,20 +5621,33 @@
         }
 
         // Badge unlocking system
-        function unlockBadge(badgeName) {
-            if (!gameState.badges.includes(badgeName)) {
-                gameState.badges.push(badgeName);
+        // B - Enhanced badge system with full badge objects
+        function unlockBadge(badgeName, badgeIcon = '🏆', badgeDescription = '') {
+            // Check if badge already exists (by name)
+            const exists = gameState.badges.some(b => (typeof b === 'string' ? b : b.name) === badgeName);
+
+            if (!exists) {
+                const badgeObject = {
+                    name: badgeName,
+                    icon: badgeIcon,
+                    description: badgeDescription,
+                    dateEarned: new Date().toISOString()
+                };
+
+                gameState.badges.push(badgeObject);
                 saveState();
+                updateBadgeTracker();  // Update the badge tracker display
 
                 // Show badge notification
                 const notification = document.createElement('div');
                 notification.className = 'badge-notification';
                 notification.innerHTML = `
                     <div class="badge-content">
-                        <div class="badge-icon">🏆</div>
+                        <div class="badge-icon" style="font-size: 2.5em;">${badgeIcon}</div>
                         <div class="badge-text">
                             <strong>Badge Unlocked!</strong>
                             <p>${badgeName}</p>
+                            ${badgeDescription ? `<small style="font-size: 0.8em; opacity: 0.8;">${badgeDescription}</small>` : ''}
                         </div>
                     </div>
                 `;
@@ -5372,32 +5674,32 @@
             }
         }
 
-        // Check for badge milestones
+        // Check for badge milestones (B - Enhanced with icons and descriptions)
         function checkBadgeMilestones() {
             const session = gameState.session;
             const correct = session.correctAnswers;
             const total = session.questionsAnswered;
 
             // Milestone badges
-            if (correct === 5) unlockBadge('First 5 Correct ⭐');
-            if (correct === 10) unlockBadge('10 in a Row 🎯');
-            if (correct === 25) unlockBadge('Quarter Century 🏅');
-            if (correct === 50) unlockBadge('Half Century 🎖️');
-            if (correct === 100) unlockBadge('Century Master 👑');
+            if (correct === 5) unlockBadge('First 5 Correct', '⭐', 'Answered 5 questions correctly!');
+            if (correct === 10) unlockBadge('10 in a Row', '🎯', 'Answered 10 questions correctly!');
+            if (correct === 25) unlockBadge('Quarter Century', '🏅', 'Reached 25 correct answers!');
+            if (correct === 50) unlockBadge('Half Century', '🎖️', 'Amazing! 50 correct answers!');
+            if (correct === 100) unlockBadge('Century Master', '👑', 'Incredible! 100 correct answers!');
 
             // Streak badges
-            if (session.currentStreak === 3) unlockBadge('Triple Threat 🔥');
-            if (session.currentStreak === 5) unlockBadge('Five Alive ⚡');
-            if (session.currentStreak === 10) unlockBadge('Perfect Ten 💫');
+            if (session.currentStreak === 3) unlockBadge('Triple Threat', '🔥', 'Three correct in a row!');
+            if (session.currentStreak === 5) unlockBadge('Five Alive', '⚡', 'Five perfect answers in a row!');
+            if (session.currentStreak === 10) unlockBadge('Perfect Ten', '💫', 'Ten consecutive correct answers!');
 
             // Persistence badges
-            if (total === 20) unlockBadge('Persistent Learner 💪');
-            if (total === 50) unlockBadge('Dedicated Student 📚');
+            if (total === 20) unlockBadge('Persistent Learner', '💪', 'Attempted 20 questions!');
+            if (total === 50) unlockBadge('Dedicated Student', '📚', 'Attempted 50 questions!');
 
             // Subject-specific badges
             const subject = gameState.student.subject;
-            if (subject === 'math' && correct >= 20) unlockBadge('Math Wizard 🧙‍♂️');
-            if (subject === 'reading' && correct >= 20) unlockBadge('Reading Rockstar 📖');
+            if (subject === 'math' && correct >= 20) unlockBadge('Math Wizard', '🧙‍♂️', 'Mastering mathematics!');
+            if (subject === 'reading' && correct >= 20) unlockBadge('Reading Rockstar', '📖', 'Excellent reading skills!');
         }
 
         // Update microSkill mastery after answer
@@ -5420,6 +5722,319 @@
             });
 
             saveState();
+        }
+
+        // ========================================
+        // B - BADGE TRACKER FUNCTIONS
+        // ========================================
+
+        function updateBadgeTracker() {
+            const emptyDiv = document.getElementById('badgeTrackerEmpty');
+            const badgeGrid = document.getElementById('badgeGrid');
+
+            if (gameState.badges.length === 0) {
+                emptyDiv.style.display = 'block';
+                badgeGrid.style.display = 'none';
+                return;
+            }
+
+            emptyDiv.style.display = 'none';
+            badgeGrid.style.display = 'grid';
+            badgeGrid.innerHTML = '';
+
+            // Convert old string badges to objects if needed
+            const normalizedBadges = gameState.badges.map(b => {
+                if (typeof b === 'string') {
+                    return { name: b, icon: '🏆', description: '', dateEarned: new Date().toISOString() };
+                }
+                return b;
+            });
+
+            normalizedBadges.forEach(badge => {
+                const badgeItem = document.createElement('div');
+                badgeItem.className = 'badge-item';
+
+                const date = badge.dateEarned ? new Date(badge.dateEarned).toLocaleDateString() : 'Unknown';
+
+                badgeItem.innerHTML = `
+                    <div class="badge-icon">${badge.icon}</div>
+                    <div class="badge-name">${badge.name}</div>
+                    ${badge.description ? `<div class="badge-description">${badge.description}</div>` : ''}
+                    <div class="badge-date">${date}</div>
+                `;
+
+                badgeGrid.appendChild(badgeItem);
+            });
+        }
+
+        function showBadgeTracker() {
+            updateBadgeTracker();
+            // Scroll to badge tracker
+            document.querySelector('.badge-tracker').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // ========================================
+        // C - STUDENT CARD FUNCTIONS
+        // ========================================
+
+        function handleProfilePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                gameState.student.profilePhoto = e.target.result;
+                saveState();
+                updateStudentCard();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveBirthday() {
+            const birthdayInput = document.getElementById('birthdayInput');
+            if (birthdayInput.value) {
+                gameState.student.birthday = birthdayInput.value;
+                saveState();
+                updateStudentCard();
+                alert('Birthday saved!');
+            } else {
+                alert('Please select a birthday date.');
+            }
+        }
+
+        function updateStudentCard() {
+            // Update student name
+            document.getElementById('studentNameDisplay').textContent = gameState.student.name || 'Not Set';
+
+            // Update photo
+            const photoContainer = document.getElementById('studentPhotoContainer');
+            if (gameState.student.profilePhoto) {
+                photoContainer.innerHTML = `<img src="${gameState.student.profilePhoto}" class="student-photo" alt="Student Photo">`;
+            } else {
+                photoContainer.innerHTML = `<div class="student-photo-placeholder">👤</div>`;
+            }
+
+            // Update birthday
+            if (gameState.student.birthday) {
+                const birthday = new Date(gameState.student.birthday);
+                document.getElementById('studentBirthdayDisplay').textContent = birthday.toLocaleDateString();
+            } else {
+                document.getElementById('studentBirthdayDisplay').textContent = 'Not Set';
+            }
+
+            // Update current date
+            document.getElementById('currentDateDisplay').textContent = new Date().toLocaleDateString();
+
+            // Update grades
+            document.getElementById('enrolledGradeDisplay').textContent = `Grade ${gameState.student.gradeEnrolled}`;
+            document.getElementById('currentLevelDisplay').textContent = `Grade ${gameState.student.gradeCurrent.toFixed(1)}`;
+        }
+
+        // ========================================
+        // D - EXPORT PROFILE AS IMAGE
+        // ========================================
+
+        function exportStudentProfileJSON() {
+            // Original export functionality renamed
+            exportStudentProfile();
+        }
+
+        async function exportProfileAsImage() {
+            try {
+                // Clone student card into export view
+                const exportView = document.getElementById('exportReportView');
+                const exportStudentCardClone = document.getElementById('exportStudentCardClone');
+                const studentCard = document.getElementById('studentCardContainer');
+                exportStudentCardClone.innerHTML = studentCard.outerHTML;
+
+                // Draw radar chart on export canvas
+                const exportCanvas = document.getElementById('exportRadarCanvas');
+                const ctx = exportCanvas.getContext('2d');
+                drawRadarChartOnCanvas(ctx, exportCanvas.width, exportCanvas.height);
+
+                // Move export view temporarily into view
+                exportView.style.top = '0';
+                exportView.style.left = '0';
+
+                // Wait a moment for rendering
+                await new Promise(resolve => setTimeout(resolve, 100));
+
+                // Use html2canvas to capture the export view
+                const canvas = await html2canvas(exportView, {
+                    backgroundColor: '#0a0e27',
+                    scale: 2,
+                    logging: false
+                });
+
+                // Hide export view again
+                exportView.style.top = '-10000px';
+                exportView.style.left = '-10000px';
+
+                // Convert to blob and download
+                canvas.toBlob(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    const studentName = gameState.student.name || 'student';
+                    const date = new Date().toISOString().split('T')[0];
+                    a.download = `learning-spectrum-${studentName}-${date}.png`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                });
+
+                alert('✅ Profile exported as image!');
+            } catch (error) {
+                console.error('Export failed:', error);
+                alert('❌ Export failed. Please try again.');
+            }
+        }
+
+        function drawRadarChartOnCanvas(ctx, width, height) {
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radius = Math.min(width, height) / 2 - 40;
+
+            const axes = [
+                { label: 'Reading', score: gameState.domains.decoding.score },
+                { label: 'Understanding', score: gameState.domains.comprehension.score },
+                { label: 'Fluency', score: gameState.domains.fluency.score },
+                { label: 'Math', score: gameState.domains.math.score },
+                { label: 'Focus', score: gameState.domains.focus.score },
+                { label: 'Effort', score: gameState.domains.effort.score }
+            ];
+
+            const angleStep = (Math.PI * 2) / axes.length;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw background circles
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
+            ctx.lineWidth = 1;
+            for (let i = 1; i <= 5; i++) {
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, (radius / 5) * i, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            // Draw axes
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+            ctx.lineWidth = 1;
+            axes.forEach((axis, i) => {
+                const angle = i * angleStep - Math.PI / 2;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+
+                // Draw labels
+                ctx.fillStyle = '#00f0ff';
+                ctx.font = 'bold 16px Orbitron';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                const labelX = centerX + Math.cos(angle) * (radius + 25);
+                const labelY = centerY + Math.sin(angle) * (radius + 25);
+                ctx.fillText(axis.label, labelX, labelY);
+            });
+
+            // Draw data polygon
+            ctx.fillStyle = 'rgba(0, 240, 255, 0.3)';
+            ctx.strokeStyle = 'rgba(0, 240, 255, 0.8)';
+            ctx.lineWidth = 2;
+
+            ctx.beginPath();
+            axes.forEach((axis, i) => {
+                const angle = i * angleStep - Math.PI / 2;
+                const distance = radius * axis.score;
+                const x = centerX + Math.cos(angle) * distance;
+                const y = centerY + Math.sin(angle) * distance;
+
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // Draw score points
+            ctx.fillStyle = '#00f0ff';
+            axes.forEach((axis, i) => {
+                const angle = i * angleStep - Math.PI / 2;
+                const distance = radius * axis.score;
+                const x = centerX + Math.cos(angle) * distance;
+                const y = centerY + Math.sin(angle) * distance;
+
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        // ========================================
+        // E - MOOD-BASED THEMING
+        // ========================================
+
+        const moodThemes = {
+            brave: {
+                colors: ['#00f0ff', '#3b82f6'],  // Deep blue + teal
+                glow: 'rgba(0, 240, 255, 0.5)',
+                name: 'Brave'
+            },
+            tryAgain: {
+                colors: ['#f97316', '#ffee00'],  // Orange + yellow
+                glow: 'rgba(249, 115, 22, 0.5)',
+                name: 'Try Again'
+            },
+            curious: {
+                colors: ['#14B8A6', '#8b5cf6'],  // Teal + purple
+                glow: 'rgba(139, 92, 246, 0.5)',
+                name: 'Curious'
+            },
+            focused: {
+                colors: ['#00ff88', '#10B981'],  // Green shades
+                glow: 'rgba(0, 255, 136, 0.5)',
+                name: 'Focused'
+            },
+            success: {
+                colors: ['#3b82f6', '#00f0ff'],  // Blue + cyan
+                glow: 'rgba(59, 130, 246, 0.5)',
+                name: 'Success'
+            },
+            creative: {
+                colors: ['#ff006e', '#8b5cf6'],  // Pink + purple
+                glow: 'rgba(139, 92, 246, 0.5)',
+                name: 'Creative'
+            },
+            mastery: {
+                colors: ['#EAB308', '#ffee00'],  // Gold shades
+                glow: 'rgba(234, 179, 8, 0.6)',
+                name: 'Mastery'
+            }
+        };
+
+        function applyMoodTheme(moodKey) {
+            const theme = moodThemes[moodKey] || moodThemes.focused;
+            const root = document.documentElement;
+
+            // Update CSS variables
+            root.style.setProperty('--mood-border', `linear-gradient(135deg, ${theme.colors[0]}, ${theme.colors[1]})`);
+            root.style.setProperty('--mood-glow', theme.glow);
+            root.style.setProperty('--mood-color-1', theme.colors[0]);
+            root.style.setProperty('--mood-color-2', theme.colors[1]);
+
+            console.log(`🎨 Applied mood theme: ${theme.name}`);
+        }
+
+        // Apply mood theme whenever mood changes
+        function updateMoodTheme() {
+            const currentMood = gameState.session.mood || 'focused';
+            applyMoodTheme(currentMood);
         }
 
         // ========================================
@@ -5980,7 +6595,11 @@
             const mostRepeated = questionFrequency.slice(0, 10);
             const avgAppearances = (totalGenerated / uniqueQuestions).toFixed(2);
 
-            // Display results
+            // A2 - Calculate enhanced metrics
+            const bankSize = questionPool.getPoolSize();
+            const coverage = bankSize > 0 ? (uniqueQuestions / bankSize * 100).toFixed(2) : 0;
+
+            // Display results with enhanced metrics
             displayStressTestResults({
                 iterations: totalGenerated,
                 uniqueQuestions,
@@ -5989,7 +6608,9 @@
                 mostRepeated,
                 avgAppearances,
                 gradeFilter,
-                subjectFilter
+                subjectFilter,
+                bankSize,           // A2 - New metric
+                coverageRate: coverage  // A2 - New metric
             });
 
             console.log('✅ Stress test complete!', {
@@ -6100,24 +6721,43 @@
                         </div>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px;">
                         <div style="background: rgba(0, 240, 255, 0.1); padding: 15px; border-radius: 10px; text-align: center;">
                             <div style="font-size: 2em; font-weight: 700; color: var(--neon-blue);">${results.iterations}</div>
-                            <div style="font-size: 0.9em; color: var(--text-muted);">Total Generations</div>
+                            <div style="font-size: 0.85em; color: var(--text-muted);">Total Generations</div>
                         </div>
                         <div style="background: rgba(0, 255, 136, 0.1); padding: 15px; border-radius: 10px; text-align: center;">
                             <div style="font-size: 2em; font-weight: 700; color: var(--neon-green);">${results.uniqueQuestions}</div>
-                            <div style="font-size: 0.9em; color: var(--text-muted);">Unique Questions</div>
+                            <div style="font-size: 0.85em; color: var(--text-muted);">Unique Questions</div>
                         </div>
                         <div style="background: rgba(139, 92, 246, 0.1); padding: 15px; border-radius: 10px; text-align: center;">
                             <div style="font-size: 2em; font-weight: 700; color: var(--neon-purple);">${results.uniquenessPercent}%</div>
-                            <div style="font-size: 0.9em; color: var(--text-muted);">Uniqueness Rate</div>
+                            <div style="font-size: 0.85em; color: var(--text-muted);">Uniqueness Rate</div>
                         </div>
                         <div style="background: rgba(255, 0, 110, 0.1); padding: 15px; border-radius: 10px; text-align: center;">
                             <div style="font-size: 2em; font-weight: 700; color: var(--neon-pink);">${results.avgAppearances}x</div>
-                            <div style="font-size: 0.9em; color: var(--text-muted);">Avg Appearances</div>
+                            <div style="font-size: 0.85em; color: var(--text-muted);">Avg Appearances</div>
+                        </div>
+                        <!-- A2 - NEW METRICS -->
+                        <div style="background: rgba(255, 238, 0, 0.1); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="font-size: 2em; font-weight: 700; color: var(--neon-yellow);">${results.bankSize || 'N/A'}</div>
+                            <div style="font-size: 0.85em; color: var(--text-muted);">Bank Size</div>
+                        </div>
+                        <div style="background: rgba(20, 184, 166, 0.1); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="font-size: 2em; font-weight: 700; color: var(--accent-teal);">${results.coverageRate || 0}%</div>
+                            <div style="font-size: 0.85em; color: var(--text-muted);">Coverage Rate</div>
                         </div>
                     </div>
+
+                    <!-- A2 - CAPACITY WARNING -->
+                    ${results.bankSize && results.iterations > results.bankSize ? `
+                        <div style="background: rgba(255, 69, 0, 0.15); padding: 15px; border-radius: 10px; border-left: 4px solid var(--neon-orange); margin-bottom: 15px;">
+                            <strong style="color: var(--neon-orange);">⚠️ Bank Capacity Warning</strong>
+                            <div style="margin-top: 8px; font-size: 0.95em; line-height: 1.5;">
+                                Bank is smaller than test size. Consider adding at least <strong>${results.iterations - results.bankSize} more questions</strong> for this filter to avoid forced repetition.
+                            </div>
+                        </div>
+                    ` : ''}
 
                     <div style="margin-top: 20px;">
                         <h4 style="color: var(--neon-yellow); margin-bottom: 10px;">🔁 Most Repeated Questions (Top 10)</h4>
@@ -8466,5 +9106,52 @@
     <script src="questions/grade-4-comprehensive.js"></script>
     <script src="questions/grade-5-comprehensive.js"></script>
     <script src="load-question-banks.js"></script>
+
+    <!-- D - Hidden Export Report View for Image Export -->
+    <div id="exportReportView" class="export-report-view">
+        <div class="export-report-header">
+            <div class="export-report-title">Learning Spectrum Diagnostic Report</div>
+            <div style="color: var(--text-muted); margin-top: 10px; font-size: 0.9em;">Every color of how they learn</div>
+        </div>
+
+        <div id="exportStudentCardClone"></div>
+
+        <div class="export-diagnostic-grid">
+            <div>
+                <canvas id="exportRadarCanvas" width="500" height="500"></canvas>
+            </div>
+            <div>
+                <h3 style="color: var(--neon-blue); margin-bottom: 15px; font-family: 'Orbitron', sans-serif;">Diagnostic Breakdown</h3>
+                <div class="export-axis-explanation">
+                    <div class="export-axis-title">📖 Reading / Decoding</div>
+                    <div class="export-axis-description">How smoothly the student decodes words and recognizes patterns.</div>
+                </div>
+                <div class="export-axis-explanation">
+                    <div class="export-axis-title">💡 Understanding / Comprehension</div>
+                    <div class="export-axis-description">Ability to understand meaning, answer questions, and make inferences.</div>
+                </div>
+                <div class="export-axis-explanation">
+                    <div class="export-axis-title">🎯 Fluency</div>
+                    <div class="export-axis-description">Reading speed and smoothness - how fluently they read aloud.</div>
+                </div>
+                <div class="export-axis-explanation">
+                    <div class="export-axis-title">🔢 Math</div>
+                    <div class="export-axis-description">Number sense, operations, problem-solving, and mathematical thinking.</div>
+                </div>
+                <div class="export-axis-explanation">
+                    <div class="export-axis-title">🎯 Focus / Executive Skills</div>
+                    <div class="export-axis-description">Attention, task completion, following directions, and self-regulation.</div>
+                </div>
+                <div class="export-axis-explanation">
+                    <div class="export-axis-title">💪 Effort / Emotions</div>
+                    <div class="export-axis-description">Persistence, bravery, emotional regulation, and willingness to try.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- D - html2canvas library for image export -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 </body>
 </html>
