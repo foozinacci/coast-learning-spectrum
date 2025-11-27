@@ -4315,28 +4315,7 @@
         // ========================================
         // ENHANCED TTS VOICE LOADING & CACHING
         // ========================================
-        /**
-         * PRODUCTION TTS UPGRADE RECOMMENDATION:
-         * For consistent, reliable TTS across all browsers and devices, consider integrating:
-         *
-         * Option 1: ResponsiveVoice (Free tier available)
-         *   - Consistent voices across all browsers
-         *   - 100+ voices, 50+ languages
-         *   - Add: <script src="https://code.responsivevoice.org/responsivevoice.js?key=YOUR_KEY"></script>
-         *   - Usage: responsiveVoice.speak(text, voiceName);
-         *
-         * Option 2: Google Cloud Text-to-Speech
-         *   - Very high quality voices
-         *   - Requires API key and billing
-         *   - Best for production apps with budget
-         *
-         * Option 3: Amazon Polly
-         *   - Neural voices available
-         *   - AWS account required
-         *   - Good for AWS-hosted apps
-         *
-         * Current implementation uses Web Speech API (free, built-in, but inconsistent)
-         */
+        // Using Web Speech API (built-in browser TTS)
 
         let speechVoicesLoaded = false;
         let cachedVoices = [];
