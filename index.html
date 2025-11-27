@@ -5848,6 +5848,14 @@
 
             console.log(`🧪 Starting stress test: ${iterations} iterations, Grade: ${gradeFilter}, Subject: ${subjectFilter}`);
 
+            // Verify comprehensive banks are loaded
+            if (typeof window.ComprehensiveQuestionRegistry !== 'undefined') {
+                const stats = window.ComprehensiveQuestionRegistry.getOverallStats();
+                console.log('📚 [StressTest] Comprehensive banks loaded:', stats);
+            } else {
+                console.warn('⚠️ [StressTest] ComprehensiveQuestionRegistry NOT LOADED - will use limited hardcoded questions');
+            }
+
             // Show progress UI
             document.getElementById('stressTestProgress').style.display = 'block';
             document.getElementById('stressTestTotalIterations').textContent = iterations;
@@ -5937,34 +5945,50 @@
                 ? ['K', '1', '2', '3', '4', '5']
                 : [gradeFilter];
 
-            // Determine which subjects to pull from
+            // Determine which subjects to pull from - INCLUDE ALL CATEGORIES
             const subjectsToTest = subjectFilter === 'all'
-                ? ['reading', 'math']
-                : [subjectFilter];
+                ? ['reading', 'understanding', 'fluency', 'math', 'focus', 'effort']
+                : subjectFilter === 'reading'
+                    ? ['reading', 'understanding', 'fluency'] // Reading includes comprehension and fluency
+                    : [subjectFilter];
 
             // Build question pool - try comprehensive banks first, then fall back to hardcoded
             let pool = [];
 
             // Try using ComprehensiveQuestionRegistry if available
             if (typeof window.ComprehensiveQuestionRegistry !== 'undefined') {
+                console.log(`🔍 [StressTest] Using ComprehensiveQuestionRegistry for ${gradesToTest.join(', ')} grades, ${subjectsToTest.join(', ')} subjects`);
+
                 gradesToTest.forEach(grade => {
                     subjectsToTest.forEach((subject) => {
                         const gradeNum = grade === 'K' ? 0 : parseInt(grade);
-                        const categoryName = subject === 'reading' ? 'reading' :
-                                            subject === 'math' ? 'math' : subject;
+                        const categoryName = subject.toLowerCase();
 
                         const comprehensiveQuestions = window.ComprehensiveQuestionRegistry.getQuestions(gradeNum, categoryName);
                         if (comprehensiveQuestions && comprehensiveQuestions.length > 0) {
+                            console.log(`  ✓ Found ${comprehensiveQuestions.length} questions for Grade ${grade}, ${categoryName}`);
                             pool = pool.concat(comprehensiveQuestions);
+                        } else {
+                            console.log(`  ⚠️ No questions for Grade ${grade}, ${categoryName}`);
                         }
                     });
                 });
+
+                console.log(`📊 [StressTest] Total pool size: ${pool.length} questions`);
+            } else {
+                console.warn('⚠️ [StressTest] ComprehensiveQuestionRegistry not available, falling back to hardcoded questions');
             }
 
             // Fall back to hardcoded questions if comprehensive banks not loaded or empty
             if (pool.length === 0) {
+                console.warn('⚠️ [StressTest] Using fallback hardcoded questions');
                 gradesToTest.forEach(grade => {
-                    subjectsToTest.forEach((subject) => {
+                    // Only use reading/math for hardcoded fallback since that's all we have
+                    const fallbackSubjects = subjectFilter === 'all' ? ['reading', 'math'] :
+                                           ['reading', 'understanding', 'fluency'].includes(subjectFilter) ? ['reading'] :
+                                           [subjectFilter];
+
+                    fallbackSubjects.forEach((subject) => {
                         if (questions[subject] && questions[subject][grade]) {
                             pool = pool.concat(questions[subject][grade]);
                         }
@@ -5973,7 +5997,7 @@
             }
 
             if (pool.length === 0) {
-                console.warn('⚠️ No questions found for the specified criteria');
+                console.error('❌ No questions found for the specified criteria');
                 return null;
             }
 
