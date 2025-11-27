@@ -8026,12 +8026,20 @@
                 <div style="text-align: left; padding: 20px; background: rgba(0, 240, 255, 0.1); border-radius: 15px; margin-bottom: 20px;">
                     <h3 style="color: var(--neon-blue); margin-bottom: 15px;">📖 ${story.title}</h3>
                     <p style="font-size: 1.1em; line-height: 1.8; margin-bottom: 20px;">${story.text}</p>
-                    <button class="btn btn-secondary" onclick="speak('${story.text.replace(/'/g, "\\'")}')"><span>🔊 Read Story Aloud</span></button>
+                    <button class="btn btn-secondary" id="readStoryBtn"><span>🔊 Read Story Aloud</span></button>
                 </div>
                 <div style="background: rgba(139, 92, 246, 0.1); padding: 15px; border-radius: 10px; border: 2px solid var(--neon-purple);">
                     <p style="font-size: 1em; color: var(--neon-purple); font-weight: 600;">📝 ${story.question}</p>
                 </div>
             `;
+
+            // Attach event listener for read story button
+            setTimeout(() => {
+                const readBtn = document.getElementById('readStoryBtn');
+                if (readBtn) {
+                    readBtn.onclick = () => speak(story.text);
+                }
+            }, 0);
 
             // Create text input for retelling
             const answersContainer = document.getElementById('answersContainer');
@@ -8041,9 +8049,17 @@
                     style="width: 100%; min-height: 120px; padding: 15px; border-radius: 10px; background: rgba(15, 23, 42, 0.6); border: 2px solid rgba(0, 240, 255, 0.3); color: var(--text-light); font-size: 1em; font-family: 'Rajdhani', sans-serif; resize: vertical;"
                     rows="5"></textarea>
                 <div style="margin-top: 15px; text-align: center;">
-                    <button class="btn btn-primary" onclick="checkStoryRetelling(${JSON.stringify(story.correctKeywords).replace(/"/g, '&quot;')})"><span>Submit Your Story</span></button>
+                    <button class="btn btn-primary" id="submitStoryBtn"><span>Submit Your Story</span></button>
                 </div>
             `;
+
+            // Attach event listener for submit button
+            setTimeout(() => {
+                const submitBtn = document.getElementById('submitStoryBtn');
+                if (submitBtn) {
+                    submitBtn.onclick = () => checkStoryRetelling(story.correctKeywords);
+                }
+            }, 0);
 
             updateGatorMessage("Read the story carefully, then tell it back to me in your own words!", 'gatorPracticeMessage');
             showScreen('practiceScreen');
@@ -8099,10 +8115,18 @@
             document.getElementById('questionText').innerHTML = `
                 <div style="background: rgba(0, 240, 255, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
                     <p style="font-size: 1.1em; line-height: 1.8; margin-bottom: 15px;">${passage.text}</p>
-                    <button class="btn btn-secondary" onclick="speak('${passage.text.replace(/'/g, "\\'")}')"><span>🔊 Read Passage</span></button>
+                    <button class="btn btn-secondary" id="readPassageBtn"><span>🔊 Read Passage</span></button>
                 </div>
                 <p style="font-size: 1.1em; color: var(--neon-purple); font-weight: 600; margin-bottom: 15px;">🎯 ${passage.question}</p>
             `;
+
+            // Attach event listener for read passage button
+            setTimeout(() => {
+                const readBtn = document.getElementById('readPassageBtn');
+                if (readBtn) {
+                    readBtn.onclick = () => speak(passage.text);
+                }
+            }, 0);
 
             const answersContainer = document.getElementById('answersContainer');
             answersContainer.innerHTML = '';
@@ -8142,10 +8166,18 @@
             document.getElementById('questionText').innerHTML = `
                 <div style="background: rgba(139, 92, 246, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
                     <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 15px;">🔍 ${scenario.text}</p>
-                    <button class="btn btn-secondary" onclick="speak('${scenario.text.replace(/'/g, "\\'")}')"><span>🔊 Hear the Clues</span></button>
+                    <button class="btn btn-secondary" id="hearCluesBtn"><span>🔊 Hear the Clues</span></button>
                 </div>
                 <p style="font-size: 1.1em; color: var(--neon-pink); font-weight: 600; margin-bottom: 15px;">🤔 ${scenario.question}</p>
             `;
+
+            // Attach event listener for hear clues button
+            setTimeout(() => {
+                const hearBtn = document.getElementById('hearCluesBtn');
+                if (hearBtn) {
+                    hearBtn.onclick = () => speak(scenario.text);
+                }
+            }, 0);
 
             const answersContainer = document.getElementById('answersContainer');
             answersContainer.innerHTML = '';
@@ -8185,10 +8217,18 @@
             document.getElementById('questionText').innerHTML = `
                 <div style="background: rgba(255, 0, 110, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
                     <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 15px;">🔮 ${story.text}</p>
-                    <button class="btn btn-secondary" onclick="speak('${story.text.replace(/'/g, "\\'")}')"><span>🔊 Hear the Story</span></button>
+                    <button class="btn btn-secondary" id="hearPredictionStoryBtn"><span>🔊 Hear the Story</span></button>
                 </div>
                 <p style="font-size: 1.1em; color: var(--neon-pink); font-weight: 600; margin-bottom: 15px;">🔮 ${story.question}</p>
             `;
+
+            // Attach event listener for hear story button
+            setTimeout(() => {
+                const hearBtn = document.getElementById('hearPredictionStoryBtn');
+                if (hearBtn) {
+                    hearBtn.onclick = () => speak(story.text);
+                }
+            }, 0);
 
             const answersContainer = document.getElementById('answersContainer');
             answersContainer.innerHTML = '';
