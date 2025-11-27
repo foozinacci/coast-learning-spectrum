@@ -108,7 +108,7 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 15px;
+            padding: 10px;
             position: relative;
             z-index: 1;
         }
@@ -119,8 +119,8 @@
             backdrop-filter: blur(20px);
             border: 1px solid rgba(0, 240, 255, 0.3);
             border-radius: 15px;
-            padding: 18px;
-            margin-bottom: 18px;
+            padding: 10px;
+            margin-bottom: 8px;
             box-shadow:
                 0 0 20px rgba(0, 240, 255, 0.3),
                 inset 0 0 20px rgba(139, 92, 246, 0.1);
@@ -157,13 +157,13 @@
 
         header h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.8em;
+            font-size: 1.5rem;
             font-weight: 900;
             background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             text-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
             position: relative;
             z-index: 1;
@@ -176,13 +176,14 @@
         }
 
         header .tagline {
-            font-size: 0.95em;
+            font-size: 0.8rem;
             color: var(--neon-green);
             font-style: italic;
             font-weight: 500;
             text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
             position: relative;
             z-index: 1;
+            margin-bottom: 0;
         }
 
         /* Header Grid Layout */
@@ -202,13 +203,14 @@
         /* Header Grades */
         .header-grades {
             display: flex;
-            gap: 12px;
+            gap: 8px;
             justify-content: center;
+            padding: 8px;
         }
 
         .header-grade-box {
             text-align: center;
-            padding: 8px 14px;
+            padding: 6px 10px;
             border-radius: 10px;
             transition: all 0.3s ease;
             cursor: default;
@@ -236,7 +238,7 @@
         }
 
         .grade-label {
-            font-size: 0.65em;
+            font-size: 0.7rem;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -245,7 +247,7 @@
         }
 
         .grade-value {
-            font-size: 1.4em;
+            font-size: 1.3rem;
             font-weight: 700;
             font-family: 'Orbitron', sans-serif;
         }
@@ -268,12 +270,12 @@
         /* Header Session Stats */
         .header-session {
             display: flex;
-            gap: 12px;
+            gap: 8px;
         }
 
         .session-stat {
             text-align: center;
-            padding: 6px 12px;
+            padding: 4px 8px;
             background: rgba(0, 240, 255, 0.05);
             border-radius: 8px;
             border: 1px solid rgba(0, 240, 255, 0.2);
@@ -388,8 +390,8 @@
             backdrop-filter: blur(20px);
             border: 1px solid var(--card-border);
             border-radius: 15px;
-            padding: 18px;
-            margin-bottom: 15px;
+            padding: 12px;
+            margin-bottom: 10px;
             box-shadow:
                 0 8px 32px rgba(0, 0, 0, 0.4),
                 inset 0 1px 1px rgba(255, 255, 255, 0.1);
@@ -427,11 +429,16 @@
         .card h2 {
             font-family: 'Orbitron', sans-serif;
             color: var(--neon-blue);
-            margin-bottom: 12px;
-            font-size: 1.2em;
+            margin-bottom: 8px;
+            font-size: 1.2rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            margin-bottom: 6px;
         }
 
         /* Futuristic buttons */
@@ -512,14 +519,14 @@
         .three-grade {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 12px;
+            gap: 8px;
             margin: 15px 0;
         }
 
         .grade-box {
             background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.6));
             backdrop-filter: blur(10px);
-            padding: 12px;
+            padding: 8px;
             border-radius: 12px;
             text-align: center;
             border: 2px solid rgba(148, 163, 184, 0.3);
@@ -1073,6 +1080,78 @@
         /* Hidden */
         .hidden {
             display: none !important;
+        }
+
+        /* Hide duplicate spectrum on dashboard */
+        #dashboardScreen .dashboard-grid .card:has(#dashboardSpectrum) {
+            display: none !important;
+        }
+
+        /* TTS buttons for answer options */
+        .answer-tts-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0, 240, 255, 0.2);
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .answer-tts-btn:hover {
+            background: rgba(0, 240, 255, 0.4);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+        }
+
+        .answer-tts-btn:active {
+            transform: scale(0.95);
+        }
+
+        .answer-btn {
+            position: relative !important;
+        }
+
+        /* Compress practice screen elements */
+        #practiceScreen .container {
+            max-width: 900px !important;
+        }
+
+        .question-card {
+            padding: 15px !important;
+            margin-bottom: 12px !important;
+        }
+
+        .question-text {
+            font-size: 1.3rem !important;
+            margin-bottom: 15px !important;
+        }
+
+        .answers-grid {
+            gap: 10px !important;
+        }
+
+        .practice-controls {
+            margin-top: 12px !important;
+            gap: 8px !important;
+        }
+
+        .gator-message {
+            padding: 10px !important;
+            font-size: 0.9rem !important;
+        }
+
+        /* Dashboard grid compression */
+        .dashboard-grid {
+            gap: 10px !important;
         }
 
         /* Particle click effect */
@@ -2792,6 +2871,14 @@
             if (gatorEl) gatorEl.textContent = message;
         }
 
+        function showGatorMessage(message, elementId = 'gatorMessage') {
+            updateGatorMessage(message, elementId);
+            // Also speak it if TTS is enabled
+            if (gameState && gameState.settings && gameState.settings.ttsEnabled) {
+                setTimeout(() => speak(message), 300);
+            }
+        }
+
         function getEncouragementMessage(isCorrect) {
             const ctx = gameState.student.context;
 
@@ -3362,6 +3449,90 @@
             }
         }
 
+        // ========================================
+        // TTS VOICE LOADING & CACHING (FIX)
+        // ========================================
+        let speechVoicesLoaded = false;
+        let cachedVoices = [];
+        let selectedVoice = null;
+
+        function loadVoices() {
+            return new Promise((resolve) => {
+                let voices = window.speechSynthesis.getVoices();
+                if (voices.length > 0) {
+                    cachedVoices = voices;
+                    speechVoicesLoaded = true;
+                    resolve(voices);
+                } else {
+                    window.speechSynthesis.onvoiceschanged = () => {
+                        voices = window.speechSynthesis.getVoices();
+                        cachedVoices = voices;
+                        speechVoicesLoaded = true;
+                        resolve(voices);
+                    };
+                }
+            });
+        }
+
+        function selectConsistentVoice() {
+            if (!gameState || !gameState.settings) return null;
+
+            const lang = gameState.student?.language || 'en';
+            const voicePref = gameState.settings.ttsVoice || 'neutral';
+
+            const langMap = {
+                'en': 'en-US',
+                'es': 'es-ES',
+                'fr': 'fr-FR',
+                'zh': 'zh-CN',
+                'ar': 'ar-SA'
+            };
+
+            const targetLang = langMap[lang] || 'en-US';
+            const langPrefix = targetLang.split('-')[0];
+
+            const matchingVoices = cachedVoices.filter(voice =>
+                voice.lang.startsWith(langPrefix)
+            );
+
+            if (matchingVoices.length === 0) {
+                selectedVoice = cachedVoices[0];
+                return selectedVoice;
+            }
+
+            if (voicePref === 'female') {
+                const femaleVoice = matchingVoices.find(v =>
+                    v.name.toLowerCase().includes('female') ||
+                    v.name.toLowerCase().includes('woman') ||
+                    v.name.toLowerCase().includes('zira') ||
+                    v.name.toLowerCase().includes('samantha')
+                );
+                if (femaleVoice) {
+                    selectedVoice = femaleVoice;
+                    return femaleVoice;
+                }
+            } else if (voicePref === 'male') {
+                const maleVoice = matchingVoices.find(v =>
+                    v.name.toLowerCase().includes('male') ||
+                    v.name.toLowerCase().includes('man') ||
+                    v.name.toLowerCase().includes('david') ||
+                    v.name.toLowerCase().includes('mark')
+                );
+                if (maleVoice) {
+                    selectedVoice = maleVoice;
+                    return maleVoice;
+                }
+            }
+
+            selectedVoice = matchingVoices[0];
+            return matchingVoices[0];
+        }
+
+        // Initialize voice loading
+        loadVoices().then(() => {
+            selectConsistentVoice();
+        });
+
         function speak(text) {
             if (!gameState.settings || !gameState.settings.ttsEnabled) {
                 return; // TTS is disabled
@@ -3374,36 +3545,28 @@
 
                 const utterance = new SpeechSynthesisUtterance(text);
 
-                // Set language
-                const langMap = {
-                    'en': 'en-US',
-                    'es': 'es-ES',
-                    'fr': 'fr-FR',
-                    'zh': 'zh-CN',
-                    'ar': 'ar-SA'
-                };
-                utterance.lang = langMap[gameState.student.language] || 'en-US';
-
-                // Set voice preference (male/female)
-                const voices = window.speechSynthesis.getVoices();
-                const preferredVoice = voices.find(voice => {
-                    const matchesLang = voice.lang.startsWith(utterance.lang.split('-')[0]);
-                    const matchesGender = gameState.settings.ttsVoice === 'female'
-                        ? voice.name.toLowerCase().includes('female') || voice.name.toLowerCase().includes('woman')
-                        : voice.name.toLowerCase().includes('male') || voice.name.toLowerCase().includes('man');
-                    return matchesLang && matchesGender;
-                });
-
-                if (preferredVoice) {
-                    utterance.voice = preferredVoice;
+                // Use cached, consistent voice
+                if (!speechVoicesLoaded) {
+                    loadVoices().then(() => {
+                        selectConsistentVoice();
+                        utterance.voice = selectedVoice;
+                        utterance.lang = selectedVoice ? selectedVoice.lang : 'en-US';
+                        utterance.rate = 0.9;
+                        utterance.pitch = 1.0;
+                        utterance.volume = gameState.settings.volume || 0.5;
+                        window.speechSynthesis.speak(utterance);
+                    });
+                } else {
+                    if (!selectedVoice) {
+                        selectConsistentVoice();
+                    }
+                    utterance.voice = selectedVoice;
+                    utterance.lang = selectedVoice ? selectedVoice.lang : 'en-US';
+                    utterance.rate = 0.9;
+                    utterance.pitch = 1.0;
+                    utterance.volume = gameState.settings.volume || 0.5;
+                    window.speechSynthesis.speak(utterance);
                 }
-
-                // Set rate and pitch
-                utterance.rate = 0.9; // Slightly slower for clarity
-                utterance.pitch = 1.0;
-                utterance.volume = gameState.settings.volume || 0.5;
-
-                window.speechSynthesis.speak(utterance);
             } else {
                 console.warn('Text-to-Speech not supported in this browser');
             }
@@ -4042,6 +4205,67 @@
             }
         }
 
+        // Show abacus visual hint for math
+        function showAbacus(number) {
+            let abacusContainer = document.getElementById('abacusHint');
+
+            if (!abacusContainer) {
+                // Create abacus container
+                const questionCard = document.querySelector('.question-card');
+                if (!questionCard) return;
+
+                abacusContainer = document.createElement('div');
+                abacusContainer.id = 'abacusHint';
+                abacusContainer.style.cssText = `
+                    display: none;
+                    padding: 10px;
+                    background: rgba(0, 240, 255, 0.1);
+                    border: 1px solid rgba(0, 240, 255, 0.3);
+                    border-radius: 10px;
+                    margin: 10px 0;
+                `;
+
+                abacusContainer.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-size: 0.9rem; color: var(--neon-cyan);">🧮 Visual Hint</span>
+                        <button onclick="document.getElementById('abacusHint').style.display='none'" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem;">×</button>
+                    </div>
+                    <div id="abacusDisplay" style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;"></div>
+                `;
+
+                questionCard.appendChild(abacusContainer);
+            }
+
+            const abacusDisplay = document.getElementById('abacusDisplay');
+            if (!abacusDisplay) return;
+
+            abacusDisplay.innerHTML = '';
+
+            const num = parseInt(number) || 0;
+            const maxDots = Math.min(num, 20);
+
+            for (let i = 0; i < maxDots; i++) {
+                const dot = document.createElement('div');
+                dot.style.cssText = `
+                    width: 24px;
+                    height: 24px;
+                    background: var(--neon-cyan);
+                    border-radius: 50%;
+                    box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+                `;
+                abacusDisplay.appendChild(dot);
+            }
+
+            if (num > 20) {
+                const more = document.createElement('div');
+                more.textContent = `... (${num} total)`;
+                more.style.cssText = 'color: var(--text-muted); font-size: 0.8rem; width: 100%; text-align: center; margin-top: 4px;';
+                abacusDisplay.appendChild(more);
+            }
+
+            abacusContainer.style.display = 'block';
+        }
+
         // Show hint for current question
         function showHint() {
             const q = gameState.session.currentQuestion;
@@ -4064,6 +4288,16 @@
             if (q.type === 'fill_in_blank_simple' && q.correct) {
                 const firstLetter = String(q.correct).charAt(0);
                 updateGatorMessage(`💡 Hint: The answer starts with "${firstLetter}"`, 'gatorPracticeMessage');
+            }
+
+            // For math questions, show abacus
+            if (q.domains && q.domains.includes('math')) {
+                const questionText = q.q || q.prompt || '';
+                const numbers = questionText.match(/\d+/g);
+                if (numbers && numbers.length > 0) {
+                    showAbacus(numbers[0]);
+                    updateGatorMessage('🧮 Use the visual hint to help count!', 'gatorPracticeMessage');
+                }
             }
         }
 
@@ -4238,6 +4472,18 @@
                     btn.className = 'answer-btn';
                     btn.textContent = answer;
                     btn.onclick = () => checkAnswer(index);
+
+                    // Add TTS button for each answer
+                    const ttsBtn = document.createElement('button');
+                    ttsBtn.className = 'answer-tts-btn';
+                    ttsBtn.innerHTML = '🔊';
+                    ttsBtn.title = 'Hear this answer';
+                    ttsBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        speak(answer);
+                    };
+                    btn.appendChild(ttsBtn);
+
                     container.appendChild(btn);
                 });
             }
