@@ -1077,6 +1077,140 @@
             box-shadow: 0 0 10px var(--neon-blue);
         }
 
+        /* Companion Selection */
+        .companion-option {
+            padding: 15px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(148, 163, 184, 0.3);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .companion-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(0, 240, 255, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .companion-option:hover {
+            transform: translateY(-4px);
+            border-color: var(--neon-purple);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .companion-option:hover::before {
+            opacity: 1;
+        }
+
+        .companion-option.selected {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(0, 240, 255, 0.2));
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .companion-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .companion-icon {
+            font-size: 3em;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            position: relative;
+            z-index: 1;
+        }
+
+        .companion-name {
+            font-weight: 600;
+            font-size: 0.9em;
+            color: var(--text-light);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Companion Display in App */
+        .companion-display {
+            position: relative;
+            display: inline-block;
+            font-size: 3em;
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
+            animation: companionFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes companionFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .companion-display.mood-calm {
+            filter: drop-shadow(0 6px 12px rgba(100, 200, 255, 0.6));
+        }
+
+        .companion-display.mood-curious {
+            filter: drop-shadow(0 6px 12px rgba(255, 238, 0, 0.6));
+            animation: companionBounce 1s ease-in-out infinite;
+        }
+
+        @keyframes companionBounce {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-15px) scale(1.05); }
+        }
+
+        .companion-display.mood-encouraging {
+            filter: drop-shadow(0 6px 12px rgba(0, 255, 136, 0.6));
+            animation: companionGlow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes companionGlow {
+            0%, 100% { filter: drop-shadow(0 6px 12px rgba(0, 255, 136, 0.4)); }
+            50% { filter: drop-shadow(0 8px 20px rgba(0, 255, 136, 0.8)); }
+        }
+
+        .companion-display.mood-celebrating {
+            filter: drop-shadow(0 6px 12px rgba(255, 0, 110, 0.6));
+            animation: companionCelebrate 0.6s ease-in-out infinite;
+        }
+
+        @keyframes companionCelebrate {
+            0%, 100% { transform: rotate(-5deg) scale(1); }
+            25% { transform: rotate(5deg) scale(1.1); }
+            75% { transform: rotate(-5deg) scale(1.1); }
+        }
+
+        .companion-display.mood-resting {
+            filter: drop-shadow(0 6px 12px rgba(148, 163, 184, 0.4));
+            opacity: 0.7;
+            animation: companionRest 4s ease-in-out infinite;
+        }
+
+        @keyframes companionRest {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 0.5; }
+        }
+
         /* Hidden */
         .hidden {
             display: none !important;
@@ -2093,6 +2227,42 @@
                     <option value="zh">中文 (Chinese)</option>
                     <option value="ar">العربية (Arabic)</option>
                 </select>
+            </div>
+
+            <div class="form-group">
+                <label style="display: block; margin-bottom: 12px; font-weight: 600; color: var(--neon-purple);">
+                    🐾 Choose Your Learning Companion:
+                </label>
+                <p style="color: var(--text-muted); font-size: 0.9em; margin-bottom: 15px;">
+                    Your companion will support you throughout your learning journey. They're here to encourage you, celebrate with you, and help you stay calm.
+                </p>
+                <div id="companionSelector" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 15px;">
+                    <div class="companion-option" data-companion="dog" onclick="selectCompanion('dog')">
+                        <div class="companion-icon">🐕</div>
+                        <div class="companion-name">Friendly Dog</div>
+                    </div>
+                    <div class="companion-option" data-companion="bear" onclick="selectCompanion('bear')">
+                        <div class="companion-icon">🐻</div>
+                        <div class="companion-name">Calm Bear</div>
+                    </div>
+                    <div class="companion-option" data-companion="mouse" onclick="selectCompanion('mouse')">
+                        <div class="companion-icon">🐭</div>
+                        <div class="companion-name">Quick Mouse</div>
+                    </div>
+                    <div class="companion-option" data-companion="fox" onclick="selectCompanion('fox')">
+                        <div class="companion-icon">🦊</div>
+                        <div class="companion-name">Clever Fox</div>
+                    </div>
+                    <div class="companion-option" data-companion="cat" onclick="selectCompanion('cat')">
+                        <div class="companion-icon">🐱</div>
+                        <div class="companion-name">Curious Cat</div>
+                    </div>
+                    <div class="companion-option" data-companion="bunny" onclick="selectCompanion('bunny')">
+                        <div class="companion-icon">🐰</div>
+                        <div class="companion-name">Happy Bunny</div>
+                    </div>
+                </div>
+                <input type="hidden" id="selectedCompanion" value="dog">
             </div>
 
             <div class="form-group">
@@ -4160,6 +4330,20 @@
                 ttsVoice: gameState.settings.ttsVoice
             });
 
+            // Initialize companion system
+            const selectedCompanion = document.getElementById('selectedCompanion').value;
+            if (!gameState.companion) {
+                gameState.companion = {};
+            }
+            gameState.companion.type = selectedCompanion;
+            gameState.companion.currentMood = 'calm';
+
+            console.log('🐾 Companion initialized:', {
+                type: gameState.companion.type,
+                emoji: getCompanionEmoji(selectedCompanion),
+                mood: gameState.companion.currentMood
+            });
+
             // Initialize session
             gameState.session.questionsAnswered = 0;
             gameState.session.correctAnswers = 0;
@@ -4214,6 +4398,9 @@
 
             updateHeaderValues();
             updateTrackingInfo();
+
+            // Add companion to dashboard
+            setTimeout(() => addCompanionToDashboard(), 500);
         }
 
         function updateDashboard() {
@@ -5658,6 +5845,198 @@
 
             console.log('✅ Student profile exported');
             showGatorMessage(`Profile exported for ${student.name || 'student'}! Check your downloads folder.`);
+        }
+
+        // ========================================
+        // COMPANION & REGULATION BUDDY SYSTEM
+        // ========================================
+
+        const companionEmojis = {
+            dog: '🐕',
+            bear: '🐻',
+            mouse: '🐭',
+            fox: '🦊',
+            cat: '🐱',
+            bunny: '🐰'
+        };
+
+        function selectCompanion(companionType) {
+            // Remove selected class from all options
+            document.querySelectorAll('.companion-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+
+            // Add selected class to clicked option
+            const selectedOption = document.querySelector(`[data-companion="${companionType}"]`);
+            if (selectedOption) {
+                selectedOption.classList.add('selected');
+            }
+
+            // Update hidden input
+            document.getElementById('selectedCompanion').value = companionType;
+
+            console.log(`🐾 Companion selected: ${companionType}`);
+        }
+
+        function initializeCompanion() {
+            // Set default selection
+            const defaultCompanion = document.getElementById('selectedCompanion').value;
+            const defaultOption = document.querySelector(`[data-companion="${defaultCompanion}"]`);
+            if (defaultOption) {
+                defaultOption.classList.add('selected');
+            }
+        }
+
+        function getCompanionEmoji(companionType) {
+            return companionEmojis[companionType] || companionEmojis.dog;
+        }
+
+        function updateCompanionMood(mood) {
+            // Update companion display throughout the app
+            const companionDisplays = document.querySelectorAll('.companion-display');
+
+            companionDisplays.forEach(display => {
+                // Remove all mood classes
+                display.classList.remove('mood-calm', 'mood-curious', 'mood-encouraging', 'mood-celebrating', 'mood-resting');
+
+                // Add current mood class
+                if (mood) {
+                    display.classList.add(`mood-${mood}`);
+                }
+            });
+
+            // Store current mood in gameState
+            if (gameState && gameState.companion) {
+                gameState.companion.currentMood = mood;
+            }
+
+            console.log(`🐾 Companion mood updated to: ${mood}`);
+        }
+
+        function createCompanionDisplay(mood = 'calm') {
+            const companionType = gameState?.companion?.type || 'dog';
+            const emoji = getCompanionEmoji(companionType);
+
+            return `<div class="companion-display mood-${mood}" title="Your companion is feeling ${mood}">${emoji}</div>`;
+        }
+
+        function determineCompanionMood() {
+            const session = gameState.session;
+            const streak = session.currentStreak || 0;
+            const questionsAnswered = session.questionsAnswered || 0;
+            const accuracy = questionsAnswered > 0 ? session.correctAnswers / questionsAnswered : 0;
+
+            // Determine mood based on session conditions (NOT right/wrong answers)
+            let mood = 'calm'; // default
+
+            // Celebrating: High streak or just finished a session successfully
+            if (streak >= 5) {
+                mood = 'celebrating';
+            }
+            // Encouraging: Making progress, keep going!
+            else if (streak >= 2 && accuracy >= 0.5) {
+                mood = 'encouraging';
+            }
+            // Curious: Just started or exploring
+            else if (questionsAnswered < 3) {
+                mood = 'curious';
+            }
+            // Resting: Taking a break or idle
+            else if (gameState.session.onBreak) {
+                mood = 'resting';
+            }
+            // Calm: Default steady state
+            else {
+                mood = 'calm';
+            }
+
+            return mood;
+        }
+
+        function addCompanionToDashboard() {
+            // Find a good place on the dashboard to add the companion
+            const dashboardScreen = document.getElementById('dashboardScreen');
+            if (!dashboardScreen || dashboardScreen.classList.contains('hidden')) return;
+
+            // Check if companion container already exists
+            let companionContainer = document.getElementById('dashboardCompanion');
+
+            if (!companionContainer) {
+                // Create companion container
+                companionContainer = document.createElement('div');
+                companionContainer.id = 'dashboardCompanion';
+                companionContainer.style.cssText = `
+                    position: fixed;
+                    bottom: 30px;
+                    right: 30px;
+                    z-index: 100;
+                    background: rgba(15, 23, 42, 0.8);
+                    backdrop-filter: blur(20px);
+                    padding: 20px;
+                    border-radius: 50%;
+                    border: 2px solid rgba(139, 92, 246, 0.4);
+                    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                `;
+
+                companionContainer.onclick = () => {
+                    showCompanionMessage();
+                };
+
+                // Add hover effect
+                companionContainer.onmouseenter = () => {
+                    companionContainer.style.transform = 'scale(1.1)';
+                    companionContainer.style.boxShadow = '0 12px 40px rgba(139, 92, 246, 0.5)';
+                };
+                companionContainer.onmouseleave = () => {
+                    companionContainer.style.transform = 'scale(1)';
+                    companionContainer.style.boxShadow = '0 8px 32px rgba(139, 92, 246, 0.3)';
+                };
+
+                document.body.appendChild(companionContainer);
+            }
+
+            // Update companion display
+            const mood = determineCompanionMood();
+            companionContainer.innerHTML = createCompanionDisplay(mood);
+        }
+
+        function showCompanionMessage() {
+            const messages = {
+                calm: [
+                    "I'm here with you. Let's learn together!",
+                    "You're doing great. Keep being yourself.",
+                    "Take your time. I'm right here."
+                ],
+                curious: [
+                    "What are we learning today? I'm excited!",
+                    "I wonder what we'll discover together!",
+                    "This looks interesting!"
+                ],
+                encouraging: [
+                    "You're making real progress! I'm proud of you!",
+                    "Look how far you've come! Keep going!",
+                    "You're working so hard. That's what matters!"
+                ],
+                celebrating: [
+                    "Wow! You're on fire! 🎉",
+                    "Amazing work! You should be so proud!",
+                    "Look at you go! You're incredible!"
+                ],
+                resting: [
+                    "Taking a break is important. I'll rest with you.",
+                    "Let's recharge together.",
+                    "You've earned this break."
+                ]
+            };
+
+            const mood = gameState?.companion?.currentMood || 'calm';
+            const moodMessages = messages[mood] || messages.calm;
+            const randomMessage = moodMessages[Math.floor(Math.random() * moodMessages.length)];
+
+            showGatorMessage(randomMessage);
+            speak(randomMessage);
         }
 
         // ========================================
