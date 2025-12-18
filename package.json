@@ -1,10 +1,13 @@
 {
   "name": "learning-spectrum",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Learning Spectrum - Every color of how they learn. A K-5 learning companion for students with 504 plans and ADHD.",
+  "main": "index.html",
   "scripts": {
-    "start": "python3 -m http.server 3000",
-    "dev": "python3 -m http.server 3000"
+    "start": "npx serve -l 3000",
+    "dev": "npx serve -l 3000",
+    "serve:python": "python3 -m http.server 3000",
+    "generate:questions": "node questions/generators/generate-all-questions.js"
   },
   "keywords": [
     "education",
@@ -14,8 +17,17 @@
     "elementary",
     "K-5",
     "reading",
-    "math"
+    "math",
+    "spectrum",
+    "three-grade-system"
   ],
   "author": "Learning Spectrum Team",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/foozinacci/coast-learning-spectrum"
+  },
+  "engines": {
+    "node": ">=18"
+  }
 }

@@ -153,20 +153,21 @@ Learning Spectrum's UI feels like a **quiet, organized classroom**:
 5. **Tag 504 accommodations** for automatic support
 
 ### For Developers
-_(Coming soon)_
+
 ```bash
 # Clone the repository
 git clone https://github.com/foozinacci/coast-learning-spectrum.git
 cd coast-learning-spectrum
 
-# Install dependencies (example, TBD)
-# npm install
+# Run local development server
+npm start
+# Or with Python
+npm run serve:python
 
-# Run development server (example, TBD)
-# npm run dev
+# Open http://localhost:3000
 ```
 
-See [CLAUDE.md](./CLAUDE.md) for comprehensive development guidelines.
+See [CLAUDE.md](./CLAUDE.md) for comprehensive development guidelines and [docs/](./docs/) for additional guides.
 
 ---
 
@@ -174,37 +175,34 @@ See [CLAUDE.md](./CLAUDE.md) for comprehensive development guidelines.
 
 - **[CLAUDE.md](./CLAUDE.md)**: Comprehensive guide for AI assistants and developers
 - **[BRAND.md](./BRAND.md)**: Complete brand guidelines (voice, tone, colors)
-- **[docs/three-grade-system.md](./docs/three-grade-system.md)**: _(Coming soon)_ Deep dive on Enrolled→Current→Target
-- **[docs/screenshot-import.md](./docs/screenshot-import.md)**: _(Coming soon)_ OCR/LLM implementation guide
-- **[docs/sst-reports.md](./docs/sst-reports.md)**: _(Coming soon)_ SST meeting export formats
+- **[docs/](./docs/)**: All guides, question bank docs, and technical references
 
 ---
 
-## 🧪 Roadmap
+## 🧪 Current Status & Roadmap
 
-### Phase 1: Foundation (Q1 2025)
-- [ ] Finalize tech stack (Next.js, TypeScript, PostgreSQL)
-- [ ] Implement three-grade dashboard
-- [ ] Build LaBuBu + Gator character system
-- [ ] Create export/import/resume/reset functionality
+### Completed (MVP)
+- [x] Three-grade dashboard (Enrolled → Current → Target)
+- [x] LaBuBu mood system with spectrum colors
+- [x] Gator narration throughout
+- [x] Export/import/resume/reset (sacred features)
+- [x] Badge and achievement system
+- [x] Comprehensive question banks (K-2 complete, 3-5 partial)
+- [x] Diagnostics panel
+- [x] Responsive design
+- [x] Deployed to Vercel
 
-### Phase 2: Core Features (Q2 2025)
+### In Progress
+- [ ] Expand question coverage for Grades 3-5
+- [ ] Refine "calm room" UI theme
+
+### Future
 - [ ] Screenshot import (OCR + LLM parsing)
 - [ ] Home/school sync engine
 - [ ] Offline mode with service workers
-- [ ] Diagnostics & stability panel
-
-### Phase 3: Curriculum Content (Q3 2025)
-- [ ] Reading Spectrum (phonics, decoding, comprehension)
-- [ ] Math Spectrum (counting, operations, word problems)
-- [ ] Combined Spectrum (integrated tasks)
-- [ ] Focus & Bravery tracking
-
-### Phase 4: SST & Communication (Q4 2025)
 - [ ] SST report generator (PDF + CSV)
-- [ ] Parent/teacher messaging
+- [ ] Parent/teacher portal separation
 - [ ] School system integration (Clever, ClassLink)
-- [ ] Pilot at Hugh Gregg Elementary, NY
 
 ---
 
