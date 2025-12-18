@@ -1,0 +1,842 @@
+/* ==========================================================================
+   Learning Spectrum - Streamlined UI
+   A compact, engaging, focus-friendly interface
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   CSS Variables - Balanced color palette
+   -------------------------------------------------------------------------- */
+:root {
+  /* Primary palette - calmer but still engaging */
+  --primary: #14b8a6;        /* Teal - main accent */
+  --primary-glow: rgba(20, 184, 166, 0.3);
+  --secondary: #8b5cf6;      /* Violet - creative accent */
+  --success: #10b981;        /* Green - positive states */
+  --warning: #f59e0b;        /* Amber - attention */
+  --danger: #ef4444;         /* Red - brave/retry */
+
+  /* Background layers */
+  --bg-base: #0f172a;        /* Deep slate */
+  --bg-card: rgba(30, 41, 59, 0.8);
+  --bg-card-hover: rgba(51, 65, 85, 0.9);
+  --bg-input: rgba(15, 23, 42, 0.6);
+
+  /* Text */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  /* Borders */
+  --border-subtle: rgba(148, 163, 184, 0.1);
+  --border-accent: rgba(20, 184, 166, 0.3);
+
+  /* Spacing scale - TIGHT */
+  --space-xs: 4px;
+  --space-sm: 6px;
+  --space-md: 10px;
+  --space-lg: 14px;
+  --space-xl: 20px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+}
+
+/* --------------------------------------------------------------------------
+   Base Reset - Tighter defaults
+   -------------------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Rajdhani', 'Segoe UI', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.4;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Subtle animated background - not distracting */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(20, 184, 166, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* --------------------------------------------------------------------------
+   Container - Focused width
+   -------------------------------------------------------------------------- */
+.container {
+  max-width: 800px !important;
+  margin: 0 auto;
+  padding: var(--space-sm) !important;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: var(--space-md) !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Header - Compact and informative
+   -------------------------------------------------------------------------- */
+header {
+  background: var(--bg-card) !important;
+  border-radius: 10px !important;
+  padding: var(--space-sm) var(--space-md) !important;
+  margin-bottom: var(--space-md) !important;
+  border: 1px solid var(--border-subtle) !important;
+  position: sticky;
+  top: var(--space-sm);
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+.header-grid {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: var(--space-md) !important;
+  flex-wrap: wrap;
+}
+
+/* Title section - minimal */
+.header-title {
+  flex: 0 0 auto;
+}
+
+header h1 {
+  font-size: 1.1rem !important;
+  margin: 0 !important;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+header .tagline {
+  display: none !important; /* Hide tagline to save space */
+}
+
+/* Grade boxes - inline and compact */
+.header-grades {
+  display: flex !important;
+  gap: var(--space-xs) !important;
+  padding: 0 !important;
+  background: none !important;
+}
+
+.header-grade-box {
+  padding: var(--space-xs) var(--space-sm) !important;
+  border-radius: 6px !important;
+  font-size: 0.7rem !important;
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-subtle) !important;
+  text-align: center;
+  min-width: 50px;
+}
+
+.header-grade-box .label {
+  font-size: 0.6rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  display: block;
+}
+
+.header-grade-box .value {
+  font-size: 0.85rem !important;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* Session stats - ultra compact */
+.header-session {
+  display: flex !important;
+  gap: var(--space-sm) !important;
+  padding: 0 !important;
+  background: none !important;
+}
+
+.header-session .stat-box {
+  padding: var(--space-xs) var(--space-sm) !important;
+  background: var(--bg-input) !important;
+  border-radius: 6px !important;
+  font-size: 0.7rem !important;
+  text-align: center;
+}
+
+.header-session .stat-value {
+  font-size: 0.85rem !important;
+  font-weight: 600;
+}
+
+/* Mini radar in header */
+#headerRadar {
+  width: 44px !important;
+  height: 44px !important;
+}
+
+/* --------------------------------------------------------------------------
+   Cards - Tighter, cleaner
+   -------------------------------------------------------------------------- */
+.card {
+  background: var(--bg-card) !important;
+  border-radius: 10px !important;
+  padding: var(--space-md) !important;
+  margin-bottom: var(--space-sm) !important;
+  border: 1px solid var(--border-subtle) !important;
+  transition: var(--transition-normal);
+  box-shadow: none !important;
+}
+
+.card:hover {
+  border-color: var(--border-accent) !important;
+  background: var(--bg-card-hover) !important;
+}
+
+.card h2,
+.card h3 {
+  font-size: 0.9rem !important;
+  margin: 0 0 var(--space-sm) 0 !important;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons - Compact and clickable
+   -------------------------------------------------------------------------- */
+button,
+.btn,
+[class*="btn"] {
+  padding: var(--space-sm) var(--space-md) !important;
+  font-size: 0.8rem !important;
+  border-radius: 6px !important;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  border: 1px solid transparent !important;
+  margin: 2px !important;
+}
+
+/* Primary button */
+button:not(.secondary):not(.danger):not(.ghost),
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), #0d9488) !important;
+  color: white !important;
+  border-color: var(--primary) !important;
+}
+
+button:not(.secondary):not(.danger):not(.ghost):hover,
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--primary-glow);
+}
+
+/* Secondary button */
+button.secondary,
+.btn-secondary {
+  background: var(--bg-input) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-subtle) !important;
+}
+
+/* Ghost/text button */
+button.ghost,
+.btn-ghost {
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+}
+
+/* Button groups */
+.button-group,
+.btn-group,
+[class*="buttons"] {
+  display: flex !important;
+  gap: var(--space-xs) !important;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   Navigation Tabs - Compact horizontal nav
+   -------------------------------------------------------------------------- */
+.tab-navigation {
+  display: flex !important;
+  gap: 2px !important;
+  padding: var(--space-xs) !important;
+  background: var(--bg-input) !important;
+  border-radius: 8px !important;
+  margin-bottom: var(--space-md) !important;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tab-btn {
+  padding: var(--space-xs) var(--space-md) !important;
+  font-size: 0.75rem !important;
+  border-radius: 6px !important;
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: none !important;
+}
+
+.tab-btn:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: var(--text-primary) !important;
+}
+
+.tab-btn.active {
+  background: var(--primary) !important;
+  color: white !important;
+}
+
+/* --------------------------------------------------------------------------
+   Dashboard - Grid layout to reduce scrolling
+   -------------------------------------------------------------------------- */
+#dashboardScreen .card {
+  margin-bottom: var(--space-sm) !important;
+}
+
+/* Stats grid - 2 columns on mobile, 4 on desktop */
+.dashboard-stats,
+.stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: var(--space-sm) !important;
+}
+
+@media (min-width: 600px) {
+  .dashboard-stats,
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+
+.stat-card,
+.dashboard-card {
+  padding: var(--space-sm) !important;
+  text-align: center;
+  background: var(--bg-input) !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--border-subtle) !important;
+}
+
+.stat-card .value,
+.dashboard-card-value {
+  font-size: 1.2rem !important;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.stat-card .label,
+.dashboard-card-label {
+  font-size: 0.65rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Spectrum Chart - Compact radar
+   -------------------------------------------------------------------------- */
+.spectrum-container,
+.chart-container {
+  max-width: 280px !important;
+  margin: 0 auto var(--space-md) !important;
+}
+
+canvas[id*="radar"],
+canvas[id*="Radar"],
+canvas[id*="spectrum"] {
+  max-height: 200px !important;
+}
+
+/* --------------------------------------------------------------------------
+   Badge Gallery - Compact grid
+   -------------------------------------------------------------------------- */
+.badge-gallery-container {
+  padding: var(--space-sm) !important;
+  margin-bottom: var(--space-sm) !important;
+}
+
+.badge-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)) !important;
+  gap: var(--space-sm) !important;
+}
+
+.badge-card {
+  padding: var(--space-sm) !important;
+  text-align: center;
+  border-radius: 8px !important;
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-subtle) !important;
+  transition: var(--transition-fast);
+}
+
+.badge-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-accent);
+}
+
+.badge-card.earned {
+  border-color: var(--success) !important;
+  background: rgba(16, 185, 129, 0.1) !important;
+}
+
+.badge-icon,
+.badge-icon-large {
+  font-size: 1.8rem !important;
+  margin-bottom: var(--space-xs) !important;
+  display: block;
+}
+
+.badge-name {
+  font-size: 0.65rem !important;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.badge-description {
+  font-size: 0.6rem !important;
+  color: var(--text-muted);
+  display: none; /* Show on hover/tap */
+}
+
+.badge-card:hover .badge-description {
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   Practice Screen - Focused experience
+   -------------------------------------------------------------------------- */
+#practiceScreen .card {
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.question-container {
+  padding: var(--space-md) !important;
+  font-size: 1rem !important;
+  text-align: center;
+  min-height: 80px;
+}
+
+.answer-options {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: var(--space-sm) !important;
+  margin: var(--space-md) 0 !important;
+}
+
+.answer-option,
+.answer-btn {
+  padding: var(--space-md) !important;
+  font-size: 0.9rem !important;
+  border-radius: 8px !important;
+  background: var(--bg-input) !important;
+  border: 2px solid var(--border-subtle) !important;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.answer-option:hover,
+.answer-btn:hover {
+  border-color: var(--primary) !important;
+  background: rgba(20, 184, 166, 0.1) !important;
+}
+
+.answer-option.correct,
+.answer-btn.correct {
+  border-color: var(--success) !important;
+  background: rgba(16, 185, 129, 0.2) !important;
+}
+
+.answer-option.incorrect,
+.answer-btn.incorrect {
+  border-color: var(--danger) !important;
+  background: rgba(239, 68, 68, 0.2) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Calm Room & Breaks - Spacious but contained
+   -------------------------------------------------------------------------- */
+#calmRoomScreen,
+#movementBreakScreen {
+  text-align: center;
+}
+
+.breathing-circle {
+  width: 120px !important;
+  height: 120px !important;
+  margin: var(--space-lg) auto !important;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--primary), var(--bg-base));
+  animation: breathe 6s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+/* --------------------------------------------------------------------------
+   Profile/Setup - Streamlined
+   -------------------------------------------------------------------------- */
+.profile-section,
+.profile-section-compact {
+  max-width: 500px !important;
+  margin: 0 auto !important;
+  padding: var(--space-md) !important;
+}
+
+.form-group {
+  margin-bottom: var(--space-md) !important;
+}
+
+.form-group label {
+  font-size: 0.75rem !important;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs) !important;
+  display: block;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md) !important;
+  font-size: 0.9rem !important;
+  border-radius: 6px !important;
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-subtle) !important;
+  color: var(--text-primary) !important;
+  transition: var(--transition-fast);
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 2px var(--primary-glow);
+}
+
+/* Grade dial - more compact */
+.grade-dial,
+.dial-container {
+  max-width: 200px !important;
+  margin: 0 auto var(--space-md) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Collapsibles/Details - Tighter
+   -------------------------------------------------------------------------- */
+details {
+  margin-bottom: var(--space-sm) !important;
+}
+
+details summary {
+  padding: var(--space-sm) var(--space-md) !important;
+  font-size: 0.8rem !important;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--bg-input);
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  transition: var(--transition-fast);
+}
+
+details summary:hover {
+  border-color: var(--border-accent);
+}
+
+details[open] summary {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-color: var(--primary);
+}
+
+details > *:not(summary) {
+  padding: var(--space-sm) var(--space-md) !important;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+}
+
+/* --------------------------------------------------------------------------
+   LaBuBu Avatar & Mood - Engaging but compact
+   -------------------------------------------------------------------------- */
+.labubu-avatar,
+.avatar-container {
+  width: 60px !important;
+  height: 60px !important;
+  margin: 0 auto var(--space-sm) !important;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  transition: var(--transition-normal);
+}
+
+/* Mood colors */
+.mood-brave { background: linear-gradient(135deg, #ef4444, #dc2626) !important; }
+.mood-retry { background: linear-gradient(135deg, #f97316, #ea580c) !important; }
+.mood-curious { background: linear-gradient(135deg, #facc15, #eab308) !important; }
+.mood-focused { background: linear-gradient(135deg, #10b981, #059669) !important; }
+.mood-success { background: linear-gradient(135deg, #3b82f6, #2563eb) !important; }
+.mood-creative { background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important; }
+.mood-break { background: linear-gradient(135deg, #f1f5f9, #e2e8f0) !important; }
+.mood-overwhelmed { background: linear-gradient(135deg, #374151, #1f2937) !important; }
+
+/* --------------------------------------------------------------------------
+   Gator Messages - Friendly speech bubbles
+   -------------------------------------------------------------------------- */
+.gator-message,
+.gator-speech {
+  background: var(--bg-input) !important;
+  border-left: 3px solid var(--primary) !important;
+  padding: var(--space-sm) var(--space-md) !important;
+  margin: var(--space-md) 0 !important;
+  border-radius: 0 8px 8px 0 !important;
+  font-size: 0.85rem !important;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.gator-message::before {
+  content: '🐊 ';
+}
+
+/* --------------------------------------------------------------------------
+   Progress Bars - Slim and clear
+   -------------------------------------------------------------------------- */
+.progress-bar,
+.progress-container {
+  height: 6px !important;
+  background: var(--bg-input) !important;
+  border-radius: 3px !important;
+  overflow: hidden;
+  margin: var(--space-xs) 0 !important;
+}
+
+.progress-fill,
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--success)) !important;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+/* --------------------------------------------------------------------------
+   Diagnostics Panel - Hidden by default, compact when shown
+   -------------------------------------------------------------------------- */
+.diagnostics-panel {
+  font-size: 0.7rem !important;
+  padding: var(--space-sm) !important;
+  background: rgba(0, 0, 0, 0.3) !important;
+  border-radius: 6px !important;
+  margin-top: var(--space-md) !important;
+}
+
+.diagnostics-panel h3 {
+  font-size: 0.75rem !important;
+  margin-bottom: var(--space-xs) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Scrollbar - Subtle
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   Animations - Subtle and purposeful
+   -------------------------------------------------------------------------- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  animation: fadeIn 0.3s ease;
+}
+
+/* Remove excessive animations */
+body::after,
+header::before,
+header::after {
+  display: none !important;
+}
+
+/* Disable infinite pulsing/glowing - keep only on interaction */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Mobile Optimizations
+   -------------------------------------------------------------------------- */
+@media (max-width: 480px) {
+  .container {
+    padding: var(--space-xs) !important;
+  }
+
+  header {
+    padding: var(--space-xs) var(--space-sm) !important;
+    position: relative; /* Not sticky on mobile */
+  }
+
+  .header-grid {
+    flex-direction: column;
+    gap: var(--space-xs) !important;
+  }
+
+  .header-grades,
+  .header-session {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .card {
+    padding: var(--space-sm) !important;
+    border-radius: 8px !important;
+  }
+
+  .badge-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: var(--space-xs) !important;
+  }
+
+  .badge-icon,
+  .badge-icon-large {
+    font-size: 1.4rem !important;
+  }
+
+  .answer-options {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Quick Actions Bar - Floating nav for common actions
+   -------------------------------------------------------------------------- */
+.quick-actions {
+  position: fixed;
+  bottom: var(--space-md);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  background: var(--bg-card);
+  border-radius: 30px;
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+.quick-action-btn {
+  width: 44px !important;
+  height: 44px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem !important;
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-subtle) !important;
+}
+
+.quick-action-btn:hover {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+}
+
+.quick-action-btn.active {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Hide/Show Utilities
+   -------------------------------------------------------------------------- */
+.hidden {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Print Styles - Clean export
+   -------------------------------------------------------------------------- */
+@media print {
+  body::before,
+  .quick-actions,
+  button:not(.print-show) {
+    display: none !important;
+  }
+
+  .card {
+    break-inside: avoid;
+    border: 1px solid #ccc !important;
+    background: white !important;
+    color: black !important;
+  }
+}

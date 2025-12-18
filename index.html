@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- VERSION: 2025-11-27-FIXED | All JavaScript syntax errors resolved | If you see errors, CLEAR YOUR BROWSER CACHE! -->
+<!-- VERSION: 2025-12-18-STREAMLINED | UI facelift: compact layout, quick nav, reduced scrolling | CLEAR CACHE if old styles show -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +12,7 @@
     <!-- Enhancement Styles -->
     <link rel="stylesheet" href="ui-enhancements.css">
     <link rel="stylesheet" href="ui-compact-overhaul.css">
+    <link rel="stylesheet" href="ui-streamlined.css">
 
     <style>
         /* ========================================
@@ -9503,6 +9504,71 @@
     <script src="enhancements-module.js"></script>
     <script src="questions/enhanced-question-generator.js"></script>
     <script src="integration-patch-comprehensive.js"></script>
+
+    <!-- Quick Actions Navigation Bar -->
+    <nav class="quick-actions" id="quickActionsNav" aria-label="Quick navigation">
+        <button class="quick-action-btn" onclick="showScreen('dashboardScreen')" title="Dashboard" aria-label="Go to Dashboard">
+            🏠
+        </button>
+        <button class="quick-action-btn" onclick="showScreen('practiceScreen'); if(typeof generateQuestion === 'function') generateQuestion();" title="Practice" aria-label="Start Practice">
+            📝
+        </button>
+        <button class="quick-action-btn" onclick="showScreen('badgeGalleryScreen')" title="Badges" aria-label="View Badges">
+            🏆
+        </button>
+        <button class="quick-action-btn" onclick="showScreen('calmRoomScreen')" title="Take a Break" aria-label="Go to Calm Room">
+            🧘
+        </button>
+        <button class="quick-action-btn" onclick="toggleDiagnostics()" title="Settings" aria-label="Toggle Settings">
+            ⚙️
+        </button>
+    </nav>
+
+    <script>
+        // Quick actions - highlight active screen
+        function updateQuickActionsState() {
+            const screens = ['dashboardScreen', 'practiceScreen', 'badgeGalleryScreen', 'calmRoomScreen'];
+            const btns = document.querySelectorAll('.quick-action-btn');
+            screens.forEach((screenId, index) => {
+                const screen = document.getElementById(screenId);
+                if (screen && screen.style.display !== 'none') {
+                    btns[index]?.classList.add('active');
+                } else {
+                    btns[index]?.classList.remove('active');
+                }
+            });
+        }
+
+        // Toggle diagnostics panel
+        function toggleDiagnostics() {
+            const panel = document.querySelector('.diagnostics-panel, #diagnosticsPanel, [class*="diagnostic"]');
+            if (panel) {
+                panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        // Hide quick actions on setup screen
+        const originalShowScreen = window.showScreen;
+        if (typeof originalShowScreen === 'function') {
+            window.showScreen = function(screenId) {
+                originalShowScreen(screenId);
+                const quickNav = document.getElementById('quickActionsNav');
+                if (quickNav) {
+                    quickNav.style.display = screenId === 'setupScreen' ? 'none' : 'flex';
+                }
+                setTimeout(updateQuickActionsState, 100);
+            };
+        }
+
+        // Initial state
+        document.addEventListener('DOMContentLoaded', function() {
+            const quickNav = document.getElementById('quickActionsNav');
+            const setupScreen = document.getElementById('setupScreen');
+            if (quickNav && setupScreen && setupScreen.style.display !== 'none') {
+                quickNav.style.display = 'none';
+            }
+        });
+    </script>
 
 </body>
 </html>
